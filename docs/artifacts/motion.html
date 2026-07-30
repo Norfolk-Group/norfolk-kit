@@ -714,7 +714,7 @@ function buildOrbit3D(st,card,{advanced}){
     }
   });
   const spin=TRACKS.map(()=>0);
-  let t=0, ripples=[], coreNudge=null, nextSpark=advanced?.45:.28;
+  let t=0, coreNudge=null, nextSpark=advanced?.45:.28;
 
   function fireSpark(){
     const b=beads[(Math.random()*beads.length)|0];
@@ -723,10 +723,50 @@ function buildOrbit3D(st,card,{advanced}){
     b.spark={type,e:0,
       dur:[1.0,2.8,1.0,1.6,.6,.8,1.2,1.8,1.0][type],
       accent:(type===2||type===8)?ACCENTS[(Math.random()*ACCENTS.length)|0]:null};
-    if(type===8)ripples.push({e:0,dur:1.0});
     if(type===5)coreNudge={e:0,dur:.6};
     nextSpark=advanced?(.4+Math.random()*1.2):(.28+Math.random()*.82);
     if(type===1)nextSpark+=1.5; if(type===7)nextSpark+=.8;
+  }
+
+  /* ── bead materials, one per spark type ──────────────────
+     The nine types differ in surface as much as in motion — a conic pinwheel, a
+     sparkle of concentric rings, an inverted dark-cored bead, a hollow one that is
+     only glow. Rendering them all as the same lit sphere is what made the first
+     canvas pass feel inert. `glow` is the accent when the spark has one, else
+     #d6d3d1 — warm pale stone, never pure white. */
+  function beadPaint(x,y,r,type,bgHex,glowHex,S){
+    const g=hex2rgb(bgHex), rgb=`rgb(${g[0]},${g[1]},${g[2]})`;
+    let fill,blur=0,hollow=false;
+    const rg=(ox,oy,ir,stops)=>{
+      const q=ctx.createRadialGradient(x+ox*r,y+oy*r,r*ir,x,y,r);
+      stops.forEach(s=>q.addColorStop(s[0],s[1]));return q;
+    };
+    switch(type){
+      case 0:  fill=rg(-.36,-.44,.05,[[0,"#ffffff"],[.4,"#fafaf9"],[.9,rgb]]); blur=.28; break;
+      case 1:  /* inverted: dark core, bright rim */
+               fill=rg(0,0,.1,[[.1,"#1c1917"],[.6,rgb],[.9,"#ffffff"]]); blur=.35; break;
+      case 2:  /* spinning conic pinwheel */
+               if(ctx.createConicGradient){
+                 const q=ctx.createConicGradient(Math.PI/4+t*3,x,y);
+                 [[0,"#ffffff"],[.25,rgb],[.5,"#ffffff"],[.75,rgb],[1,"#ffffff"]]
+                   .forEach(s=>q.addColorStop(s[0],s[1]));
+                 fill=q;
+               }else fill=rg(-.3,-.3,.05,[[0,"#ffffff"],[.55,rgb],[1,"#1c1917"]]);
+               blur=.4; break;
+      case 3:  { const q=ctx.createLinearGradient(x-r,y-r,x+r,y+r);
+                 q.addColorStop(0,"#ffffff");q.addColorStop(.4,rgb);q.addColorStop(1,"#1c1917");
+                 fill=q; blur=.2; } break;
+      case 4:  /* sparkle: concentric rings */
+               fill=rg(0,0,.02,[[0,"#ffffff"],[.15,rgb],[.3,"#1c1917"],
+                                [.45,"#ffffff"],[.6,rgb],[.75,"#1c1917"],[1,rgb]]); blur=.15; break;
+      case 5:  /* light from lower-right instead of upper-left */
+               fill=rg(.5,.5,.05,[[0,"#ffffff"],[.4,rgb],[.9,"#000000"]]); blur=.3; break;
+      case 6:  hollow=true; blur=.2; break;
+      case 7:  fill=rg(0,0,.02,[[0,glowHex],[.3,"#ffffff"],[.8,rgb]]); blur=.5; break;
+      case 8:  fill=rg(0,0,.05,[[.1,"#ffffff"],[.4,rgb],[1,"rgba(28,25,23,0)"]]); blur=.3; break;
+      default: fill=rg(-.36,-.4,.05,[[0,"#ffffff"],[.55,rgb],[1,"#1c1917"]]);
+    }
+    return{fill,blur:blur*S,hollow};
   }
 
   function draw(dt){
@@ -734,7 +774,6 @@ function buildOrbit3D(st,card,{advanced}){
     t+=dt;
     TRACKS.forEach((tk,i)=>{spin[i]+=dt*(Math.PI*2/tk.dur)});
     nextSpark-=dt; if(nextSpark<=0)fireSpark();
-    ripples=ripples.filter(r=>(r.e+=dt)<r.dur);
     if(coreNudge&&(coreNudge.e+=dt)>=coreNudge.dur)coreNudge=null;
 
     const cx=W/2, cy=H/2, S=Math.min(W,H);
@@ -802,20 +841,26 @@ function buildOrbit3D(st,card,{advanced}){
       const world=rot3([Math.cos(a)*lr,Math.sin(a)*lr,0],
                        rad(tk.tilt[0]),rad(tk.tilt[1]),rad(tk.tilt[2]));
       const pr=project(world);
+      const sp=b.spark;
       items.push({b,pr,scale,alpha,jx,jy,square,
-        accent:b.spark&&b.spark.accent,hot:!!b.spark});
+        accent:sp&&sp.accent, hot:!!sp,
+        type:sp?sp.type:-1, p:sp?Math.min(sp.e/sp.dur,1):0,
+        glow:(sp&&sp.accent)||"#d6d3d1"});
     });
 
-    /* trails: drawn under everything, core → bead */
+    /* Trails: dark, not bright — the source streaks rgba(0,0,0,.85) from the core
+       out toward the bead's resting position, then retracts toward the core as it
+       fades (scaleX 1 → 0.2 over 0.7s). Reads as a wake being pulled inward. */
     items.forEach(it=>{
-      if(!it.hot)return;
-      const ty=it.b.spark.type;
-      if(ty===4||ty===7)return;                        /* these don't trail   */
-      const g=ctx.createLinearGradient(cx,cy,it.pr.x,it.pr.y);
-      const c=it.accent?hex2rgb(it.accent):[255,255,255];
-      g.addColorStop(0,`rgba(${c[0]},${c[1]},${c[2]},0)`);
-      g.addColorStop(1,`rgba(${c[0]},${c[1]},${c[2]},.55)`);
-      ctx.beginPath();ctx.moveTo(cx+nx,cy+ny);ctx.lineTo(it.pr.x,it.pr.y);
+      if(!it.hot||it.type===4||it.type===7)return;     /* these two don't trail */
+      const tp=Math.min(it.p*(it.b.spark.dur/0.7),1);  /* trail runs 0.7s       */
+      if(tp>=1)return;
+      const len=1-0.8*tp;
+      const ex=cx+nx+(it.pr.x-(cx+nx))*len, ey=cy+ny+(it.pr.y-(cy+ny))*len;
+      const g=ctx.createLinearGradient(cx+nx,cy+ny,ex,ey);
+      g.addColorStop(0,`rgba(0,0,0,${(.85*(1-tp)).toFixed(3)})`);
+      g.addColorStop(1,"rgba(0,0,0,0)");
+      ctx.beginPath();ctx.moveTo(cx+nx,cy+ny);ctx.lineTo(ex,ey);
       ctx.strokeStyle=g;ctx.lineWidth=1.25*it.pr.s;ctx.stroke();
     });
 
@@ -832,12 +877,6 @@ function buildOrbit3D(st,card,{advanced}){
         g.addColorStop(0,"#ffffff");g.addColorStop(.4,"#f5f5f4");g.addColorStop(1,"#1c1917");
         ctx.beginPath();ctx.arc(x,y,coreR,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
         ctx.strokeStyle="rgba(0,0,0,.8)";ctx.lineWidth=1;ctx.stroke();
-        ripples.forEach(r=>{
-          const p=r.e/r.dur;
-          ctx.beginPath();ctx.arc(x,y,coreR*(1+p*5),0,Math.PI*2);
-          ctx.strokeStyle=`rgba(255,255,255,${(.9*(1-p)).toFixed(3)})`;
-          ctx.lineWidth=1.25;ctx.stroke();
-        });
         return;
       }
       const {it}=d, r=S*.055*it.scale*it.pr.s;
@@ -845,26 +884,47 @@ function buildOrbit3D(st,card,{advanced}){
       /* distance fog: far side of every ring sits back into the dark */
       const depth=(it.pr.z/(S*.42)+1)/2;                /* 0 far … 1 near     */
       const fog=.45+.55*Math.max(0,Math.min(1,depth));
-      const base=it.accent||it.b.col;
-      const c=hex2rgb(base);
       ctx.save();
       ctx.globalAlpha=it.alpha*fog;
+
       if(it.hot){
-        ctx.shadowColor=it.accent?`rgba(${c[0]},${c[1]},${c[2]},.95)`:"rgba(255,255,255,.95)";
-        ctx.shadowBlur=S*.22*it.scale;
-      }
-      const g=ctx.createRadialGradient(x-r*.36,y-r*.4,r*.05,x,y,r);
-      g.addColorStop(0,"#ffffff");
-      g.addColorStop(it.hot?.7:.55,`rgb(${c[0]},${c[1]},${c[2]})`);
-      g.addColorStop(1,"#1c1917");
-      ctx.fillStyle=g;
-      if(it.square>.02){                                /* type 3 morphs shape */
-        const q=r*.92, ang=it.square*Math.PI/2;
-        ctx.translate(x,y);ctx.rotate(ang);
-        ctx.beginPath();ctx.rect(-q,-q,q*2,q*2);ctx.fill();
-        ctx.strokeStyle="rgba(0,0,0,.9)";ctx.lineWidth=1;ctx.stroke();
+        const paint=beadPaint(x,y,r,it.type,it.accent||it.b.col,it.glow,S);
+        const gc=hex2rgb(it.glow);
+        ctx.shadowColor=`rgba(${gc[0]},${gc[1]},${gc[2]},.95)`;
+        ctx.shadowBlur=paint.blur*it.scale;
+        if(paint.hollow){
+          /* type 6 is only glow — a bubble with nothing inside it */
+          ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
+          ctx.strokeStyle=`rgba(${gc[0]},${gc[1]},${gc[2]},.9)`;
+          ctx.lineWidth=Math.max(1,r*.22);ctx.stroke();
+        }else if(it.square>.02){          /* type 3 morphs circle → square, rotating */
+          const q=r*.92;
+          ctx.translate(x,y);ctx.rotate(it.square*Math.PI/2);ctx.translate(-x,-y);
+          ctx.beginPath();ctx.rect(x-q,y-q,q*2,q*2);
+          ctx.fillStyle=paint.fill;ctx.fill();
+          ctx.strokeStyle="rgba(0,0,0,.9)";ctx.lineWidth=1;ctx.stroke();
+        }else{
+          ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
+          ctx.fillStyle=paint.fill;ctx.fill();
+          ctx.strokeStyle="rgba(0,0,0,.9)";ctx.lineWidth=1;ctx.stroke();
+        }
+        /* type 8's ring is born at the bead and expands as it travels inward */
+        if(it.type===8){
+          ctx.shadowBlur=0;
+          ctx.beginPath();ctx.arc(x,y,r*(1+it.p*4),0,Math.PI*2);
+          ctx.strokeStyle=`rgba(${gc[0]},${gc[1]},${gc[2]},${(.9*(1-it.p)).toFixed(3)})`;
+          ctx.lineWidth=1.5;ctx.stroke();
+        }
       }else{
-        ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
+        /* idle beads carry no glow at all in the source — the flashes only read
+           as flashes because the resting state is completely matte */
+        const c=hex2rgb(it.b.col);
+        const g2=ctx.createRadialGradient(x-r*.36,y-r*.4,r*.05,x,y,r);
+        g2.addColorStop(0,"#ffffff");
+        g2.addColorStop(.55,`rgb(${c[0]},${c[1]},${c[2]})`);
+        g2.addColorStop(1,"#1c1917");
+        ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
+        ctx.fillStyle=g2;ctx.fill();
         ctx.strokeStyle="rgba(0,0,0,.9)";ctx.lineWidth=1;ctx.stroke();
       }
       ctx.restore();
