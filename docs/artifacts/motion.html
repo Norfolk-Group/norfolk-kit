@@ -143,6 +143,21 @@ code{font-family:var(--mono);font-size:.92em;color:var(--accent)}
 @keyframes trace{0%{stroke-dashoffset:0;opacity:1}60%{opacity:1}85%{opacity:.6}100%{stroke-dashoffset:-400;opacity:0}}
 .glyph.breathe{animation:breathe calc(3.2s / var(--spd)) ease-in-out infinite}
 @keyframes breathe{0%,100%{transform:scale(1)}28%{transform:scale(1.022)}50%{transform:scale(1.008)}78%{transform:scale(1.03)}}
+/* living cave animals: the beast walks by having its limbs redrawn */
+.liv{transform-box:fill-box;transform-origin:center}
+.liv-shift{animation:shift calc(2.9s / var(--spd)) ease-in-out infinite}
+@keyframes shift{0%,100%{transform:translateX(-1.4px)}50%{transform:translateX(1.4px)}}
+.liv-body{animation:draw calc(.6s / var(--spd)) ease-out forwards,
+                    lung calc(2.2s / var(--spd)) ease-in-out infinite calc(.6s / var(--spd))}
+@keyframes lung{0%,100%{transform:scale(1,1)}45%{transform:scale(1.014,1.028)}}
+.liv-head{animation:draw calc(.6s / var(--spd)) ease-out forwards .1s,
+                    bob calc(1.6s / var(--spd)) ease-in-out infinite calc(.7s / var(--spd))}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0deg)}40%{transform:translateY(1.6px) rotate(-1.6deg)}}
+.liv-tail{animation:draw calc(.5s / var(--spd)) ease-out forwards .2s,
+                    flick calc(1.1s / var(--spd)) ease-in-out infinite calc(.7s / var(--spd))}
+@keyframes flick{0%,100%{transform:rotate(0deg)}30%{transform:rotate(9deg)}65%{transform:rotate(-6deg)}}
+.liv-leg{stroke-linecap:round;stroke-linejoin:round}
+
 .firelight{position:absolute;inset:0;background:radial-gradient(circle at 42% 38%,rgba(234,88,12,.34),transparent 62%);
   animation:fire calc(7.6s / var(--spd)) ease-in-out infinite;pointer-events:none}
 @keyframes fire{0%,100%{opacity:.3}18%{opacity:.55}32%{opacity:.4}55%{opacity:.7}72%{opacity:.35}88%{opacity:.45}}
@@ -163,6 +178,9 @@ code{font-family:var(--mono);font-size:.92em;color:var(--accent)}
 @keyframes rp{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.09)}}
 .tri{animation:tp calc(1.4s / var(--spd)) ease-in-out infinite;animation-delay:var(--d,0s)}
 @keyframes tp{0%,100%{opacity:.45}50%{opacity:1}}
+.spoke{transform-box:fill-box;transform-origin:center;
+  animation:spk calc(1.1s / var(--spd)) ease-in-out infinite;animation-delay:var(--d,0s)}
+@keyframes spk{0%,100%{opacity:.2;transform:scale(.72)}35%{opacity:1;transform:scale(1)}}
 
 /* the orbits render to canvas with real 3D math, so they need no CSS of their own.
    .core is retained: RebeccaAliveGeometry still uses it for its glowing centre. */
@@ -260,8 +278,8 @@ code{font-family:var(--mono);font-size:.92em;color:var(--accent)}
   </section>
 
   <section id="s-orb">
-    <div class="sec-head"><h2>Orb — presence indicators</h2><span class="count">5 components</span></div>
-    <p class="sec-note">Small, persistent, one per persona. Every orb is phase-driven — the same geometry speeds up and brightens from <code>idle</code> through <code>synthesizing</code>. Change the phase control above to see the full range; it is the same knob the application drives. Note these are <em>five distinct geometries</em>, not one component recoloured.</p>
+    <div class="sec-head"><h2>Orb — presence indicators</h2><span class="count">6 components</span></div>
+    <p class="sec-note">These are deliberately the quiet end of the library — small, persistent marks that sit in a corner and say "still here" without competing with the content around them. If they read as plain next to the orbitals, that is the job, not a shortfall; plenty of surfaces want exactly this and nothing more. <strong>Ember</strong> is the exception, for when a wait should feel energetic. All are phase-driven: the same geometry speeds up and brightens from <code>idle</code> through <code>synthesizing</code> — change the phase control above to see the range the application actually drives. Six distinct geometries, not one component recoloured.</p>
     <div class="grid" id="g-orb"></div>
   </section>
 
@@ -388,13 +406,128 @@ const GEO=[["chalice",["M 20 25 L 80 25 L 50 65 Z","M 50 65 L 50 90","M 30 90 L 
 const ALIVE=[["chalice",GEO[0][1]],["womb",GEO[1][1]],["moon",GEO[2][1]],
   ["water",GEO[3][1]],["bison",CAVE[0][1]],["horse",CAVE[1][1]]];
 
+/* ── living cave animals ───────────────────────────────────
+   The static glyphs were the dullest thing on the page. These are the same crude
+   marks, but the limbs cycle through three drawn poses, and the two previous poses
+   stay on the wall as faint ghosts.
+
+   That ghosting is not an invention: Paleolithic painters at Chauvet and Lascaux
+   drew extra superimposed legs and heads on single animals to imply movement, and
+   the flicker of a tallow lamp did the rest. So the animal walks by the same device
+   its painters used — the line stays primitive, the motion comes from redrawing.
+
+   body/head are drawn once and then breathe; legs swap; tails flick. */
+const LIVING=[
+  {name:"bison",
+   body:["M 20 50 C 20 30, 40 20, 60 25 C 80 30, 85 45, 80 55 C 75 65, 60 70, 45 68 C 30 66, 20 65, 20 50 Z"],
+   head:["M 60 25 L 66 12 M 63 26 L 71 15","M 54 31 L 57 31"],
+   tail:["M 80 55 L 88 50"],
+   legs:["M 34 64 L 32 86 M 44 66 L 45 87 M 62 62 L 66 85 M 72 58 L 76 84",
+         "M 34 64 L 26 84 M 44 66 L 40 88 M 62 62 L 70 84 M 72 58 L 80 80",
+         "M 34 64 L 36 84 M 44 66 L 50 86 M 62 62 L 60 86 M 72 58 L 70 86"]},
+  {name:"horse",
+   body:["M 15 55 C 15 35, 35 20, 55 22 C 75 24, 85 40, 82 55 C 79 70, 65 75, 50 73 C 35 71, 15 70, 15 55 Z"],
+   head:["M 55 22 L 50 6 L 60 8 L 58 20","M 52 20 C 55 12, 58 8, 60 8"],
+   tail:["M 82 55 L 92 62 L 90 70"],
+   legs:["M 28 68 L 26 88 M 40 71 L 41 89 M 60 70 L 63 88 M 74 64 L 78 86",
+         "M 28 68 L 18 86 M 40 71 L 34 90 M 60 70 L 68 88 M 74 64 L 84 82",
+         "M 28 68 L 32 86 M 40 71 L 46 88 M 60 70 L 56 89 M 74 64 L 70 88"]},
+  {name:"deer",
+   body:["M 25 60 C 25 40, 45 28, 60 30 C 75 32, 80 48, 75 60 C 70 72, 55 75, 42 72 C 29 69, 25 75, 25 60 Z"],
+   head:["M 60 30 L 55 10 L 48 16 M 60 30 L 68 10 L 74 16","M 57 20 L 51 18 M 65 20 L 71 18"],
+   tail:["M 75 58 L 82 54"],
+   legs:["M 36 70 L 34 88 M 46 72 L 47 89 M 60 70 L 63 88 M 70 65 L 73 87",
+         "M 36 70 L 28 86 M 46 72 L 41 90 M 60 70 L 68 87 M 70 65 L 79 84",
+         "M 36 70 L 39 87 M 46 72 L 51 89 M 60 70 L 57 89 M 70 65 L 67 88"]},
+  {name:"aurochs",
+   body:["M 18 52 C 18 32, 38 18, 58 20 C 78 22, 88 38, 85 52 C 82 66, 65 74, 48 72 C 31 70, 18 68, 18 52 Z"],
+   head:["M 58 20 C 52 8, 42 6, 40 12 M 58 20 C 66 8, 76 6, 78 12","M 52 30 L 55 30"],
+   tail:["M 85 52 L 93 58"],
+   legs:["M 32 68 L 30 87 M 44 71 L 45 89 M 62 69 L 65 88 M 76 62 L 79 86",
+         "M 32 68 L 24 85 M 44 71 L 38 90 M 62 69 L 70 87 M 76 62 L 85 83",
+         "M 32 68 L 35 86 M 44 71 L 50 89 M 62 69 L 59 89 M 76 62 L 73 87"]}
+];
+
+/* Living cave animal. Body, head and tail are drawn once and then breathe, bob and
+   flick; the legs are swapped between three drawn poses on a fast clock, with the
+   two previous poses left on the wall as fading ghosts. Legs are mutated in place
+   rather than rebuilt, so the walk costs three `d` attribute writes per tick. */
+function buildLivingCave(stage,{color}){
+  const host=el("div","glyph");
+  stage.appendChild(host);
+  const nextAnimal=shuffleBag(LIVING.length);
+  let cur=0, legs=[], frame=0, order=[0,1,2];
+
+  const mkPath=(d,cls,extra)=>{
+    const p=svgEl("path");p.setAttribute("d",d);p.setAttribute("stroke",color);
+    p.setAttribute("fill","none");p.setAttribute("stroke-linecap","round");
+    p.setAttribute("stroke-linejoin","round");
+    p.setAttribute("stroke-width",extra&&extra.sw?extra.sw:"var(--sw)");
+    if(cls)p.setAttribute("class",cls);
+    return p;
+  };
+
+  const render=()=>{
+    const a=LIVING[cur];
+    host.innerHTML="";
+    const svg=svgEl("svg");svg.setAttribute("viewBox","0 0 100 100");
+    const shift=svgEl("g");shift.setAttribute("class","liv-shift");
+
+    const gb=svgEl("g");gb.setAttribute("class","liv liv-body");
+    a.body.forEach(d=>gb.appendChild(mkPath(d)));
+    const gh=svgEl("g");gh.setAttribute("class","liv liv-head");
+    a.head.forEach(d=>gh.appendChild(mkPath(d)));
+    const gt=svgEl("g");gt.setAttribute("class","liv liv-tail");
+    a.tail.forEach(d=>gt.appendChild(mkPath(d)));
+
+    /* three leg layers: current, and two ghosts of the poses just left behind */
+    const gl=svgEl("g");
+    legs=[0,1,2].map(i=>{
+      const p=mkPath(a.legs[i],"liv-leg");
+      gl.appendChild(p);return p;
+    });
+    shift.append(gb,gh,gt,gl);svg.appendChild(shift);
+
+    /* shimmer + the re-tracing hand, kept from the static version */
+    a.body.concat(a.head).forEach((d,j)=>{
+      const s=mkPath(d,"shimmer",{sw:2});
+      s.style.animationDuration=`calc(${(4+(j%3)*0.7).toFixed(1)}s / var(--spd))`;
+      if(j%2)s.style.animationDirection="reverse";
+      svg.appendChild(s);
+    });
+    const tr=mkPath(a.body[0],"tracer",{sw:5});
+    tr.setAttribute("stroke","#fff");svg.appendChild(tr);
+
+    host.appendChild(svg);
+    frame=0;paintLegs();
+  };
+
+  const paintLegs=()=>{
+    const a=LIVING[cur];
+    /* order[0] is the live pose; the others trail behind it, fading */
+    order=[frame%3,(frame+2)%3,(frame+1)%3];
+    const op=[1,.34,.16], sw=[1,.72,.55];
+    legs.forEach((p,i)=>{
+      p.setAttribute("d",a.legs[order[i]]);
+      p.style.opacity=op[i];
+      p.style.strokeWidth=`calc(var(--sw) * ${sw[i]})`;
+    });
+  };
+
+  render();
+  timers.push({fn:()=>{frame++;paintLegs()},base:165});          /* the gait   */
+  timers.push({fn:()=>{cur=nextAnimal();render()},base:2600});   /* next beast */
+}
+
 /* sequence player: cross-fade through glyphs, redrawing each on entry */
 function buildSequence(stage,{glyphs,color,dwell}){
   const host=el("div","glyph breathe");
   stage.appendChild(host);
-  let i=0;
+  const nextGlyph=shuffleBag(glyphs.length);   /* every figure before any repeats */
+  let cur=0;
   const render=()=>{
-    const [,paths]=glyphs[i%glyphs.length];
+    const [,paths]=glyphs[cur];
+    cur=nextGlyph();
     host.innerHTML="";
     const svg=svgEl("svg");svg.setAttribute("viewBox","0 0 100 100");
     paths.forEach((d,j)=>{
@@ -414,7 +547,6 @@ function buildSequence(stage,{glyphs,color,dwell}){
     const t=svgEl("path");t.setAttribute("d",paths[Math.floor(Math.random()*paths.length)]);
     t.setAttribute("class","tracer");svg.appendChild(t);
     host.appendChild(svg);
-    i++;
   };
   render();
   timers.push({fn:render,base:dwell});
@@ -481,9 +613,9 @@ function card(gridId,{name,chars,tags,well,stage,build,noSpeed}){
 
 /* ═══ LASCAUX ═══ */
 card("g-lascaux",{name:"Ochre",well:"ember",
-  chars:"An ochre animal — bison, horse, deer, aurochs — redrawn stroke by stroke in firelight, re-traced by a bright hand, then dissolving into the next.",
-  tags:["#ea580c","draw 0.5s ease-out","flicker 1.6–3.0s","dwell 1.1–2.4s","4 glyphs"],
-  build:st=>buildSequence(st,{glyphs:CAVE,color:"#ea580c",dwell:1700})});
+  chars:"The beast walks. Body breathes, head bobs, tail flicks, and the legs are redrawn between three poses while the two poses just left behind linger as ghosts on the wall — the same device the Chauvet painters used to imply motion. Bison, horse, deer, aurochs.",
+  tags:["#ea580c","gait 165ms · 3 poses","ghost limbs ×2","breath 2.2s","next beast 2.6s"],
+  build:st=>buildLivingCave(st,{color:"#ea580c"})});
 
 card("g-lascaux",{name:"Ivory",well:"ember",
   chars:"Bone-pale totems — owl, lioness, goddess mask — same choreography, cooler line. Reads as carved ivory rather than painted ochre.",
@@ -593,12 +725,40 @@ card("g-solver",{name:"Ziggurat",
       b.r.setAttribute("d",`M ${cx},${cy-h+dy} L ${cx+dx},${cy-h} L ${cx+dx},${cy} L ${cx},${cy+dy} Z`);
       b.l.setAttribute("d",`M ${cx-dx},${cy-h} L ${cx},${cy-h+dy} L ${cx},${cy+dy} L ${cx-dx},${cy} Z`);
     });
-    let s=0;paint(0);
+    paint(0);
     st.appendChild(svg);
-    timers.push({fn:()=>{s=(s+1)%9;paint(s)},base:700});
+    const nextScene=shuffleBag(9);   /* all nine heights patterns before repeating */
+    timers.push({fn:()=>paint(nextScene()),base:700});
   }});
 
 /* ═══ ORBS ═══ */
+card("g-orb",{name:"Ember",stage:72,
+  chars:"A radiating burst of spokes, each firing in turn around the ring while the whole star drifts round. Gold, small, and busier than the rest of this family — the one to reach for when a wait needs to feel energetic rather than patient.",
+  tags:["gold","spokes fire in sequence","drift 6s","stagger 0.07s"],
+  build:st=>{
+    const w=el("div","spin");w.style.setProperty("--dur","6s");
+    const s=svgEl("svg");s.setAttribute("viewBox","0 0 100 100");
+    s.style.width=s.style.height="100%";
+    const N=10;
+    for(let i=0;i<N;i++){
+      const a=(i/N)*Math.PI*2, r0=15, r1=42;
+      const p=svgEl("line");
+      p.setAttribute("x1",(50+Math.cos(a)*r0).toFixed(2));
+      p.setAttribute("y1",(50+Math.sin(a)*r0).toFixed(2));
+      p.setAttribute("x2",(50+Math.cos(a)*r1).toFixed(2));
+      p.setAttribute("y2",(50+Math.sin(a)*r1).toFixed(2));
+      p.setAttribute("stroke","#fbbf24");p.setAttribute("stroke-width","5");
+      p.setAttribute("stroke-linecap","round");
+      p.setAttribute("class","spoke");
+      p.style.setProperty("--d",(i*0.07).toFixed(2)+"s");
+      s.appendChild(p);
+    }
+    const c=svgEl("circle");c.setAttribute("cx","50");c.setAttribute("cy","50");
+    c.setAttribute("r","8");c.setAttribute("fill","#fde68a");
+    c.setAttribute("class","corepulse");s.appendChild(c);
+    w.appendChild(s);st.appendChild(w);
+  }});
+
 card("g-orb",{name:"Cadence",stage:72,
   chars:"Three dots bouncing in a horizontal wave. The most familiar shape in the set — reads instantly as “working”.",
   tags:["--primary","3 dots","stagger 0.18s","bounce 0.12–0.55 of ⌀"],
@@ -703,7 +863,26 @@ const TRACKS=[{tilt:[70,0,0],   beads:6,radius:.40,dur:9},
               {tilt:[0,70,0],   beads:5,radius:.34,dur:11},
               {tilt:[60,0,45],  beads:4,radius:.28,dur:13}];
 const BEAD_PAL=["#f5f5f4","#d6d3d1","#a8a29e","#78716c","#44403c"];
-const ACCENTS=["#ea580c","#3b82f6","#10b981","#f59e0b","#8b5cf6"];
+/* Energy reads as gold. Weighted so gold and ember dominate and the cool hues are
+   the exception — the flash should feel like heat, not a colour wheel. */
+const ACCENTS=["#fbbf24","#f59e0b","#fcd34d","#ea580c","#d97706","#fde68a",
+               "#f59e0b","#fbbf24","#3b82f6","#8b5cf6","#10b981"];
+
+/* A shuffled bag, not a random pick. This is the mechanism behind the original
+   Figma work: nine states dealt out so that all nine are seen before any repeats,
+   which is what stops the eye from finding a loop. Pure Math.random() repeats and
+   clusters visibly — you notice the same behaviour twice in a row and the illusion
+   of something thinking collapses. */
+function shuffleBag(n){
+  let bag=[];
+  return function(){
+    if(!bag.length){
+      bag=Array.from({length:n},(_,i)=>i);
+      for(let i=n-1;i>0;i--){const j=(Math.random()*(i+1))|0;[bag[i],bag[j]]=[bag[j],bag[i]];}
+    }
+    return bag.pop();
+  };
+}
 const RIG_TILT=-15*Math.PI/180;          /* the source's static rotateX(-15deg) */
 const FOCAL=600;                         /* matches CSS perspective: 600px      */
 
@@ -774,13 +953,19 @@ function buildOrbit3D(st,card,{advanced}){
      as a machine ticking; clustering two to four firings then falling quiet reads
      as something thinking — a flurry, then a pause, then another. */
   let burst=0;
+  const nextType=shuffleBag(9);      /* all nine before any repeat */
+  const nextBody=shuffleBag(beads.length);
   function fireSpark(){
-    const b=beads[(Math.random()*beads.length)|0];
+    /* bodies are dealt from a bag too, so the same one doesn't fire twice running */
+    const b=beads[nextBody()];
     if(b.spark){nextSpark=.12;return;}
-    const type=advanced?(Math.random()*9)|0:0;
+    const type=advanced?nextType():0;
     b.spark={type,e:0,
       dur:[1.0,2.8,1.0,1.6,.6,.8,1.2,1.8,1.0][type],
-      accent:(type===2||type===8)?ACCENTS[(Math.random()*ACCENTS.length)|0]:null};
+      /* the bright types carry colour; the quiet ones stay stone, so gold means
+         "something happened here" rather than being ambient decoration */
+      accent:(type===0||type===2||type===6||type===7||type===8)
+             ?ACCENTS[(Math.random()*ACCENTS.length)|0]:null};
     /* every firing jolts the core, not only type 5 — the centre is listening */
     coreNudge={e:0,dur:type===5?.6:.34,amp:type===5?1:.42};
 
@@ -1098,12 +1283,26 @@ applyPhase();
    headless/embedded renderers, which silently defeats the optimisation. Four
    read-only rect checks per second across 18 cards costs nothing. */
 const cards=[...document.querySelectorAll(".card")];
+/* One specimen must never be able to take the page down with it. Each build is
+   isolated: a specimen that throws is marked dead and skipped, and every other one
+   still builds, still animates, still pauses correctly. Learned the hard way — an
+   unguarded throw in here aborted the loop mid-list AND prevented the scroll and
+   interval listeners below from ever attaching, so everything past the second card
+   stayed blank with no visible error. */
 function visibility(){
   const h=innerHeight, pad=220;
   cards.forEach(c=>{
-    const r=c.getBoundingClientRect();
+    let r; try{ r=c.getBoundingClientRect(); }catch{ return; }
     const off=r.bottom < -pad || r.top > h+pad;
-    if(!off && !c._built){ c._built=true; c._build(); }
+    if(!off && !c._built && !c._dead){
+      c._built=true;
+      try{ c._build(); }
+      catch(err){
+        c._dead=true;
+        console.error("[motion] specimen failed to build:",
+          c.querySelector(".name")?.textContent, err);
+      }
+    }
     if(off!==c._off){
       c._off=off;
       c.classList.toggle("paused",off);
@@ -1112,10 +1311,11 @@ function visibility(){
   });
 }
 if(!reduced){
-  visibility();
+  /* listeners attach FIRST, so a failure in the initial sweep cannot orphan them */
   addEventListener("scroll",visibility,{passive:true});
   addEventListener("resize",visibility);
   setInterval(visibility,400);   /* catches layout shifts the events miss */
+  visibility();
 }
 })();
 </script>
