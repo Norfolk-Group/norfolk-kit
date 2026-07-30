@@ -286,6 +286,35 @@ code{font-family:var(--mono);font-size:.92em;color:var(--accent)}
       </ul>
     </div>
     <div>
+      <h3>Renamed — mapping to source files</h3>
+      <p>The persona names are gone: they tied a reusable motion library to one project's agent roster, and a component called <code>GustavoOrb</code> tells you nothing about what it does. New names describe the behaviour and are meant to be said out loud.</p>
+      <div style="overflow-x:auto">
+      <table style="border-collapse:collapse;font-size:12px;width:100%">
+        <tbody>
+        <tr><td style="padding:2px 10px 2px 0"><strong>Ochre</strong></td><td><code>RebeccaCaveSequence</code></td></tr>
+        <tr><td style="padding:2px 10px 2px 0"><strong>Ivory</strong></td><td><code>RebeccaTotemSequence</code></td></tr>
+        <tr><td style="padding:2px 10px 2px 0"><strong>Sigil</strong></td><td><code>RebeccaGeoSequence</code></td></tr>
+        <tr><td style="padding:2px 10px 2px 0"><strong>Reliquary</strong></td><td><code>RebeccaAliveGeometry</code></td></tr>
+        <tr><td style="padding:2px 10px 2px 0"><strong>Lattice</strong></td><td><code>AnalystSwissCube</code></td></tr>
+        <tr><td style="padding:2px 10px 2px 0"><strong>Lattice Mark</strong></td><td><code>AnalystCubeIcon</code></td></tr>
+        <tr><td style="padding:2px 10px 2px 0"><strong>Kaleido</strong></td><td><code>AnalystThinkingCube</code></td></tr>
+        <tr><td style="padding:2px 10px 2px 0"><strong>Quanta</strong></td><td><code>AnalystQuantumSolver</code></td></tr>
+        <tr><td style="padding:2px 10px 2px 0"><strong>Bellows</strong></td><td><code>AnalystExpandingSolver</code></td></tr>
+        <tr><td style="padding:2px 10px 2px 0"><strong>Pinwheel</strong></td><td><code>AnalystNexusCore</code></td></tr>
+        <tr><td style="padding:2px 10px 2px 0"><strong>Ziggurat</strong></td><td><code>AnalystBarChartPulse</code></td></tr>
+        <tr><td style="padding:2px 10px 2px 0"><strong>Cadence</strong></td><td><code>RebeccaOrb</code></td></tr>
+        <tr><td style="padding:2px 10px 2px 0"><strong>Sentry</strong></td><td><code>IrisOrb</code></td></tr>
+        <tr><td style="padding:2px 10px 2px 0"><strong>Quorum</strong></td><td><code>MarcoOrb</code></td></tr>
+        <tr><td style="padding:2px 10px 2px 0"><strong>Halo</strong></td><td><code>GustavoOrb</code></td></tr>
+        <tr><td style="padding:2px 10px 2px 0"><strong>Nimbus</strong></td><td><code>SpecialistOrb</code></td></tr>
+        <tr><td style="padding:2px 10px 2px 0"><strong>Orrery</strong></td><td><code>RebeccaSwissOrbit</code></td></tr>
+        <tr><td style="padding:2px 10px 2px 0"><strong>Maelstrom</strong></td><td><code>RebeccaAdvancedOrbit</code></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p><strong>Orrery</strong> and <strong>Maelstrom</strong> are the same geometry — identical rings, radii and bead counts. Only the spark behaviour differs: one repeating burst versus nine, monochrome versus accented. Named separately because in use they are not interchangeable.</p>
+    </div>
+    <div>
       <h3>Using these</h3>
       <p>Import from <code>src/components/animations</code>; resolve by key through <code>animation-registry.ts</code> rather than hardcoding a component, so the choice stays data.</p>
       <p>Always honour <code>useReducedMotion.ts</code> — this page does too; switch your OS to reduced motion and every specimen freezes to a drawn resting state. That is an accessibility requirement in the design system, not a nicety.</p>
@@ -451,22 +480,22 @@ function card(gridId,{name,chars,tags,well,stage,build,noSpeed}){
 }
 
 /* ═══ LASCAUX ═══ */
-card("g-lascaux",{name:"RebeccaCaveSequence",well:"ember",
+card("g-lascaux",{name:"Ochre",well:"ember",
   chars:"An ochre animal — bison, horse, deer, aurochs — redrawn stroke by stroke in firelight, re-traced by a bright hand, then dissolving into the next.",
   tags:["#ea580c","draw 0.5s ease-out","flicker 1.6–3.0s","dwell 1.1–2.4s","4 glyphs"],
   build:st=>buildSequence(st,{glyphs:CAVE,color:"#ea580c",dwell:1700})});
 
-card("g-lascaux",{name:"RebeccaTotemSequence",well:"ember",
+card("g-lascaux",{name:"Ivory",well:"ember",
   chars:"Bone-pale totems — owl, lioness, goddess mask — same choreography, cooler line. Reads as carved ivory rather than painted ochre.",
   tags:["#d6d3d1","draw 0.5s ease-out","dwell 1.1–2.4s","3 glyphs"],
   build:st=>buildSequence(st,{glyphs:TOTEM,color:"#d6d3d1",dwell:1900})});
 
-card("g-lascaux",{name:"RebeccaGeoSequence",well:"amber",
+card("g-lascaux",{name:"Sigil",well:"amber",
   chars:"Amber sacred geometry — chalice, vesica, moon phases, water flow. More mandala than menagerie; the bridge to the Swiss families.",
   tags:["#f59e0b","draw 0.5s ease-out","dwell 1.1–2.4s","4 glyphs"],
   build:st=>buildSequence(st,{glyphs:GEO,color:"#f59e0b",dwell:1500})});
 
-card("g-lascaux",{name:"RebeccaAliveGeometry",well:"ember",
+card("g-lascaux",{name:"Reliquary",well:"ember",
   chars:"A slow-tumbling 3D sphere of faint glyph fragments around a glowing core; fragments flash and swap as if the entity has scattered thoughts.",
   tags:["stone palette","tumble 160s linear","fragments swap 0.8–2.8s","reduced here"],
   build:st=>{
@@ -486,35 +515,35 @@ card("g-lascaux",{name:"RebeccaAliveGeometry",well:"ember",
   }});
 
 /* ═══ CUBE ═══ */
-card("g-cube",{name:"AnalystSwissCube",
+card("g-cube",{name:"Lattice",
   chars:"27 monochrome stone cubies: the whole cluster turns once every 15s while each cubie tumbles and breathes outward on a 6s loop.",
   tags:["stone 6-face","spin 15s linear","tumble 6s backInOut","bulge ×1.3/1.6/1.2"],
   build:st=>buildCube(st,{palette:STONE,cubie:14,gap:1,bulge:true})});
 
-card("g-cube",{name:"AnalystCubeIcon",stage:64,
+card("g-cube",{name:"Lattice Mark",stage:64,
   chars:"The same cluster, size-responsive and freezable — collapses to a static resting cube for reduced-motion or paused states.",
   tags:["stone 6-face","spin 15s linear","size-scaled","freezable"],
   build:st=>buildCube(st,{palette:STONE,cubie:8,gap:1,bulge:true})});
 
-card("g-cube",{name:"AnalystThinkingCube",
+card("g-cube",{name:"Kaleido",
   chars:"Rubik-coloured and restless: reconfigures into one of nine exploded, spherical, ringed or flattened poses roughly every second, springing outward from the centre.",
   tags:["rubik 6-face","tumble 20s linear","9 poses @1.1s","spring 90/14/0.8"],
   build:st=>buildCube(st,{palette:RUBIK,cubie:14,gap:1,bulge:true,border:"#1c1917"})});
 
 /* ═══ SOLVER ═══ */
-card("g-solver",{name:"AnalystQuantumSolver",
+card("g-solver",{name:"Quanta",
   chars:"A jewel-toned cluster hovering in a soft pulsing glow, wobbling as a whole while cubies tumble in place — a flicker of computation, not a full spin.",
   tags:["jewel 6-face","wobble 12s easeInOut","tumble 10s","glow 4s"],
   build:st=>{st.appendChild(el("div","glow"));
     buildCube(st,{palette:JEWEL,cubie:14,gap:1,bulge:false,cls:"wobble",border:"rgba(28,25,23,.6)"})}});
 
-card("g-solver",{name:"AnalystExpandingSolver",
+card("g-solver",{name:"Bellows",
   chars:"The same cluster visibly breathing — cubies explode to twice their radius and snap back while the whole form pulses scale. Parts coming apart as they solve.",
   tags:["jewel 6-face","wobble+scale 12s","bulge ×1.6/2.0/1.4","glow 5s"],
   build:st=>{st.appendChild(el("div","glow"));
     buildCube(st,{palette:JEWEL,cubie:14,gap:1,bulge:true,cls:"wobble pulse",border:"rgba(28,25,23,.6)"})}});
 
-card("g-solver",{name:"AnalystNexusCore",
+card("g-solver",{name:"Pinwheel",
   chars:"Four gradient squares pinwheel around a bright pulsing diamond, the cluster revolving while each square shrinks, reshapes and counter-rotates in a staggered cascade.",
   tags:["4 gradients","revolve 8s linear","blocks 4s stagger 0.2s","core 2s"],
   build:st=>{
@@ -532,7 +561,7 @@ card("g-solver",{name:"AnalystNexusCore",
     n.appendChild(rot);n.appendChild(el("div","nx-core"));st.appendChild(n);
   }});
 
-card("g-solver",{name:"AnalystBarChartPulse",
+card("g-solver",{name:"Ziggurat",
   chars:"A 3×3 isometric bar grid that spring-morphs to a new height pattern every 0.7s — flat, checkerboard, corner-spike, diagonal. Live rebalancing metrics.",
   tags:["9 gradients","scenes @0.7s","spring 140/12/0.8","viewBox 360"],
   build:st=>{
@@ -570,7 +599,7 @@ card("g-solver",{name:"AnalystBarChartPulse",
   }});
 
 /* ═══ ORBS ═══ */
-card("g-orb",{name:"RebeccaOrb",stage:72,
+card("g-orb",{name:"Cadence",stage:72,
   chars:"Three dots bouncing in a horizontal wave. The most familiar shape in the set — reads instantly as “working”.",
   tags:["--primary","3 dots","stagger 0.18s","bounce 0.12–0.55 of ⌀"],
   build:(st,c)=>{
@@ -585,7 +614,7 @@ card("g-orb",{name:"RebeccaOrb",stage:72,
     });
   }});
 
-card("g-orb",{name:"IrisOrb",stage:72,
+card("g-orb",{name:"Sentry",stage:72,
   chars:"A dashed ring turning with an indicator dot circling it and a softly pulsing nucleus. A watchful, scanning presence.",
   tags:["--info","dashed ring","ring 1–12s","orbit 0.9–10s"],
   build:st=>{
@@ -612,7 +641,7 @@ card("g-orb",{name:"IrisOrb",stage:72,
     });
   }});
 
-card("g-orb",{name:"MarcoOrb",stage:72,
+card("g-orb",{name:"Quorum",stage:72,
   chars:"Six triangles at hexagon vertices, tips inward, spinning as one unit while pulsing in sequence. Separate parts resolving into structure.",
   tags:["--success","6 triangles","rotate 1–16s","stagger 0.12s"],
   build:st=>{
@@ -632,7 +661,7 @@ card("g-orb",{name:"MarcoOrb",stage:72,
     orbUpdaters.push(ph=>w.style.setProperty("--dur",PH.marco.rot[ph]+"s"));
   }});
 
-card("g-orb",{name:"GustavoOrb",stage:72,
+card("g-orb",{name:"Halo",stage:72,
   chars:"Three gold rings breathing outward together around a bright nucleus. On error the whole orb shakes — the only orb that does.",
   tags:["--accent-pop","3 rings","0.5–4s","delays 0.7 / 0.35 / 0"],
   build:st=>{
@@ -648,7 +677,7 @@ card("g-orb",{name:"GustavoOrb",stage:72,
     orbUpdaters.push(ph=>nodes.forEach(n=>n.style.setProperty("--dur",PH.gustavo.dur[ph]+"s")));
   }});
 
-card("g-orb",{name:"SpecialistOrb",stage:72,
+card("g-orb",{name:"Nimbus",stage:72,
   chars:"The same ring family as Gustavo, quieter and quicker: two muted rings, lower opacity ceiling, no error shake. A compact deputy.",
   tags:["--accent-pop /.75","2 rings","0.45–3s","no error shake"],
   build:st=>{
@@ -687,6 +716,27 @@ function rot3(p,rx,ry,rz){
   return[x,y,z];
 }
 const hex2rgb=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+const norm=v=>{const m=Math.hypot(v[0],v[1],v[2])||1;return[v[0]/m,v[1]/m,v[2]/m]};
+
+/* The orbiting bodies are real polyhedra, mixed around the rings. A sphere has no
+   readable orientation — it can tumble and you cannot tell. Tetrahedra, cubes,
+   octahedra and square pyramids each show their attitude as they turn, which is
+   where the sense of restless machinery comes from. Unit vertices + face indices;
+   winding is outward so face normals point out of the solid. */
+const K=1/Math.sqrt(3);
+const SOLIDS={
+  tetra:{v:[[K,K,K],[K,-K,-K],[-K,K,-K],[-K,-K,K]],
+         f:[[0,1,2],[0,3,1],[0,2,3],[1,3,2]]},
+  cube:{v:[[-K,-K,-K],[K,-K,-K],[K,K,-K],[-K,K,-K],
+           [-K,-K,K],[K,-K,K],[K,K,K],[-K,K,K]],
+        f:[[0,1,2,3],[5,4,7,6],[4,0,3,7],[1,5,6,2],[4,5,1,0],[3,2,6,7]]},
+  octa:{v:[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]],
+        f:[[0,2,4],[2,1,4],[1,3,4],[3,0,4],[2,0,5],[1,2,5],[3,1,5],[0,3,5]]},
+  pyr:{v:[[-.7,-.7,-.45],[.7,-.7,-.45],[.7,.7,-.45],[-.7,.7,-.45],[0,0,1.05]],
+       f:[[3,2,1,0],[0,1,4],[1,2,4],[2,3,4],[3,0,4]]}
+};
+const SHAPE_ORDER=["tetra","cube","octa","pyr"];
+const LIGHT=norm([-.45,-.55,.7]);
 
 function buildOrbit3D(st,card,{advanced}){
   const cv=document.createElement("canvas");
@@ -709,64 +759,93 @@ function buildOrbit3D(st,card,{advanced}){
   const beads=[];
   TRACKS.forEach((tk,ti)=>{
     for(let b=0;b<tk.beads;b++){
+      const n=beads.length;
       beads.push({ring:ti,a0:(b/tk.beads)*Math.PI*2,
-        col:BEAD_PAL[(ti*2+b)%5],spark:null});
+        col:BEAD_PAL[(ti*2+b)%5],spark:null,
+        shape:SHAPE_ORDER[n%SHAPE_ORDER.length],   /* mixed solids around the rings */
+        rate:[.5+(n%3)*.28, .35+(n%4)*.22, .18+(n%5)*.13],
+        phase:[n*1.1, n*.7, n*1.9]});
     }
   });
   const spin=TRACKS.map(()=>0);
   let t=0, coreNudge=null, nextSpark=advanced?.45:.28;
 
+  /* Thought comes in bursts, not on a metronome. A uniform random interval reads
+     as a machine ticking; clustering two to four firings then falling quiet reads
+     as something thinking — a flurry, then a pause, then another. */
+  let burst=0;
   function fireSpark(){
     const b=beads[(Math.random()*beads.length)|0];
-    if(b.spark)return;
+    if(b.spark){nextSpark=.12;return;}
     const type=advanced?(Math.random()*9)|0:0;
     b.spark={type,e:0,
       dur:[1.0,2.8,1.0,1.6,.6,.8,1.2,1.8,1.0][type],
       accent:(type===2||type===8)?ACCENTS[(Math.random()*ACCENTS.length)|0]:null};
-    if(type===5)coreNudge={e:0,dur:.6};
-    nextSpark=advanced?(.4+Math.random()*1.2):(.28+Math.random()*.82);
-    if(type===1)nextSpark+=1.5; if(type===7)nextSpark+=.8;
+    /* every firing jolts the core, not only type 5 — the centre is listening */
+    coreNudge={e:0,dur:type===5?.6:.34,amp:type===5?1:.42};
+
+    if(burst>0){ burst--; nextSpark=.08+Math.random()*.16; }
+    else if(Math.random()<(advanced?.42:.28)){
+      burst=1+((Math.random()*3)|0);           /* start a flurry */
+      nextSpark=.08+Math.random()*.16;
+    }else{
+      nextSpark=advanced?(.5+Math.random()*1.5):(.35+Math.random()*1.0);
+      if(type===1)nextSpark+=1.2; if(type===7)nextSpark+=.7;
+    }
   }
 
-  /* ── bead materials, one per spark type ──────────────────
-     The nine types differ in surface as much as in motion — a conic pinwheel, a
-     sparkle of concentric rings, an inverted dark-cored bead, a hollow one that is
-     only glow. Rendering them all as the same lit sphere is what made the first
-     canvas pass feel inert. `glow` is the accent when the spark has one, else
-     #d6d3d1 — warm pale stone, never pure white. */
-  function beadPaint(x,y,r,type,bgHex,glowHex,S){
-    const g=hex2rgb(bgHex), rgb=`rgb(${g[0]},${g[1]},${g[2]})`;
-    let fill,blur=0,hollow=false;
-    const rg=(ox,oy,ir,stops)=>{
-      const q=ctx.createRadialGradient(x+ox*r,y+oy*r,r*ir,x,y,r);
-      stops.forEach(s=>q.addColorStop(s[0],s[1]));return q;
-    };
+  /* per-spark-type surface: base colour, glow strength, and whether the solid is
+     drawn as wireframe (type 6 is a hollow body of pure glow in the source) */
+  function surface(type,bgHex,glowHex){
     switch(type){
-      case 0:  fill=rg(-.36,-.44,.05,[[0,"#ffffff"],[.4,"#fafaf9"],[.9,rgb]]); blur=.28; break;
-      case 1:  /* inverted: dark core, bright rim */
-               fill=rg(0,0,.1,[[.1,"#1c1917"],[.6,rgb],[.9,"#ffffff"]]); blur=.35; break;
-      case 2:  /* spinning conic pinwheel */
-               if(ctx.createConicGradient){
-                 const q=ctx.createConicGradient(Math.PI/4+t*3,x,y);
-                 [[0,"#ffffff"],[.25,rgb],[.5,"#ffffff"],[.75,rgb],[1,"#ffffff"]]
-                   .forEach(s=>q.addColorStop(s[0],s[1]));
-                 fill=q;
-               }else fill=rg(-.3,-.3,.05,[[0,"#ffffff"],[.55,rgb],[1,"#1c1917"]]);
-               blur=.4; break;
-      case 3:  { const q=ctx.createLinearGradient(x-r,y-r,x+r,y+r);
-                 q.addColorStop(0,"#ffffff");q.addColorStop(.4,rgb);q.addColorStop(1,"#1c1917");
-                 fill=q; blur=.2; } break;
-      case 4:  /* sparkle: concentric rings */
-               fill=rg(0,0,.02,[[0,"#ffffff"],[.15,rgb],[.3,"#1c1917"],
-                                [.45,"#ffffff"],[.6,rgb],[.75,"#1c1917"],[1,rgb]]); blur=.15; break;
-      case 5:  /* light from lower-right instead of upper-left */
-               fill=rg(.5,.5,.05,[[0,"#ffffff"],[.4,rgb],[.9,"#000000"]]); blur=.3; break;
-      case 6:  hollow=true; blur=.2; break;
-      case 7:  fill=rg(0,0,.02,[[0,glowHex],[.3,"#ffffff"],[.8,rgb]]); blur=.5; break;
-      case 8:  fill=rg(0,0,.05,[[.1,"#ffffff"],[.4,rgb],[1,"rgba(28,25,23,0)"]]); blur=.3; break;
-      default: fill=rg(-.36,-.4,.05,[[0,"#ffffff"],[.55,rgb],[1,"#1c1917"]]);
+      case 0: return{base:bgHex,tint:"#fafaf9",blur:.28,wire:false,flat:false};
+      case 1: return{base:bgHex,tint:"#1c1917",blur:.35,wire:false,flat:true};
+      case 2: return{base:glowHex,tint:"#ffffff",blur:.40,wire:false,flat:false};
+      case 3: return{base:bgHex,tint:"#ffffff",blur:.20,wire:false,flat:false};
+      case 4: return{base:bgHex,tint:"#ffffff",blur:.15,wire:false,flat:false};
+      case 5: return{base:bgHex,tint:"#000000",blur:.30,wire:false,flat:false};
+      case 6: return{base:glowHex,tint:glowHex,blur:.20,wire:true, flat:false};
+      case 7: return{base:glowHex,tint:"#ffffff",blur:.50,wire:false,flat:false};
+      case 8: return{base:bgHex,tint:"#ffffff",blur:.30,wire:false,flat:false};
+      default:return{base:bgHex,tint:"#ffffff",blur:0,  wire:false,flat:false};
     }
-    return{fill,blur:blur*S,hollow};
+  }
+
+  /* draw one solid: verts through its own rotation, then the shared projection */
+  function drawSolid(project,shape,world,rr,spinv,surf,alpha,fog,glowHex,S){
+    const S3=SOLIDS[shape], gc=hex2rgb(glowHex);
+    const pts=S3.v.map(v=>{
+      const rv=rot3(v,spinv[0],spinv[1],spinv[2]);
+      return project([world[0]+rv[0]*rr, world[1]+rv[1]*rr, world[2]+rv[2]*rr]);
+    });
+    const nrm=S3.v.map(v=>rot3(v,spinv[0],spinv[1],spinv[2]));
+    const faces=S3.f.map(f=>{
+      let zc=0,nx2=0,ny2=0,nz2=0;
+      f.forEach(i=>{zc+=pts[i].z;nx2+=nrm[i][0];ny2+=nrm[i][1];nz2+=nrm[i][2];});
+      const n=norm([nx2/f.length,ny2/f.length,nz2/f.length]);
+      return{f,z:zc/f.length,n};
+    }).sort((a,b)=>a.z-b.z);
+
+    if(surf.blur){ctx.shadowColor=`rgba(${gc[0]},${gc[1]},${gc[2]},.95)`;ctx.shadowBlur=surf.blur*S;}
+    faces.forEach(fc=>{
+      if(fc.n[2]<-0.15&&!surf.wire)return;                /* cull the far side  */
+      ctx.beginPath();
+      fc.f.forEach((i,k)=>k?ctx.lineTo(pts[i].x,pts[i].y):ctx.moveTo(pts[i].x,pts[i].y));
+      ctx.closePath();
+      if(surf.wire){
+        ctx.strokeStyle=`rgba(${gc[0]},${gc[1]},${gc[2]},${(.85*alpha).toFixed(3)})`;
+        ctx.lineWidth=1.2;ctx.stroke();return;
+      }
+      const lam=Math.max(0,fc.n[0]*LIGHT[0]+fc.n[1]*LIGHT[1]+fc.n[2]*LIGHT[2]);
+      const b=hex2rgb(surf.base), tn=hex2rgb(surf.tint);
+      const k=surf.flat?(1-lam):lam;                      /* type 1 inverts it  */
+      const mix=.18+.82*k;
+      const col=[0,1,2].map(i=>Math.round((b[i]*(1-mix)+tn[i]*mix)*fog));
+      ctx.fillStyle=`rgba(${col[0]},${col[1]},${col[2]},${alpha.toFixed(3)})`;
+      ctx.fill();
+      ctx.strokeStyle="rgba(0,0,0,.75)";ctx.lineWidth=.8;ctx.stroke();
+    });
+    ctx.shadowBlur=0;
   }
 
   function draw(dt){
@@ -785,10 +864,12 @@ function buildOrbit3D(st,card,{advanced}){
     let ki=0; while(ki<KT.length-2&&cyc>KT[ki+1])ki++;
     const f=(cyc-KT[ki])/(KT[ki+1]-KT[ki]||1);
     const coreScale=KS[ki]+(KS[ki+1]-KS[ki])*(f*f*(3-2*f));   /* smoothstep */
-    let nx=0,ny=0;
+    /* the core never sits perfectly still: a slow wander, plus a shove each time
+       a body fires — so the centre reads as reacting rather than anchoring */
+    let nx=Math.sin(t*.37)*1.6*S/112, ny=Math.cos(t*.29)*1.3*S/112;
     if(coreNudge){
-      const p=coreNudge.e/coreNudge.dur, d=Math.sin(p*Math.PI*3)*(1-p);
-      nx=d*8*S/112; ny=-d*6*S/112;
+      const p=coreNudge.e/coreNudge.dur, d=Math.sin(p*Math.PI*3)*(1-p)*(coreNudge.amp||1);
+      nx+=d*8*S/112; ny-=d*6*S/112;
     }
 
     const project=p=>{
@@ -817,7 +898,7 @@ function buildOrbit3D(st,card,{advanced}){
     const items=[];
     beads.forEach(b=>{
       const tk=TRACKS[b.ring], R=S*tk.radius;
-      let a=b.a0+spin[b.ring], pull=0, scale=1, alpha=1, jx=0, jy=0, square=0;
+      let a=b.a0+spin[b.ring], pull=0, scale=1, alpha=1, jx=0, jy=0;
       if(b.spark){
         const sp=b.spark; sp.e+=dt;
         const p=Math.min(sp.e/sp.dur,1);
@@ -827,7 +908,7 @@ function buildOrbit3D(st,card,{advanced}){
           case 0: pull=arc*.75; scale=1+1.1*arc; break;
           case 1: pull=Math.min(p*3,1)*.4*(1-Math.max(0,p-.7)/.3); scale=1+.4*Math.min(p*3,1); break;
           case 2: pull=arc*.75; scale=1+1.4*arc; break;
-          case 3: pull=arc*.5;  scale=1+arc; square=arc; break;
+          case 3: pull=arc*.5;  scale=1+arc; break;
           case 4: pull=0; scale=1+.5*arc;
                   jx=Math.sin(p*44)*4*S/112; jy=Math.cos(p*38)*4*S/112; break;
           case 5: pull=arc*.6;  scale=1+.8*arc; break;
@@ -837,12 +918,21 @@ function buildOrbit3D(st,card,{advanced}){
         }
         if(p>=1)b.spark=null;
       }
-      const lr=R*(1-pull);
-      const world=rot3([Math.cos(a)*lr,Math.sin(a)*lr,0],
+      /* Idle life. Without this the rings are machinery: bodies pinned to exact
+         radii, identical between flashes. Every body breathes on its own period,
+         drifts in and out along its radius, and lifts slightly out of its ring
+         plane — so the whole thing is never still and no two bodies are ever in
+         phase. This is most of what separates "alive" from "rotating". */
+      const life =1+.055*Math.sin(t*(1.05+b.rate[0])+b.phase[0]);
+      const drift=1+.045*Math.sin(t*(.62+b.rate[1]*.5)+b.phase[1]);
+      const lift  =    .055*Math.sin(t*(.44+b.rate[2]*.7)+b.phase[2]);
+      scale*=life;
+      const lr=R*(1-pull)*drift;
+      const world=rot3([Math.cos(a)*lr,Math.sin(a)*lr,R*lift],
                        rad(tk.tilt[0]),rad(tk.tilt[1]),rad(tk.tilt[2]));
       const pr=project(world);
       const sp=b.spark;
-      items.push({b,pr,scale,alpha,jx,jy,square,
+      items.push({b,pr,world,scale,alpha,jx,jy,
         accent:sp&&sp.accent, hot:!!sp,
         type:sp?sp.type:-1, p:sp?Math.min(sp.e/sp.dur,1):0,
         glow:(sp&&sp.accent)||"#d6d3d1"});
@@ -879,53 +969,29 @@ function buildOrbit3D(st,card,{advanced}){
         ctx.strokeStyle="rgba(0,0,0,.8)";ctx.lineWidth=1;ctx.stroke();
         return;
       }
-      const {it}=d, r=S*.055*it.scale*it.pr.s;
-      const x=it.pr.x+it.jx, y=it.pr.y+it.jy;
-      /* distance fog: far side of every ring sits back into the dark */
-      const depth=(it.pr.z/(S*.42)+1)/2;                /* 0 far … 1 near     */
+      const {it}=d, b=it.b;
+      const rr=S*.062*it.scale;                    /* world size; perspective scales it */
+      /* distance fog: the far side of every ring sits back into the dark */
+      const depth=(it.pr.z/(S*.42)+1)/2;
       const fog=.45+.55*Math.max(0,Math.min(1,depth));
-      ctx.save();
-      ctx.globalAlpha=it.alpha*fog;
+      /* own tumble, plus a hard spin-up while sparking */
+      const boost=it.hot?(1+6*Math.sin(Math.min(it.p,1)*Math.PI)):1;
+      const spinv=[b.phase[0]+t*b.rate[0]*boost,
+                   b.phase[1]+t*b.rate[1]*boost,
+                   b.phase[2]+t*b.rate[2]*boost];
+      const surf=it.hot?surface(it.type,it.accent||b.col,it.glow)
+                       :surface(-1,b.col,"#d6d3d1");
 
-      if(it.hot){
-        const paint=beadPaint(x,y,r,it.type,it.accent||it.b.col,it.glow,S);
+      ctx.save();
+      ctx.translate(it.jx,it.jy);                  /* type 4's jitter */
+      drawSolid(project,b.shape,it.world,rr,spinv,surf,it.alpha,fog,it.glow,S);
+      /* type 8's ring is born at the body and expands as it travels inward */
+      if(it.type===8){
         const gc=hex2rgb(it.glow);
-        ctx.shadowColor=`rgba(${gc[0]},${gc[1]},${gc[2]},.95)`;
-        ctx.shadowBlur=paint.blur*it.scale;
-        if(paint.hollow){
-          /* type 6 is only glow — a bubble with nothing inside it */
-          ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
-          ctx.strokeStyle=`rgba(${gc[0]},${gc[1]},${gc[2]},.9)`;
-          ctx.lineWidth=Math.max(1,r*.22);ctx.stroke();
-        }else if(it.square>.02){          /* type 3 morphs circle → square, rotating */
-          const q=r*.92;
-          ctx.translate(x,y);ctx.rotate(it.square*Math.PI/2);ctx.translate(-x,-y);
-          ctx.beginPath();ctx.rect(x-q,y-q,q*2,q*2);
-          ctx.fillStyle=paint.fill;ctx.fill();
-          ctx.strokeStyle="rgba(0,0,0,.9)";ctx.lineWidth=1;ctx.stroke();
-        }else{
-          ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
-          ctx.fillStyle=paint.fill;ctx.fill();
-          ctx.strokeStyle="rgba(0,0,0,.9)";ctx.lineWidth=1;ctx.stroke();
-        }
-        /* type 8's ring is born at the bead and expands as it travels inward */
-        if(it.type===8){
-          ctx.shadowBlur=0;
-          ctx.beginPath();ctx.arc(x,y,r*(1+it.p*4),0,Math.PI*2);
-          ctx.strokeStyle=`rgba(${gc[0]},${gc[1]},${gc[2]},${(.9*(1-it.p)).toFixed(3)})`;
-          ctx.lineWidth=1.5;ctx.stroke();
-        }
-      }else{
-        /* idle beads carry no glow at all in the source — the flashes only read
-           as flashes because the resting state is completely matte */
-        const c=hex2rgb(it.b.col);
-        const g2=ctx.createRadialGradient(x-r*.36,y-r*.4,r*.05,x,y,r);
-        g2.addColorStop(0,"#ffffff");
-        g2.addColorStop(.55,`rgb(${c[0]},${c[1]},${c[2]})`);
-        g2.addColorStop(1,"#1c1917");
-        ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
-        ctx.fillStyle=g2;ctx.fill();
-        ctx.strokeStyle="rgba(0,0,0,.9)";ctx.lineWidth=1;ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(it.pr.x,it.pr.y,rr*it.pr.s*(1+it.p*4),0,Math.PI*2);
+        ctx.strokeStyle=`rgba(${gc[0]},${gc[1]},${gc[2]},${(.9*(1-it.p)).toFixed(3)})`;
+        ctx.lineWidth=1.5;ctx.stroke();
       }
       ctx.restore();
     });
@@ -938,12 +1004,12 @@ function buildOrbit3D(st,card,{advanced}){
   startDriver();
 }
 
-card("g-orbit",{name:"RebeccaSwissOrbit",
+card("g-orbit",{name:"Orrery",
   chars:"Three tilted rings of grey beads around a beating core. Calm and monochrome: one repeating inward spark, no colour, no core nudge.",
   tags:["stone palette","tracks 9 / 11 / 13s","core beat 5.4s","spark 0.28–1.1s"],
   build:(st,c)=>buildOrbit3D(st,c,{advanced:false})});
 
-card("g-orbit",{name:"RebeccaAdvancedOrbit",
+card("g-orbit",{name:"Maelstrom",
   chars:"Identical geometry, far more restless: nine distinct spark behaviours — burst, drift, sharp, morph, jitter, core-nudge, flicker, punch, ripple — each with its own trail, and a core that gets shoved when a bead fires.",
   tags:["+5 accents","tracks 9 / 11 / 13s","9 spark types","0.4–1.2s+"],
   build:(st,c)=>buildOrbit3D(st,c,{advanced:true})});
