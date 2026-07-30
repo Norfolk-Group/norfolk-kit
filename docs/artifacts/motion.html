@@ -164,12 +164,8 @@ code{font-family:var(--mono);font-size:.92em;color:var(--accent)}
 .tri{animation:tp calc(1.4s / var(--spd)) ease-in-out infinite;animation-delay:var(--d,0s)}
 @keyframes tp{0%,100%{opacity:.45}50%{opacity:1}}
 
-/* orbits: tilted tracks + beads */
-.orbit-scene{position:absolute;inset:0;perspective:600px}
-.orbit-rig{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(-15deg)}
-.track{position:absolute;border:1px solid rgba(0,0,0,.55);border-radius:50%;
-  transform-style:preserve-3d;animation:rot calc(var(--dur) / var(--spd)) ease-in-out infinite}
-.bead{position:absolute;border-radius:50%;border:1px solid #000}
+/* the orbits render to canvas with real 3D math, so they need no CSS of their own.
+   .core is retained: RebeccaAliveGeometry still uses it for its glowing centre. */
 .core{position:absolute;left:50%;top:50%;border-radius:50%;border:1px solid rgba(0,0,0,.8);
   background:radial-gradient(circle at 35% 30%,#fff 0%,#f5f5f4 40%,#1c1917 100%);
   animation:corebeat calc(5.4s / var(--spd)) ease-in-out infinite;z-index:4}
@@ -177,10 +173,6 @@ code{font-family:var(--mono);font-size:.92em;color:var(--accent)}
   22%{transform:translate(-50%,-50%) scale(1.05)}38%{transform:translate(-50%,-50%) scale(1.35)}
   52%{transform:translate(-50%,-50%) scale(1.15);opacity:.88}68%{transform:translate(-50%,-50%) scale(1)}
   84%{transform:translate(-50%,-50%) scale(1.2)}100%{transform:translate(-50%,-50%) scale(1)}}
-.ripple{position:absolute;left:50%;top:50%;border-radius:50%;border:1.25px solid rgba(255,255,255,.8);
-  animation:ripple calc(1.6s / var(--spd)) ease-out infinite;z-index:3}
-@keyframes ripple{0%{transform:translate(-50%,-50%) scale(1);opacity:.9}100%{transform:translate(-50%,-50%) scale(6);opacity:0}}
-.bound{position:absolute;border-radius:50%;border:1px solid rgba(0,0,0,.35)}
 
 /* nexus */
 .nexus{position:absolute;inset:0;display:grid;place-items:center}
@@ -420,6 +412,7 @@ function sheet(rule){
   styleTag.sheet.insertRule(rule,styleTag.sheet.cssRules.length);
 }
 const timers=[];
+const canvasScenes=[];
 
 function card(gridId,{name,chars,tags,well,stage,build,noSpeed}){
   const c=el("div","card");
@@ -670,68 +663,230 @@ card("g-orb",{name:"SpecialistOrb",stage:72,
     orbUpdaters.push(ph=>nodes.forEach(n=>n.style.setProperty("--dur",PH.specialist.dur[ph]+"s")));
   }});
 
-/* ═══ ORBITS ═══ */
-const TRACKS=[{tilt:"rotateX(70deg)",beads:6,radius:.40,dur:9},
-              {tilt:"rotateY(70deg)",beads:5,radius:.34,dur:11},
-              {tilt:"rotateZ(45deg) rotateX(60deg)",beads:4,radius:.28,dur:13}];
+/* ═══ ORBITS — real 3D on canvas ═══════════════════════════
+   The source uses CSS 3D transforms, which cannot depth-sort: a bead behind the
+   core still paints over it, and nothing attenuates with distance. Rebuilt here
+   with actual 3D math — perspective projection, painter's-algorithm sorting,
+   distance fog and size falloff — so the rings genuinely pass in front of and
+   behind the core. Canvas rather than 800 composited DOM layers, which also makes
+   this the cheapest specimen on the page instead of the most expensive. */
+const TRACKS=[{tilt:[70,0,0],   beads:6,radius:.40,dur:9},
+              {tilt:[0,70,0],   beads:5,radius:.34,dur:11},
+              {tilt:[60,0,45],  beads:4,radius:.28,dur:13}];
 const BEAD_PAL=["#f5f5f4","#d6d3d1","#a8a29e","#78716c","#44403c"];
+const ACCENTS=["#ea580c","#3b82f6","#10b981","#f59e0b","#8b5cf6"];
+const RIG_TILT=-15*Math.PI/180;          /* the source's static rotateX(-15deg) */
+const FOCAL=600;                         /* matches CSS perspective: 600px      */
 
-function buildOrbit(st,{accents}){
-  const size=112;
-  const scene=el("div","orbit-scene"),rig=el("div","orbit-rig");
-  const bound=el("div","bound");
-  bound.style.width=bound.style.height=(size*.92)+"px";
-  bound.style.left=bound.style.top=(size*.04)+"px";rig.appendChild(bound);
-  const allBeads=[];
+const rad=d=>d*Math.PI/180;
+function rot3(p,rx,ry,rz){
+  let[x,y,z]=p,c,s;
+  if(rz){c=Math.cos(rz);s=Math.sin(rz);[x,y]=[x*c-y*s,x*s+y*c];}
+  if(rx){c=Math.cos(rx);s=Math.sin(rx);[y,z]=[y*c-z*s,y*s+z*c];}
+  if(ry){c=Math.cos(ry);s=Math.sin(ry);[x,z]=[x*c+z*s,-x*s+z*c];}
+  return[x,y,z];
+}
+const hex2rgb=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+
+function buildOrbit3D(st,card,{advanced}){
+  const cv=document.createElement("canvas");
+  cv.style.cssText="position:absolute;inset:0;width:100%;height:100%";
+  st.appendChild(cv);
+  const ctx=cv.getContext("2d");
+  let W=0,H=0,dpr=1;
+  function resize(){
+    const r=st.getBoundingClientRect();
+    if(!r.width)return false;
+    dpr=Math.min(devicePixelRatio||1,2);
+    W=r.width;H=r.height;
+    cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    return true;
+  }
+
+  /* beads live on their ring in ring-local space; the ring's tilt lifts them into
+     world space, so a ring's spin stays a rotation in its own plane */
+  const beads=[];
   TRACKS.forEach((tk,ti)=>{
-    const r=size*tk.radius, t=el("div","track");
-    t.style.width=t.style.height=(r*2)+"px";
-    t.style.left=t.style.top=`calc(50% - ${r}px)`;
-    t.style.setProperty("--dur",tk.dur+"s");
-    /* the tilt must survive the spin animation: wrap it */
-    const tilt=el("div");tilt.style.cssText="position:absolute;inset:0;transform-style:preserve-3d;transform:"+tk.tilt;
-    tilt.appendChild(t);
     for(let b=0;b<tk.beads;b++){
-      const a=(b/tk.beads)*Math.PI*2, d=size*.11;
-      const bead=el("div","bead");
-      bead.style.width=bead.style.height=d+"px";
-      bead.style.left=(r+Math.cos(a)*r-d/2)+"px";
-      bead.style.top=(r+Math.sin(a)*r-d/2)+"px";
-      const bg=BEAD_PAL[(ti*2+b)%5];
-      bead.dataset.bg=bg;
-      bead.style.background=`radial-gradient(circle at 32% 28%,#fff,${bg} 55%,#1c1917 130%)`;
-      bead.style.transition="transform .45s ease-out, box-shadow .45s ease-out, background .45s ease-out";
-      t.appendChild(bead);allBeads.push(bead);
+      beads.push({ring:ti,a0:(b/tk.beads)*Math.PI*2,
+        col:BEAD_PAL[(ti*2+b)%5],spark:null});
     }
-    rig.appendChild(tilt);
   });
-  const core=el("div","core");core.style.width=core.style.height=(size*.2)+"px";
-  core.style.marginLeft=core.style.marginTop="0";
-  const rip=el("div","ripple");rip.style.width=rip.style.height=(size*.2)+"px";
-  rig.append(rip,core);
-  scene.appendChild(rig);st.appendChild(scene);
+  const spin=TRACKS.map(()=>0);
+  let t=0, ripples=[], coreNudge=null, nextSpark=advanced?.45:.28;
 
-  let k=0;
-  timers.push({base:accents?900:600,fn:()=>{
-    const b=allBeads[k%allBeads.length];k+=3;
-    const ac=accents?accents[k%accents.length]:null;
-    b.style.transform="scale(2.1)";
-    b.style.boxShadow=`0 0 ${size*.28}px rgba(255,255,255,.95)`;
-    if(ac)b.style.background=`radial-gradient(circle at 32% 28%,#fff,${ac} 70%)`;
-    setTimeout(()=>{b.style.transform="";b.style.boxShadow="";
-      b.style.background=`radial-gradient(circle at 32% 28%,#fff,${b.dataset.bg} 55%,#1c1917 130%)`;},450);
-  }});
+  function fireSpark(){
+    const b=beads[(Math.random()*beads.length)|0];
+    if(b.spark)return;
+    const type=advanced?(Math.random()*9)|0:0;
+    b.spark={type,e:0,
+      dur:[1.0,2.8,1.0,1.6,.6,.8,1.2,1.8,1.0][type],
+      accent:(type===2||type===8)?ACCENTS[(Math.random()*ACCENTS.length)|0]:null};
+    if(type===8)ripples.push({e:0,dur:1.0});
+    if(type===5)coreNudge={e:0,dur:.6};
+    nextSpark=advanced?(.4+Math.random()*1.2):(.28+Math.random()*.82);
+    if(type===1)nextSpark+=1.5; if(type===7)nextSpark+=.8;
+  }
+
+  function draw(dt){
+    if(!W&&!resize())return;
+    t+=dt;
+    TRACKS.forEach((tk,i)=>{spin[i]+=dt*(Math.PI*2/tk.dur)});
+    nextSpark-=dt; if(nextSpark<=0)fireSpark();
+    ripples=ripples.filter(r=>(r.e+=dt)<r.dur);
+    if(coreNudge&&(coreNudge.e+=dt)>=coreNudge.dur)coreNudge=null;
+
+    const cx=W/2, cy=H/2, S=Math.min(W,H);
+    ctx.clearRect(0,0,W,H);
+
+    /* core beat: the source's 8-step keyframe curve, sampled continuously */
+    const cyc=(t%5.4)/5.4;
+    const KS=[1,1.15,1.05,1.35,1.15,1.0,1.2,1.0], KT=[0,.10,.22,.38,.52,.68,.84,1];
+    let ki=0; while(ki<KT.length-2&&cyc>KT[ki+1])ki++;
+    const f=(cyc-KT[ki])/(KT[ki+1]-KT[ki]||1);
+    const coreScale=KS[ki]+(KS[ki+1]-KS[ki])*(f*f*(3-2*f));   /* smoothstep */
+    let nx=0,ny=0;
+    if(coreNudge){
+      const p=coreNudge.e/coreNudge.dur, d=Math.sin(p*Math.PI*3)*(1-p);
+      nx=d*8*S/112; ny=-d*6*S/112;
+    }
+
+    const project=p=>{
+      const[x,y,z]=rot3(p,RIG_TILT,0,0);
+      const s=FOCAL/(FOCAL-z*(S/112));
+      return{x:cx+x*s,y:cy+y*s,z,s};
+    };
+
+    /* ── ring paths: sample the circle in 3D so any tilt projects correctly ── */
+    TRACKS.forEach((tk,i)=>{
+      const R=S*tk.radius, N=72;
+      ctx.beginPath();
+      for(let k=0;k<=N;k++){
+        const a=(k/N)*Math.PI*2;
+        const p=project(rot3([Math.cos(a)*R,Math.sin(a)*R,0],
+                             rad(tk.tilt[0]),rad(tk.tilt[1]),rad(tk.tilt[2])));
+        k?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y);
+      }
+      ctx.strokeStyle="rgba(0,0,0,.55)";ctx.lineWidth=1;ctx.stroke();
+    });
+    /* outer boundary */
+    ctx.beginPath();ctx.arc(cx,cy,S*.46,0,Math.PI*2);
+    ctx.strokeStyle="rgba(0,0,0,.35)";ctx.lineWidth=1;ctx.stroke();
+
+    /* ── resolve bead world positions ─────────────────────── */
+    const items=[];
+    beads.forEach(b=>{
+      const tk=TRACKS[b.ring], R=S*tk.radius;
+      let a=b.a0+spin[b.ring], pull=0, scale=1, alpha=1, jx=0, jy=0, square=0;
+      if(b.spark){
+        const sp=b.spark; sp.e+=dt;
+        const p=Math.min(sp.e/sp.dur,1);
+        const ease=1-Math.pow(1-p,3);
+        const arc=Math.sin(p*Math.PI);                 /* out and back        */
+        switch(sp.type){
+          case 0: pull=arc*.75; scale=1+1.1*arc; break;
+          case 1: pull=Math.min(p*3,1)*.4*(1-Math.max(0,p-.7)/.3); scale=1+.4*Math.min(p*3,1); break;
+          case 2: pull=arc*.75; scale=1+1.4*arc; break;
+          case 3: pull=arc*.5;  scale=1+arc; square=arc; break;
+          case 4: pull=0; scale=1+.5*arc;
+                  jx=Math.sin(p*44)*4*S/112; jy=Math.cos(p*38)*4*S/112; break;
+          case 5: pull=arc*.6;  scale=1+.8*arc; break;
+          case 6: pull=arc*.5;  scale=1+.5*arc; alpha=Math.abs(Math.cos(p*Math.PI*2)); break;
+          case 7: pull=0;       scale=1+3*Math.sin(p*Math.PI); break;
+          case 8: pull=arc*.7;  scale=1+1.5*arc; break;
+        }
+        if(p>=1)b.spark=null;
+      }
+      const lr=R*(1-pull);
+      const world=rot3([Math.cos(a)*lr,Math.sin(a)*lr,0],
+                       rad(tk.tilt[0]),rad(tk.tilt[1]),rad(tk.tilt[2]));
+      const pr=project(world);
+      items.push({b,pr,scale,alpha,jx,jy,square,
+        accent:b.spark&&b.spark.accent,hot:!!b.spark});
+    });
+
+    /* trails: drawn under everything, core → bead */
+    items.forEach(it=>{
+      if(!it.hot)return;
+      const ty=it.b.spark.type;
+      if(ty===4||ty===7)return;                        /* these don't trail   */
+      const g=ctx.createLinearGradient(cx,cy,it.pr.x,it.pr.y);
+      const c=it.accent?hex2rgb(it.accent):[255,255,255];
+      g.addColorStop(0,`rgba(${c[0]},${c[1]},${c[2]},0)`);
+      g.addColorStop(1,`rgba(${c[0]},${c[1]},${c[2]},.55)`);
+      ctx.beginPath();ctx.moveTo(cx+nx,cy+ny);ctx.lineTo(it.pr.x,it.pr.y);
+      ctx.strokeStyle=g;ctx.lineWidth=1.25*it.pr.s;ctx.stroke();
+    });
+
+    /* ── depth sort: core is an occluder like any other body ── */
+    const coreR=S*.10*coreScale;
+    const drawn=items.map(it=>({z:it.pr.z,kind:"bead",it}));
+    drawn.push({z:0,kind:"core"});
+    drawn.sort((a,b)=>a.z-b.z);
+
+    drawn.forEach(d=>{
+      if(d.kind==="core"){
+        const x=cx+nx,y=cy+ny;
+        const g=ctx.createRadialGradient(x-coreR*.3,y-coreR*.4,coreR*.1,x,y,coreR);
+        g.addColorStop(0,"#ffffff");g.addColorStop(.4,"#f5f5f4");g.addColorStop(1,"#1c1917");
+        ctx.beginPath();ctx.arc(x,y,coreR,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+        ctx.strokeStyle="rgba(0,0,0,.8)";ctx.lineWidth=1;ctx.stroke();
+        ripples.forEach(r=>{
+          const p=r.e/r.dur;
+          ctx.beginPath();ctx.arc(x,y,coreR*(1+p*5),0,Math.PI*2);
+          ctx.strokeStyle=`rgba(255,255,255,${(.9*(1-p)).toFixed(3)})`;
+          ctx.lineWidth=1.25;ctx.stroke();
+        });
+        return;
+      }
+      const {it}=d, r=S*.055*it.scale*it.pr.s;
+      const x=it.pr.x+it.jx, y=it.pr.y+it.jy;
+      /* distance fog: far side of every ring sits back into the dark */
+      const depth=(it.pr.z/(S*.42)+1)/2;                /* 0 far … 1 near     */
+      const fog=.45+.55*Math.max(0,Math.min(1,depth));
+      const base=it.accent||it.b.col;
+      const c=hex2rgb(base);
+      ctx.save();
+      ctx.globalAlpha=it.alpha*fog;
+      if(it.hot){
+        ctx.shadowColor=it.accent?`rgba(${c[0]},${c[1]},${c[2]},.95)`:"rgba(255,255,255,.95)";
+        ctx.shadowBlur=S*.22*it.scale;
+      }
+      const g=ctx.createRadialGradient(x-r*.36,y-r*.4,r*.05,x,y,r);
+      g.addColorStop(0,"#ffffff");
+      g.addColorStop(it.hot?.7:.55,`rgb(${c[0]},${c[1]},${c[2]})`);
+      g.addColorStop(1,"#1c1917");
+      ctx.fillStyle=g;
+      if(it.square>.02){                                /* type 3 morphs shape */
+        const q=r*.92, ang=it.square*Math.PI/2;
+        ctx.translate(x,y);ctx.rotate(ang);
+        ctx.beginPath();ctx.rect(-q,-q,q*2,q*2);ctx.fill();
+        ctx.strokeStyle="rgba(0,0,0,.9)";ctx.lineWidth=1;ctx.stroke();
+      }else{
+        ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
+        ctx.strokeStyle="rgba(0,0,0,.9)";ctx.lineWidth=1;ctx.stroke();
+      }
+      ctx.restore();
+    });
+  }
+
+  resize();
+  addEventListener("resize",resize);
+  canvasScenes.push({draw,card});
+  draw(0);            /* paint one frame immediately, so it's never blank */
+  startDriver();
 }
 
 card("g-orbit",{name:"RebeccaSwissOrbit",
   chars:"Three tilted rings of grey beads around a beating core. Calm and monochrome: one repeating inward spark, no colour, no core nudge.",
-  tags:["stone palette","tracks 9 / 11 / 13s","core beat 5.4s","spark ~0.3–1.1s"],
-  build:st=>buildOrbit(st,{accents:null})});
+  tags:["stone palette","tracks 9 / 11 / 13s","core beat 5.4s","spark 0.28–1.1s"],
+  build:(st,c)=>buildOrbit3D(st,c,{advanced:false})});
 
 card("g-orbit",{name:"RebeccaAdvancedOrbit",
-  chars:"Identical geometry, far more restless: nine distinct spark behaviours — burst, drift, morph, jitter, flicker, ripple — and beads that nudge the core when they fire.",
+  chars:"Identical geometry, far more restless: nine distinct spark behaviours — burst, drift, sharp, morph, jitter, core-nudge, flicker, punch, ripple — each with its own trail, and a core that gets shoved when a bead fires.",
   tags:["+5 accents","tracks 9 / 11 / 13s","9 spark types","0.4–1.2s+"],
-  build:st=>buildOrbit(st,{accents:["#ea580c","#3b82f6","#10b981","#f59e0b","#8b5cf6"]})});
+  build:(st,c)=>buildOrbit3D(st,c,{advanced:true})});
 
 /* ── timer engine ─────────────────────────────────────────
    Drives the state-machine specimens: glyph sequences, bar-chart scenes, orbit
@@ -748,6 +903,31 @@ function schedule(t){
 }
 if(!reduced)timers.forEach(schedule);
 
+/* ── canvas driver ────────────────────────────────────────
+   The 3D orbit specimens need a continuous clock. Prefers requestAnimationFrame,
+   but watchdogs it: if no frame arrives within 500ms — which is what happens in
+   embedded and headless renderers — it falls back to a timer so the orbits still
+   turn instead of sitting frozen. */
+let lastT=0, rafAlive=false, driving=false;
+function frame(now){
+  if(!lastT)lastT=now;
+  const dt=Math.min((now-lastT)/1000,.05)*rate; lastT=now;
+  rafAlive=true;
+  canvasScenes.forEach(s=>{ if(!s.card._off)s.draw(dt) });
+  if(driving)requestAnimationFrame(frame);
+}
+function startDriver(){
+  if(driving||reduced)return; driving=true;
+  requestAnimationFrame(frame);
+  setTimeout(()=>{
+    if(rafAlive)return;
+    driving=false;                                  /* rAF is not firing here */
+    setInterval(()=>{
+      canvasScenes.forEach(s=>{ if(!s.card._off)s.draw(.016*rate) });
+    },16);
+  },500);
+}
+
 /* ── controls ─────────────────────────────────────────── */
 const root=document.documentElement;
 const spd=$("#spd"),sz=$("#sz"),sw=$("#sw"),ph=$("#ph"),ac=$("#ac");
@@ -761,6 +941,8 @@ sz.addEventListener("input",()=>{
   document.querySelectorAll(".stage").forEach(s=>{
     if(!s.dataset.fixed)s.style.setProperty("--stage",sz.value+"px");
   });
+  /* canvases carry their own backing-store size and must be re-measured */
+  dispatchEvent(new Event("resize"));
 });
 sw.addEventListener("input",()=>{root.style.setProperty("--sw",sw.value);
   $("#swo").textContent=parseFloat(sw.value).toFixed(1)});
