@@ -1,0 +1,813 @@
+<title>Norfolk Kit — Motion Catalog</title>
+
+<style>
+:root{
+  --stone-50:#fafaf9; --stone-100:#f5f5f4; --stone-200:#e7e5e4; --stone-300:#d6d3d1;
+  --stone-400:#a8a29e; --stone-500:#78716c; --stone-600:#57534e; --stone-700:#44403c;
+  --stone-800:#292524; --stone-900:#1c1917; --stone-950:#0f0d0c;
+  --ember:#ea580c; --amber:#f59e0b; --bone:#d6d3d1; --indigo:#6366f1;
+
+  --ground:#f7f6f4;
+  --panel:#ffffff;
+  --ink:#1c1917;
+  --ink-soft:#57534e;
+  --ink-faint:#8b8580;
+  --rule:#e3dfda;
+  --accent:var(--ember);
+
+  --spd:1;
+  --sz:112;
+  --sw:4;
+
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","Roboto Mono",Menlo,Consolas,monospace;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{ --ground:#141210; --panel:#1c1917; --ink:#f5f5f4; --ink-soft:#b5aea8;
+         --ink-faint:#857d76; --rule:#302b27; }
+}
+:root[data-theme="dark"]{ --ground:#141210; --panel:#1c1917; --ink:#f5f5f4; --ink-soft:#b5aea8;
+       --ink-faint:#857d76; --rule:#302b27; }
+:root[data-theme="light"]{ --ground:#f7f6f4; --panel:#ffffff; --ink:#1c1917; --ink-soft:#57534e;
+       --ink-faint:#8b8580; --rule:#e3dfda; }
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);
+  font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 96px}
+
+/* ── masthead ─────────────────────────────────────────── */
+header{padding:56px 0 28px;border-bottom:1px solid var(--rule)}
+.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-faint);margin:0 0 14px}
+h1{font-size:clamp(30px,4.4vw,46px);line-height:1.02;letter-spacing:-.028em;font-weight:600;
+  margin:0 0 14px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent)}
+.lede{max-width:62ch;color:var(--ink-soft);font-size:15px;margin:0}
+
+/* ── control bar ──────────────────────────────────────── */
+.controls{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--ground) 92%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);margin-bottom:8px}
+.controls-in{max-width:1180px;margin:0 auto;padding:12px 24px;display:flex;flex-wrap:wrap;
+  gap:10px 26px;align-items:center}
+.ctl{display:flex;align-items:center;gap:9px}
+.ctl > label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink-faint);white-space:nowrap}
+.ctl output{font-family:var(--mono);font-size:11.5px;color:var(--accent);min-width:3.6ch;
+  font-variant-numeric:tabular-nums}
+input[type=range]{width:104px;accent-color:var(--accent);height:18px}
+input[type=color]{width:26px;height:22px;padding:0;border:1px solid var(--rule);
+  border-radius:3px;background:none;cursor:pointer}
+select,.btn{font-family:var(--mono);font-size:11px;color:var(--ink);background:var(--panel);
+  border:1px solid var(--rule);border-radius:4px;padding:4px 8px;cursor:pointer}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ── sections ─────────────────────────────────────────── */
+section{padding-top:44px}
+.sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+h2{font-size:19px;letter-spacing:-.012em;font-weight:600;margin:0}
+.count{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);letter-spacing:.1em}
+.sec-note{color:var(--ink-soft);max-width:66ch;margin:0 0 22px;font-size:13.5px}
+
+/* ── specimen grid ────────────────────────────────────── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:18px}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:7px;overflow:hidden;
+  display:flex;flex-direction:column}
+/* specimen wells stay dark: these animations were authored for firelit stone grounds */
+.well{position:relative;aspect-ratio:1;display:grid;place-items:center;
+  background:linear-gradient(140deg,#292524,#0f0d0c);border-bottom:1px solid var(--rule);
+  overflow:hidden}
+.well.ember{background:linear-gradient(140deg,#2a1c12,#120b07)}
+.well.amber{background:linear-gradient(35deg,#292524,#2c1608)}
+.stage{position:relative;width:var(--stage,112px);height:var(--stage,112px)}
+.meta{padding:11px 13px 13px;display:flex;flex-direction:column;gap:7px}
+.name{font-family:var(--mono);font-size:12px;letter-spacing:-.01em;color:var(--ink);word-break:break-word}
+.chars{color:var(--ink-soft);font-size:12px;line-height:1.4}
+.specs{display:flex;flex-wrap:wrap;gap:4px;margin-top:1px}
+.tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;color:var(--ink-faint);
+  border:1px solid var(--rule);border-radius:3px;padding:1.5px 5px;white-space:nowrap}
+.tag.hot{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 42%,var(--rule))}
+.row{display:flex;align-items:center;gap:7px;margin-top:2px}
+.row input[type=range]{width:100%}
+.row span{font-family:var(--mono);font-size:9.5px;color:var(--ink-faint);letter-spacing:.1em}
+
+/* ── excluded / notes ─────────────────────────────────── */
+.notes{margin-top:52px;border-top:1px solid var(--rule);padding-top:26px;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));gap:26px}
+.notes h3{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-faint);margin:0 0 9px;font-weight:400}
+.notes p,.notes li{color:var(--ink-soft);font-size:13px;margin:0 0 7px}
+.notes ul{margin:0;padding-left:16px}
+code{font-family:var(--mono);font-size:.92em;color:var(--accent)}
+
+/* ═══ ANIMATION PRIMITIVES ═══════════════════════════════ */
+/* every duration divided by --spd so the sliders retime everything live */
+
+/* cube family: CSS 3D, 27 cubies */
+.cube-scene{position:absolute;inset:0;perspective:1000px}
+.cube{position:absolute;inset:0;transform-style:preserve-3d;
+  animation:cubeSpin calc(15s / var(--spd)) linear infinite}
+@keyframes cubeSpin{from{transform:rotateX(-25deg) rotateY(0)}to{transform:rotateX(-25deg) rotateY(360deg)}}
+.cube.wobble{animation:cubeWobble calc(12s / var(--spd)) ease-in-out infinite}
+@keyframes cubeWobble{
+  0%{transform:rotateX(-25deg) rotateY(-45deg)} 25%{transform:rotateX(-15deg) rotateY(-25deg)}
+  50%{transform:rotateX(-35deg) rotateY(-65deg)} 75%{transform:rotateX(-20deg) rotateY(-35deg)}
+  100%{transform:rotateX(-25deg) rotateY(-45deg)}}
+.cube.wobble.pulse{animation:cubeWobblePulse calc(12s / var(--spd)) ease-in-out infinite}
+@keyframes cubeWobblePulse{
+  0%{transform:rotateX(-25deg) rotateY(-45deg) scale(1)} 25%{transform:rotateX(-15deg) rotateY(-25deg) scale(.85)}
+  50%{transform:rotateX(-35deg) rotateY(-65deg) scale(1.05)} 75%{transform:rotateX(-20deg) rotateY(-35deg) scale(.9)}
+  100%{transform:rotateX(-25deg) rotateY(-45deg) scale(1)}}
+.orbit{position:absolute;inset:0;transform-style:preserve-3d}
+.pos{position:absolute;transform-style:preserve-3d}
+.face{position:absolute;inset:0;border:1.5px solid #000;backface-visibility:hidden}
+.glow{position:absolute;inset:0;border-radius:50%;background:rgba(99,102,241,.2);
+  filter:blur(18px);animation:glowPulse calc(4s / var(--spd)) ease-in-out infinite}
+@keyframes glowPulse{0%,100%{transform:scale(.9);opacity:.3}50%{transform:scale(1.05);opacity:.6}}
+
+/* lascaux family: self-drawing marks */
+.glyph{position:absolute;inset:0}
+.glyph svg{width:100%;height:100%;padding:12%;box-sizing:border-box;overflow:visible}
+.glyph path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.mark{stroke-width:var(--sw);stroke-dasharray:1;stroke-dashoffset:1;
+  animation:draw calc(.55s / var(--spd)) ease-out forwards,
+            flick calc(2.1s / var(--spd)) ease-in-out infinite calc(.55s / var(--spd))}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes flick{0%,100%{opacity:.6}20%{opacity:1}45%{opacity:.72}70%{opacity:.97}}
+.shimmer{stroke-width:2;stroke-dasharray:2 18;opacity:.65;mix-blend-mode:screen;
+  animation:shim calc(4.4s / var(--spd)) linear infinite}
+@keyframes shim{to{stroke-dashoffset:-200}}
+.tracer{stroke:#fff;stroke-width:5;stroke-dasharray:6 400;
+  animation:trace calc(1.1s / var(--spd)) linear infinite}
+@keyframes trace{0%{stroke-dashoffset:0;opacity:1}60%{opacity:1}85%{opacity:.6}100%{stroke-dashoffset:-400;opacity:0}}
+.glyph.breathe{animation:breathe calc(3.2s / var(--spd)) ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1)}28%{transform:scale(1.022)}50%{transform:scale(1.008)}78%{transform:scale(1.03)}}
+.firelight{position:absolute;inset:0;background:radial-gradient(circle at 42% 38%,rgba(234,88,12,.34),transparent 62%);
+  animation:fire calc(7.6s / var(--spd)) ease-in-out infinite;pointer-events:none}
+@keyframes fire{0%,100%{opacity:.3}18%{opacity:.55}32%{opacity:.4}55%{opacity:.7}72%{opacity:.35}88%{opacity:.45}}
+
+/* orbs */
+.dots{display:flex;align-items:center;justify-content:center;height:100%;gap:14%}
+.dot{width:22%;aspect-ratio:1;border-radius:50%;background:var(--c,var(--accent));
+  animation:bounce calc(var(--dur,1.1s) / var(--spd)) ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0) scale(.85);opacity:.5}
+  50%{transform:translateY(calc(-1 * var(--bh,40%))) scale(1.1);opacity:1}}
+.spin{position:absolute;inset:0;animation:rot calc(var(--dur,2.4s) / var(--spd)) linear infinite}
+.spin.rev{animation-direction:reverse}
+@keyframes rot{to{transform:rotate(360deg)}}
+.corepulse{animation:cp calc(2.4s / var(--spd)) ease-in-out infinite;transform-origin:center}
+@keyframes cp{0%,100%{opacity:.5}50%{opacity:.9}}
+.ringpulse{animation:rp calc(var(--dur,1.2s) / var(--spd)) ease-in-out infinite;transform-origin:center;
+  animation-delay:var(--d,0s)}
+@keyframes rp{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.09)}}
+.tri{animation:tp calc(1.4s / var(--spd)) ease-in-out infinite;animation-delay:var(--d,0s)}
+@keyframes tp{0%,100%{opacity:.45}50%{opacity:1}}
+
+/* orbits: tilted tracks + beads */
+.orbit-scene{position:absolute;inset:0;perspective:600px}
+.orbit-rig{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(-15deg)}
+.track{position:absolute;border:1px solid rgba(0,0,0,.55);border-radius:50%;
+  transform-style:preserve-3d;animation:rot calc(var(--dur) / var(--spd)) ease-in-out infinite}
+.bead{position:absolute;border-radius:50%;border:1px solid #000}
+.core{position:absolute;left:50%;top:50%;border-radius:50%;border:1px solid rgba(0,0,0,.8);
+  background:radial-gradient(circle at 35% 30%,#fff 0%,#f5f5f4 40%,#1c1917 100%);
+  animation:corebeat calc(5.4s / var(--spd)) ease-in-out infinite;z-index:4}
+@keyframes corebeat{0%{transform:translate(-50%,-50%) scale(1)}10%{transform:translate(-50%,-50%) scale(1.15)}
+  22%{transform:translate(-50%,-50%) scale(1.05)}38%{transform:translate(-50%,-50%) scale(1.35)}
+  52%{transform:translate(-50%,-50%) scale(1.15);opacity:.88}68%{transform:translate(-50%,-50%) scale(1)}
+  84%{transform:translate(-50%,-50%) scale(1.2)}100%{transform:translate(-50%,-50%) scale(1)}}
+.ripple{position:absolute;left:50%;top:50%;border-radius:50%;border:1.25px solid rgba(255,255,255,.8);
+  animation:ripple calc(1.6s / var(--spd)) ease-out infinite;z-index:3}
+@keyframes ripple{0%{transform:translate(-50%,-50%) scale(1);opacity:.9}100%{transform:translate(-50%,-50%) scale(6);opacity:0}}
+.bound{position:absolute;border-radius:50%;border:1px solid rgba(0,0,0,.35)}
+
+/* nexus */
+.nexus{position:absolute;inset:0;display:grid;place-items:center}
+.nx-rot{position:relative;width:60%;height:60%;animation:rot calc(8s / var(--spd)) linear infinite}
+.nx-b{position:absolute;width:45%;height:45%;mix-blend-mode:screen;
+  animation:nxb calc(4s / var(--spd)) ease-in-out infinite;animation-delay:var(--d)}
+@keyframes nxb{0%{transform:rotate(0) scale(1);border-radius:25%}
+  25%{transform:rotate(90deg) scale(.4);border-radius:50%}
+  50%{transform:rotate(0) scale(1.05);border-radius:10%}
+  75%{transform:rotate(-90deg) scale(1);border-radius:25%}
+  100%{transform:rotate(0) scale(1);border-radius:25%}}
+.nx-core{position:absolute;width:14%;height:14%;background:#fff;mix-blend-mode:overlay;z-index:20;
+  animation:nxc calc(2s / var(--spd)) ease-in-out infinite}
+@keyframes nxc{0%,100%{transform:rotate(45deg) scale(.5);opacity:.5}50%{transform:rotate(45deg) scale(1.4);opacity:1}}
+
+/* alive geometry */
+.alive-rig{position:absolute;inset:0;transform-style:preserve-3d;
+  animation:aliveTumble calc(160s / var(--spd)) linear infinite}
+@keyframes aliveTumble{to{transform:rotateX(360deg) rotateY(360deg) rotateZ(180deg)}}
+.alive-inst{position:absolute;inset:0}
+.alive-inst svg{width:100%;height:100%;overflow:visible}
+.alive-inst path{fill:none;stroke-width:3;stroke-linecap:round;
+  animation:aliveFade calc(3s / var(--spd)) ease-in-out infinite;animation-delay:var(--d,0s)}
+@keyframes aliveFade{0%,100%{opacity:.4}50%{opacity:.7}}
+
+/* off-screen specimens stop animating — see the IntersectionObserver note in JS */
+.card.paused *{animation-play-state:paused!important}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:0s!important;animation-iteration-count:1!important}
+  .mark{stroke-dashoffset:0}
+}
+</style>
+
+<div class="controls">
+  <div class="controls-in">
+    <div class="ctl"><label for="spd">Speed</label>
+      <input type="range" id="spd" min="0.1" max="3" step="0.05" value="1">
+      <output id="spdo">1.00×</output></div>
+    <div class="ctl"><label for="sz">Size</label>
+      <input type="range" id="sz" min="56" max="200" step="4" value="112">
+      <output id="szo">112</output></div>
+    <div class="ctl"><label for="sw">Stroke</label>
+      <input type="range" id="sw" min="1" max="9" step="0.5" value="4">
+      <output id="swo">4.0</output></div>
+    <div class="ctl"><label for="ph">Orb phase</label>
+      <select id="ph">
+        <option value="idle">idle</option>
+        <option value="dispatching">dispatching</option>
+        <option value="thinking" selected>thinking</option>
+        <option value="synthesizing">synthesizing</option>
+        <option value="complete">complete</option>
+        <option value="error">error</option>
+      </select></div>
+    <div class="ctl"><label for="ac">Accent</label>
+      <input type="color" id="ac" value="#ea580c"></div>
+    <button class="btn" id="reset">Reset</button>
+    <button class="btn" id="theme">Theme</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Norfolk Kit · Design System Artifact</p>
+    <h1>Motion catalog — <em>the vocabulary</em>, not a gallery</h1>
+    <p class="lede">Every animation in <code>src/components/animations</code>, grouped by family, with its real timings. Reach for one of these before inventing new motion. The controls retime every specimen at once, so you can judge speed against the whole set rather than one card in isolation.</p>
+  </header>
+
+  <section id="s-lascaux">
+    <div class="sec-head"><h2>Lascaux — self-drawing marks</h2><span class="count">4 components</span></div>
+    <p class="sec-note">Cave-painting-derived glyphs that draw themselves stroke by stroke, flicker as if firelit, and are periodically re-traced by a bright white "hand" before dissolving into the next figure. The warm counterweight to the geometric families. Path data is the original hand-drawn mark data, unmodified.</p>
+    <div class="grid" id="g-lascaux"></div>
+  </section>
+
+  <section id="s-cube">
+    <div class="sec-head"><h2>Cube — Swiss geometry</h2><span class="count">3 components</span></div>
+    <p class="sec-note">A 3×3×3 cluster of 27 cubies. The whole cube turns slowly while individual cubies tumble and breathe outward on their own clock, so the form reads as continuously disassembling and reassembling. Precise, technical, monochrome.</p>
+    <div class="grid" id="g-cube"></div>
+  </section>
+
+  <section id="s-solver">
+    <div class="sec-head"><h2>Solver — visible working</h2><span class="count">4 components</span></div>
+    <p class="sec-note">Motion that shows effort: expansion, convergence, rebalancing. Use these where a wait has substance behind it and the user benefits from seeing that something is being worked through rather than merely awaited.</p>
+    <div class="grid" id="g-solver"></div>
+  </section>
+
+  <section id="s-orb">
+    <div class="sec-head"><h2>Orb — presence indicators</h2><span class="count">5 components</span></div>
+    <p class="sec-note">Small, persistent, one per persona. Every orb is phase-driven — the same geometry speeds up and brightens from <code>idle</code> through <code>synthesizing</code>. Change the phase control above to see the full range; it is the same knob the application drives. Note these are <em>five distinct geometries</em>, not one component recoloured.</p>
+    <div class="grid" id="g-orb"></div>
+  </section>
+
+  <section id="s-orbit">
+    <div class="sec-head"><h2>Orbit — for longer waits</h2><span class="count">2 components</span></div>
+    <p class="sec-note">Three tilted rings of beads around a beating core. Beads randomly "spark" inward, trailing light. Swiss is the calm monochrome original; Advanced shares its geometry exactly and layers on nine distinct spark behaviours, an accent palette, and a core that gets nudged when a bead fires.</p>
+    <div class="grid" id="g-orbit"></div>
+  </section>
+
+  <div class="notes">
+    <div>
+      <h3>How faithful is this page?</h3>
+      <p>These are <strong>vanilla SVG/CSS recreations</strong>, rebuilt from the source components' literal timings, easings, colours and path data. They are not the React originals — a self-contained page cannot load <code>framer-motion</code>.</p>
+      <p>Close on the Lascaux family (exact path data, same draw/flicker/trace choreography) and the orbs and cube grids. Deliberately simplified where the original is driven by random state machines: <code>AnalystThinkingCube</code>'s nine poses, <code>BarChartPulse</code>'s scene shuffle, and the orbits' spark selection all run here on a fixed cycle rather than the original's randomness. Treat this as the motion vocabulary reference, not a pixel-diff target.</p>
+    </div>
+    <div>
+      <h3>Not shown</h3>
+      <ul>
+        <li><code>AgentThinkingState</code> and <code>AgentWaitingOverlay</code> — composed wrappers that select a family and own the full waiting UX. They carry the H-Analytics agent taxonomy and need adapting per project, so they are not primitives.</li>
+        <li><code>AnalystCubeR3F</code> — a WebGL variant, deliberately excluded from the kit.</li>
+        <li><code>RebeccaAliveGeometry</code> renders 12 independent glyph fragments; shown here reduced for legibility at card scale.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Using these</h3>
+      <p>Import from <code>src/components/animations</code>; resolve by key through <code>animation-registry.ts</code> rather than hardcoding a component, so the choice stays data.</p>
+      <p>Always honour <code>useReducedMotion.ts</code> — this page does too; switch your OS to reduced motion and every specimen freezes to a drawn resting state. That is an accessibility requirement in the design system, not a nicety.</p>
+      <p>New motion should reuse an easing curve already on this page. The recurring one is <code>cubic-bezier(.23,1,.32,1)</code>.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+
+/* ── shared geometry ──────────────────────────────────── */
+const CUBIES=[];for(let x=-1;x<=1;x++)for(let y=-1;y<=1;y++)for(let z=-1;z<=1;z++)CUBIES.push({x,y,z});
+const STONE=["#f5f5f4","#d6d3d1","#a8a29e","#78716c","#e7e5e4","#44403c"];
+const RUBIK=["#ef4444","#3b82f6","#f97316","#22c55e","#ffffff","#eab308"];
+const JEWEL=["#6366f1","#8b5cf6","#2dd4bf","#f472b6","#0ea5e9","#f59e0b"];
+const FACE_T=[["rotateY(0deg)",0],["rotateY(90deg)",1],["rotateY(180deg)",2],
+              ["rotateY(-90deg)",3],["rotateX(90deg)",4],["rotateX(-90deg)",5]];
+
+/* build a 27-cubie CSS-3D cube. bulge=animate outward breathing */
+function buildCube(stage,{palette,cubie,gap,bulge,cls,border="#000"}){
+  const off=cubie+gap, scene=el("div","cube-scene"), cube=el("div","cube"+(cls?" "+cls:""));
+  CUBIES.forEach(({x,y,z},i)=>{
+    const orbit=el("div","orbit"), pos=el("div","pos");
+    pos.style.width=pos.style.height=cubie+"px";
+    pos.style.left=pos.style.top="calc(50% - "+(cubie/2)+"px)";
+    const base=`translate3d(${x*off}px,${y*off}px,${z*off}px)`;
+    pos.style.transform=base;
+    /* tumble: 10 keyframes at the original times, backInOut approximated */
+    const kf=[[0,0,0],[x*90,0,0],[x*90,y*90,0],[0,y*90,0],[0,y*90,z*90],
+              [0,0,z*90],[x*-90,0,0],[x*-90,y*-90,0],[0,0,0],[0,0,0]];
+    const times=[0,12,24,36,48,60,72,84,96,100];
+    const name="tum"+i;
+    sheet(`@keyframes ${name}{`+kf.map((k,j)=>
+      `${times[j]}%{transform:rotateX(${k[0]}deg) rotateY(${k[1]}deg) rotateZ(${k[2]}deg)}`).join("")+"}");
+    orbit.style.animation=`${name} calc(6s / var(--spd)) cubic-bezier(.68,-.55,.27,1.55) infinite`;
+    if(bulge){
+      const m=[1,1.3,1,1,1.6,1,1,1.2,1], bt=[0,12,24,36,48,60,72,84,100], bn="bul"+i;
+      sheet(`@keyframes ${bn}{`+m.map((s,j)=>
+        `${bt[j]}%{transform:translate3d(${x*off*s}px,${y*off*s}px,${z*off*s}px)}`).join("")+"}");
+      pos.style.animation=`${bn} calc(6s / var(--spd)) ease-in-out infinite`;
+    }
+    FACE_T.forEach(([t,ci])=>{
+      const f=el("div","face");
+      f.style.transform=`${t} translateZ(${cubie/2}px)`;
+      f.style.background=palette[ci]; f.style.borderColor=border;
+      pos.appendChild(f);
+    });
+    orbit.appendChild(pos); cube.appendChild(orbit);
+  });
+  scene.appendChild(cube); stage.appendChild(scene);
+}
+
+/* ── lascaux glyph data (verbatim path data from source) ── */
+const CAVE=[["bison",["M 20 50 C 20 30, 40 20, 60 25 C 80 30, 85 45, 80 55 C 75 65, 60 70, 45 68 C 30 66, 20 65, 20 50 Z","M 60 25 L 65 10 M 45 68 L 40 85 L 50 85","M 30 48 L 35 45 M 55 28 C 58 22, 62 20, 65 22"]],
+["horse",["M 15 55 C 15 35, 35 20, 55 22 C 75 24, 85 40, 82 55 C 79 70, 65 75, 50 73 C 35 71, 15 70, 15 55 Z","M 55 22 L 50 5 L 58 5","M 82 55 L 90 65 L 85 70 M 50 73 L 45 88 L 55 88"]],
+["deer",["M 25 60 C 25 40, 45 28, 60 30 C 75 32, 80 48, 75 60 C 70 72, 55 75, 42 72 C 29 69, 25 75, 25 60 Z","M 60 30 L 55 10 L 48 18 M 60 30 L 68 10 L 75 18","M 42 72 L 35 88 M 60 72 L 65 88"]],
+["aurochs",["M 18 52 C 18 32, 38 18, 58 20 C 78 22, 88 38, 85 52 C 82 66, 65 74, 48 72 C 31 70, 18 68, 18 52 Z","M 58 20 C 55 8, 45 5, 42 10 M 58 20 C 65 8, 75 5, 78 10","M 30 52 L 25 58 M 72 38 L 80 32"]]];
+
+const TOTEM=[["owl",["M 20 40 C 20 10, 80 10, 80 40 C 80 80, 50 90, 50 90 C 50 90, 20 80, 20 40 Z","M 40 40 a 8 8 0 1 0 -16 0 a 8 8 0 1 0 16 0","M 76 40 a 8 8 0 1 0 -16 0 a 8 8 0 1 0 16 0","M 45 55 L 55 55 L 50 65 Z"]],
+["lioness",["M 20 30 L 30 35 C 40 25, 60 25, 70 35 L 80 30 L 75 55 C 70 80, 50 90, 50 90 C 50 90, 30 80, 25 55 Z","M 35 50 L 45 45 M 65 50 L 55 45","M 45 65 L 55 65 L 50 75 Z"]],
+["goddess_mask",["M 30 30 C 30 5, 70 5, 70 30 C 70 70, 50 90, 50 90 C 50 90, 30 70, 30 30 Z","M 35 45 Q 42 35 48 45","M 65 45 Q 58 35 52 45","M 50 60 L 50 65","M 43 75 Q 50 85 57 75"]]];
+
+const GEO=[["chalice",["M 20 25 L 80 25 L 50 65 Z","M 50 65 L 50 90","M 30 90 L 70 90"]],
+["womb",["M 50 10 L 90 50 L 50 90 L 10 50 Z","M 50 30 L 70 50 L 50 70 L 30 50 Z","M 50 45 a 5 5 0 1 0 0 10 a 5 5 0 1 0 0 -10"]],
+["moon_cycles",["M 50 20 a 30 30 0 1 0 0 60 a 30 30 0 1 0 0 -60","M 20 50 A 20 20 0 0 1 50 50 A 20 20 0 0 0 20 50","M 80 50 A 20 20 0 0 0 50 50 A 20 20 0 0 1 80 50"]],
+["water_flow",["M 10 30 C 30 10, 70 50, 90 30","M 10 50 C 30 30, 70 70, 90 50","M 10 70 C 30 50, 70 90, 90 70"]]];
+
+const ALIVE=[["chalice",GEO[0][1]],["womb",GEO[1][1]],["moon",GEO[2][1]],
+  ["water",GEO[3][1]],["bison",CAVE[0][1]],["horse",CAVE[1][1]]];
+
+/* sequence player: cross-fade through glyphs, redrawing each on entry */
+function buildSequence(stage,{glyphs,color,dwell}){
+  const host=el("div","glyph breathe");
+  stage.appendChild(host);
+  let i=0;
+  const render=()=>{
+    const [,paths]=glyphs[i%glyphs.length];
+    host.innerHTML="";
+    const svg=svgEl("svg");svg.setAttribute("viewBox","0 0 100 100");
+    paths.forEach((d,j)=>{
+      const p=svgEl("path");p.setAttribute("d",d);p.setAttribute("stroke",color);
+      p.setAttribute("class","mark");
+      p.style.animationDelay=`calc(${Math.min(j*0.05,0.4)}s / var(--spd)), calc(${0.55+Math.min(j*0.05,0.4)}s / var(--spd))`;
+      p.style.animationDuration=`calc(.55s / var(--spd)), calc(${(1.6+((j*31)%11)*0.13).toFixed(2)}s / var(--spd))`;
+      svg.appendChild(p);
+    });
+    paths.forEach((d,j)=>{
+      const s=svgEl("path");s.setAttribute("d",d);s.setAttribute("stroke",color);
+      s.setAttribute("class","shimmer");
+      s.style.animationDuration=`calc(${(4+(j%3)*0.7).toFixed(1)}s / var(--spd))`;
+      if(j%2)s.style.animationDirection="reverse";
+      svg.appendChild(s);
+    });
+    const t=svgEl("path");t.setAttribute("d",paths[Math.floor(Math.random()*paths.length)]);
+    t.setAttribute("class","tracer");svg.appendChild(t);
+    host.appendChild(svg);
+    i++;
+  };
+  render();
+  timers.push({fn:render,base:dwell});
+}
+
+/* ── orb phase tables (from the source constants) ──────── */
+const PH={
+  rebecca:{dur:{idle:3.5,dispatching:1.8,thinking:1.1,synthesizing:.85,complete:.7,error:.6},
+           bh:{idle:.12,dispatching:.25,thinking:.4,synthesizing:.55,complete:.35,error:.3}},
+  iris:{ring:{idle:12,dispatching:5,thinking:2.4,synthesizing:1.6,complete:8,error:1},
+        orb:{idle:10,dispatching:4,thinking:2,synthesizing:1.4,complete:7,error:.9}},
+  marco:{rot:{idle:16,dispatching:5.5,thinking:2.8,synthesizing:1.6,complete:8,error:1}},
+  gustavo:{dur:{idle:4,dispatching:2.2,thinking:1.2,synthesizing:.9,complete:.6,error:.5}},
+  specialist:{dur:{idle:3,dispatching:1.8,thinking:1,synthesizing:.75,complete:.5,error:.45}}
+};
+const orbUpdaters=[];
+
+/* ── DOM helpers ──────────────────────────────────────── */
+function el(t,c){const e=document.createElement(t);if(c)e.className=c;return e}
+function svgEl(t){return document.createElementNS("http://www.w3.org/2000/svg",t)}
+let styleTag;
+function sheet(rule){
+  if(!styleTag){styleTag=document.createElement("style");document.head.appendChild(styleTag);}
+  styleTag.sheet.insertRule(rule,styleTag.sheet.cssRules.length);
+}
+const timers=[];
+
+function card(gridId,{name,chars,tags,well,stage,build,noSpeed}){
+  const c=el("div","card");
+  const w=el("div","well"+(well?" "+well:""));
+  if(well==="ember"){const f=el("div","firelight");w.appendChild(f);}
+  const st=el("div","stage");
+  if(stage)st.style.setProperty("--stage",stage+"px");
+  w.appendChild(st);
+  const m=el("div","meta");
+  const n=el("div","name");n.textContent=name;
+  const ch=el("div","chars");ch.textContent=chars;
+  const sp=el("div","specs");
+  tags.forEach((t,i)=>{const g=el("span","tag"+(i===0?" hot":""));g.textContent=t;sp.appendChild(g);});
+  m.append(n,ch,sp);
+  if(!noSpeed){
+    const r=el("div","row"),lab=el("span");lab.textContent="SPD";
+    const inp=el("input");inp.type="range";inp.min="0.1";inp.max="3";inp.step="0.05";inp.value="1";
+    inp.setAttribute("aria-label",name+" speed");
+    inp.addEventListener("input",()=>{c.style.setProperty("--spd",inp.value)});
+    r.append(lab,inp);m.appendChild(r);
+  }
+  c.append(w,m);
+  $("#"+gridId).appendChild(c);
+  /* Built lazily on first approach into view, not up front. Eagerly building all
+     18 specimens creates ~810 3D-transformed layers, and the compositor cost is
+     paid even while paused — enough to make the page unresponsive on modest
+     hardware. Deferring keeps roughly one screenful live at a time. */
+  c._build=()=>{
+    const before=timers.length;
+    build(st,c);
+    c._timers=timers.slice(before);
+    if(!reduced)c._timers.forEach(schedule);
+    applyPhase();   /* orbs register their phase updater during build */
+  };
+  return c;
+}
+
+/* ═══ LASCAUX ═══ */
+card("g-lascaux",{name:"RebeccaCaveSequence",well:"ember",
+  chars:"An ochre animal — bison, horse, deer, aurochs — redrawn stroke by stroke in firelight, re-traced by a bright hand, then dissolving into the next.",
+  tags:["#ea580c","draw 0.5s ease-out","flicker 1.6–3.0s","dwell 1.1–2.4s","4 glyphs"],
+  build:st=>buildSequence(st,{glyphs:CAVE,color:"#ea580c",dwell:1700})});
+
+card("g-lascaux",{name:"RebeccaTotemSequence",well:"ember",
+  chars:"Bone-pale totems — owl, lioness, goddess mask — same choreography, cooler line. Reads as carved ivory rather than painted ochre.",
+  tags:["#d6d3d1","draw 0.5s ease-out","dwell 1.1–2.4s","3 glyphs"],
+  build:st=>buildSequence(st,{glyphs:TOTEM,color:"#d6d3d1",dwell:1900})});
+
+card("g-lascaux",{name:"RebeccaGeoSequence",well:"amber",
+  chars:"Amber sacred geometry — chalice, vesica, moon phases, water flow. More mandala than menagerie; the bridge to the Swiss families.",
+  tags:["#f59e0b","draw 0.5s ease-out","dwell 1.1–2.4s","4 glyphs"],
+  build:st=>buildSequence(st,{glyphs:GEO,color:"#f59e0b",dwell:1500})});
+
+card("g-lascaux",{name:"RebeccaAliveGeometry",well:"ember",
+  chars:"A slow-tumbling 3D sphere of faint glyph fragments around a glowing core; fragments flash and swap as if the entity has scattered thoughts.",
+  tags:["stone palette","tumble 160s linear","fragments swap 0.8–2.8s","reduced here"],
+  build:st=>{
+    const rig=el("div","alive-rig");
+    ALIVE.forEach(([,paths],k)=>{
+      const inst=el("div","alive-inst");
+      const sc=(0.35+((k*37)%45)/100).toFixed(2);
+      inst.style.transform=`rotateX(${(k*67)%360}deg) rotateY(${(k*113)%360}deg) scale(${sc})`;
+      const svg=svgEl("svg");svg.setAttribute("viewBox","0 0 100 100");
+      paths.forEach((d,j)=>{const p=svgEl("path");p.setAttribute("d",d);
+        p.setAttribute("stroke",["#f5f5f4","#d6d3d1","#a8a29e","#78716c","#44403c"][k%5]);
+        p.style.setProperty("--d",(j*0.2)+"s");svg.appendChild(p);});
+      inst.appendChild(svg);rig.appendChild(inst);
+    });
+    const core=el("div","core");core.style.width=core.style.height="18%";
+    st.append(rig,core);
+  }});
+
+/* ═══ CUBE ═══ */
+card("g-cube",{name:"AnalystSwissCube",
+  chars:"27 monochrome stone cubies: the whole cluster turns once every 15s while each cubie tumbles and breathes outward on a 6s loop.",
+  tags:["stone 6-face","spin 15s linear","tumble 6s backInOut","bulge ×1.3/1.6/1.2"],
+  build:st=>buildCube(st,{palette:STONE,cubie:14,gap:1,bulge:true})});
+
+card("g-cube",{name:"AnalystCubeIcon",stage:64,
+  chars:"The same cluster, size-responsive and freezable — collapses to a static resting cube for reduced-motion or paused states.",
+  tags:["stone 6-face","spin 15s linear","size-scaled","freezable"],
+  build:st=>buildCube(st,{palette:STONE,cubie:8,gap:1,bulge:true})});
+
+card("g-cube",{name:"AnalystThinkingCube",
+  chars:"Rubik-coloured and restless: reconfigures into one of nine exploded, spherical, ringed or flattened poses roughly every second, springing outward from the centre.",
+  tags:["rubik 6-face","tumble 20s linear","9 poses @1.1s","spring 90/14/0.8"],
+  build:st=>buildCube(st,{palette:RUBIK,cubie:14,gap:1,bulge:true,border:"#1c1917"})});
+
+/* ═══ SOLVER ═══ */
+card("g-solver",{name:"AnalystQuantumSolver",
+  chars:"A jewel-toned cluster hovering in a soft pulsing glow, wobbling as a whole while cubies tumble in place — a flicker of computation, not a full spin.",
+  tags:["jewel 6-face","wobble 12s easeInOut","tumble 10s","glow 4s"],
+  build:st=>{st.appendChild(el("div","glow"));
+    buildCube(st,{palette:JEWEL,cubie:14,gap:1,bulge:false,cls:"wobble",border:"rgba(28,25,23,.6)"})}});
+
+card("g-solver",{name:"AnalystExpandingSolver",
+  chars:"The same cluster visibly breathing — cubies explode to twice their radius and snap back while the whole form pulses scale. Parts coming apart as they solve.",
+  tags:["jewel 6-face","wobble+scale 12s","bulge ×1.6/2.0/1.4","glow 5s"],
+  build:st=>{st.appendChild(el("div","glow"));
+    buildCube(st,{palette:JEWEL,cubie:14,gap:1,bulge:true,cls:"wobble pulse",border:"rgba(28,25,23,.6)"})}});
+
+card("g-solver",{name:"AnalystNexusCore",
+  chars:"Four gradient squares pinwheel around a bright pulsing diamond, the cluster revolving while each square shrinks, reshapes and counter-rotates in a staggered cascade.",
+  tags:["4 gradients","revolve 8s linear","blocks 4s stagger 0.2s","core 2s"],
+  build:st=>{
+    const g=el("div","glow");g.style.background="rgba(59,130,246,.3)";st.appendChild(g);
+    const n=el("div","nexus"),rot=el("div","nx-rot");
+    [["#0ea5e9","#2dd4bf"],["#6366f1","#a855f7"],["#3b82f6","#8b5cf6"],["#14b8a6","#3b82f6"]]
+    .forEach((gr,i)=>{
+      const b=el("div","nx-b");
+      b.style.background=`linear-gradient(135deg,${gr[0]},${gr[1]})`;
+      b.style.top=i>1?"55%":"0%"; b.style.left=(i%2===1)?"55%":"0%";
+      b.style.transformOrigin=["100% 100%","0% 100%","100% 0%","0% 0%"][i];
+      b.style.setProperty("--d",(i*0.2)+"s");
+      rot.appendChild(b);
+    });
+    n.appendChild(rot);n.appendChild(el("div","nx-core"));st.appendChild(n);
+  }});
+
+card("g-solver",{name:"AnalystBarChartPulse",
+  chars:"A 3×3 isometric bar grid that spring-morphs to a new height pattern every 0.7s — flat, checkerboard, corner-spike, diagonal. Live rebalancing metrics.",
+  tags:["9 gradients","scenes @0.7s","spring 140/12/0.8","viewBox 360"],
+  build:st=>{
+    const SCENES=[[30,30,30,30,30,30,30,30,30],[60,30,30,30,90,30,30,30,60],
+      [30,80,30,80,30,80,30,80,30],[40,60,90,30,40,60,20,30,40],[90,60,40,60,40,30,40,30,20],
+      [140,40,40,40,140,40,40,40,140],[40,40,140,40,140,40,140,40,40],
+      [30,60,30,60,160,60,30,60,30],[110,90,70,90,70,50,70,50,30]];
+    const COL=[["#38bdf8","#0284c7","#0c4a6e"],["#818cf8","#4f46e5","#312e81"],
+      ["#a78bfa","#7c3aed","#4c1d95"],["#c084fc","#9333ea","#5b21b6"],["#f0abfc","#c026d3","#831843"],
+      ["#f472b6","#db2777","#9d174d"],["#fb7185","#e11d48","#881337"],["#f43f5e","#be123c","#4c0519"],
+      ["#fb923c","#ea580c","#7c2d12"]];
+    const W=28,dx=W*0.866,dy=W*0.5,G=12;
+    const svg=svgEl("svg");svg.setAttribute("viewBox","0 0 360 360");
+    svg.setAttribute("preserveAspectRatio","xMidYMid meet");
+    svg.style.width=svg.style.height="100%";
+    const g=svgEl("g");g.setAttribute("transform","translate(180,250)");svg.appendChild(g);
+    const bars=[];
+    for(let i=0;i<9;i++){
+      const r=Math.floor(i/3),c=i%3;
+      const cx=(c-r)*(dx+G), cy=(c+r)*(dy+G/2)-30;
+      const t=svgEl("path"),l=svgEl("path"),rt=svgEl("path");
+      t.setAttribute("fill",COL[i][0]);l.setAttribute("fill",COL[i][1]);rt.setAttribute("fill",COL[i][2]);
+      [t,l,rt].forEach(p=>{p.style.transition="d .45s cubic-bezier(.34,1.4,.5,1)";g.appendChild(p)});
+      bars.push({cx,cy,t,l,r:rt});
+    }
+    const paint=s=>bars.forEach((b,i)=>{
+      const h=SCENES[s][i],{cx,cy}=b;
+      b.t.setAttribute("d",`M ${cx},${cy-h-dy} L ${cx+dx},${cy-h} L ${cx},${cy-h+dy} L ${cx-dx},${cy-h} Z`);
+      b.r.setAttribute("d",`M ${cx},${cy-h+dy} L ${cx+dx},${cy-h} L ${cx+dx},${cy} L ${cx},${cy+dy} Z`);
+      b.l.setAttribute("d",`M ${cx-dx},${cy-h} L ${cx},${cy-h+dy} L ${cx},${cy+dy} L ${cx-dx},${cy} Z`);
+    });
+    let s=0;paint(0);
+    st.appendChild(svg);
+    timers.push({fn:()=>{s=(s+1)%9;paint(s)},base:700});
+  }});
+
+/* ═══ ORBS ═══ */
+card("g-orb",{name:"RebeccaOrb",stage:72,
+  chars:"Three dots bouncing in a horizontal wave. The most familiar shape in the set — reads instantly as “working”.",
+  tags:["--primary","3 dots","stagger 0.18s","bounce 0.12–0.55 of ⌀"],
+  build:(st,c)=>{
+    const d=el("div","dots");
+    for(let i=0;i<3;i++){const s=el("span","dot");s.style.animationDelay=(i*0.18)+"s";d.appendChild(s);}
+    st.appendChild(d);
+    orbUpdaters.push(ph=>{
+      d.querySelectorAll(".dot").forEach(x=>{
+        x.style.setProperty("--dur",PH.rebecca.dur[ph]+"s");
+        x.style.setProperty("--bh",(PH.rebecca.bh[ph]*100)+"%");
+      });
+    });
+  }});
+
+card("g-orb",{name:"IrisOrb",stage:72,
+  chars:"A dashed ring turning with an indicator dot circling it and a softly pulsing nucleus. A watchful, scanning presence.",
+  tags:["--info","dashed ring","ring 1–12s","orbit 0.9–10s"],
+  build:st=>{
+    const mk=(cls)=>{const w=el("div",cls);const s=svgEl("svg");
+      s.setAttribute("viewBox","0 0 100 100");s.style.width=s.style.height="100%";
+      w.appendChild(s);st.appendChild(w);return s;};
+    const r1=mk("spin"),r2=mk("spin"),r3=el("div");
+    const ring=svgEl("circle");ring.setAttribute("cx","50");ring.setAttribute("cy","50");
+    ring.setAttribute("r","37");ring.setAttribute("fill","none");ring.setAttribute("stroke","#38bdf8");
+    ring.setAttribute("stroke-width","4");
+    const C=2*Math.PI*37;
+    ring.setAttribute("stroke-dasharray",(C*0.18).toFixed(1)+" "+(C*0.08).toFixed(1));
+    ring.setAttribute("opacity",".6");r1.appendChild(ring);
+    const dot=svgEl("circle");dot.setAttribute("cx","50");dot.setAttribute("cy","13");
+    dot.setAttribute("r","7");dot.setAttribute("fill","#38bdf8");r2.appendChild(dot);
+    r3.style.position="absolute";r3.style.inset="0";
+    const s3=svgEl("svg");s3.setAttribute("viewBox","0 0 100 100");s3.style.width=s3.style.height="100%";
+    const nuc=svgEl("circle");nuc.setAttribute("cx","50");nuc.setAttribute("cy","50");
+    nuc.setAttribute("r","8");nuc.setAttribute("fill","#38bdf8");nuc.setAttribute("class","corepulse");
+    s3.appendChild(nuc);r3.appendChild(s3);st.appendChild(r3);
+    orbUpdaters.push(ph=>{
+      r1.parentElement.style.setProperty("--dur",PH.iris.ring[ph]+"s");
+      r2.parentElement.style.setProperty("--dur",PH.iris.orb[ph]+"s");
+    });
+  }});
+
+card("g-orb",{name:"MarcoOrb",stage:72,
+  chars:"Six triangles at hexagon vertices, tips inward, spinning as one unit while pulsing in sequence. Separate parts resolving into structure.",
+  tags:["--success","6 triangles","rotate 1–16s","stagger 0.12s"],
+  build:st=>{
+    const w=el("div","spin");
+    const s=svgEl("svg");s.setAttribute("viewBox","0 0 100 100");s.style.width=s.style.height="100%";
+    const side=18,h=side*Math.SQRT3/2;
+    for(let i=0;i<6;i++){
+      const p=svgEl("polygon");
+      p.setAttribute("points",`0,${(h*2/3).toFixed(2)} ${-side/2},${(-h/3).toFixed(2)} ${side/2},${(-h/3).toFixed(2)}`);
+      p.setAttribute("fill","#22c55e");p.setAttribute("class","tri");
+      p.setAttribute("transform",`rotate(${i*60},50,50) translate(50,20)`);
+      p.style.setProperty("--d",(i*0.12)+"s");s.appendChild(p);
+    }
+    const c=svgEl("circle");c.setAttribute("cx","50");c.setAttribute("cy","50");c.setAttribute("r","9");
+    c.setAttribute("fill","#22c55e");c.setAttribute("class","corepulse");s.appendChild(c);
+    w.appendChild(s);st.appendChild(w);
+    orbUpdaters.push(ph=>w.style.setProperty("--dur",PH.marco.rot[ph]+"s"));
+  }});
+
+card("g-orb",{name:"GustavoOrb",stage:72,
+  chars:"Three gold rings breathing outward together around a bright nucleus. On error the whole orb shakes — the only orb that does.",
+  tags:["--accent-pop","3 rings","0.5–4s","delays 0.7 / 0.35 / 0"],
+  build:st=>{
+    const s=svgEl("svg");s.setAttribute("viewBox","0 0 100 100");s.style.width=s.style.height="100%";
+    const rs=[[44,3.5,.7,"none"],[33,4,.35,"none"],[19,0,0,"fill"]];
+    const nodes=rs.map(([r,sw,d,mode])=>{
+      const c=svgEl("circle");c.setAttribute("cx","50");c.setAttribute("cy","50");c.setAttribute("r",r);
+      if(mode==="fill"){c.setAttribute("fill","#f59e0b")}
+      else{c.setAttribute("fill","none");c.setAttribute("stroke","#f59e0b");c.setAttribute("stroke-width",sw)}
+      c.setAttribute("class","ringpulse");c.style.setProperty("--d",d+"s");s.appendChild(c);return c;
+    });
+    st.appendChild(s);
+    orbUpdaters.push(ph=>nodes.forEach(n=>n.style.setProperty("--dur",PH.gustavo.dur[ph]+"s")));
+  }});
+
+card("g-orb",{name:"SpecialistOrb",stage:72,
+  chars:"The same ring family as Gustavo, quieter and quicker: two muted rings, lower opacity ceiling, no error shake. A compact deputy.",
+  tags:["--accent-pop /.75","2 rings","0.45–3s","no error shake"],
+  build:st=>{
+    const s=svgEl("svg");s.setAttribute("viewBox","0 0 100 100");s.style.width=s.style.height="100%";
+    const nodes=[[41,3.5,.25,"stroke"],[20,0,0,"fill"]].map(([r,sw,d,mode])=>{
+      const c=svgEl("circle");c.setAttribute("cx","50");c.setAttribute("cy","50");c.setAttribute("r",r);
+      if(mode==="fill"){c.setAttribute("fill","#f59e0b")}
+      else{c.setAttribute("fill","none");c.setAttribute("stroke","rgba(245,158,11,.75)");c.setAttribute("stroke-width",sw)}
+      c.setAttribute("class","ringpulse");c.style.setProperty("--d",d+"s");s.appendChild(c);return c;
+    });
+    st.appendChild(s);
+    orbUpdaters.push(ph=>nodes.forEach(n=>n.style.setProperty("--dur",PH.specialist.dur[ph]+"s")));
+  }});
+
+/* ═══ ORBITS ═══ */
+const TRACKS=[{tilt:"rotateX(70deg)",beads:6,radius:.40,dur:9},
+              {tilt:"rotateY(70deg)",beads:5,radius:.34,dur:11},
+              {tilt:"rotateZ(45deg) rotateX(60deg)",beads:4,radius:.28,dur:13}];
+const BEAD_PAL=["#f5f5f4","#d6d3d1","#a8a29e","#78716c","#44403c"];
+
+function buildOrbit(st,{accents}){
+  const size=112;
+  const scene=el("div","orbit-scene"),rig=el("div","orbit-rig");
+  const bound=el("div","bound");
+  bound.style.width=bound.style.height=(size*.92)+"px";
+  bound.style.left=bound.style.top=(size*.04)+"px";rig.appendChild(bound);
+  const allBeads=[];
+  TRACKS.forEach((tk,ti)=>{
+    const r=size*tk.radius, t=el("div","track");
+    t.style.width=t.style.height=(r*2)+"px";
+    t.style.left=t.style.top=`calc(50% - ${r}px)`;
+    t.style.setProperty("--dur",tk.dur+"s");
+    /* the tilt must survive the spin animation: wrap it */
+    const tilt=el("div");tilt.style.cssText="position:absolute;inset:0;transform-style:preserve-3d;transform:"+tk.tilt;
+    tilt.appendChild(t);
+    for(let b=0;b<tk.beads;b++){
+      const a=(b/tk.beads)*Math.PI*2, d=size*.11;
+      const bead=el("div","bead");
+      bead.style.width=bead.style.height=d+"px";
+      bead.style.left=(r+Math.cos(a)*r-d/2)+"px";
+      bead.style.top=(r+Math.sin(a)*r-d/2)+"px";
+      const bg=BEAD_PAL[(ti*2+b)%5];
+      bead.dataset.bg=bg;
+      bead.style.background=`radial-gradient(circle at 32% 28%,#fff,${bg} 55%,#1c1917 130%)`;
+      bead.style.transition="transform .45s ease-out, box-shadow .45s ease-out, background .45s ease-out";
+      t.appendChild(bead);allBeads.push(bead);
+    }
+    rig.appendChild(tilt);
+  });
+  const core=el("div","core");core.style.width=core.style.height=(size*.2)+"px";
+  core.style.marginLeft=core.style.marginTop="0";
+  const rip=el("div","ripple");rip.style.width=rip.style.height=(size*.2)+"px";
+  rig.append(rip,core);
+  scene.appendChild(rig);st.appendChild(scene);
+
+  let k=0;
+  timers.push({base:accents?900:600,fn:()=>{
+    const b=allBeads[k%allBeads.length];k+=3;
+    const ac=accents?accents[k%accents.length]:null;
+    b.style.transform="scale(2.1)";
+    b.style.boxShadow=`0 0 ${size*.28}px rgba(255,255,255,.95)`;
+    if(ac)b.style.background=`radial-gradient(circle at 32% 28%,#fff,${ac} 70%)`;
+    setTimeout(()=>{b.style.transform="";b.style.boxShadow="";
+      b.style.background=`radial-gradient(circle at 32% 28%,#fff,${b.dataset.bg} 55%,#1c1917 130%)`;},450);
+  }});
+}
+
+card("g-orbit",{name:"RebeccaSwissOrbit",
+  chars:"Three tilted rings of grey beads around a beating core. Calm and monochrome: one repeating inward spark, no colour, no core nudge.",
+  tags:["stone palette","tracks 9 / 11 / 13s","core beat 5.4s","spark ~0.3–1.1s"],
+  build:st=>buildOrbit(st,{accents:null})});
+
+card("g-orbit",{name:"RebeccaAdvancedOrbit",
+  chars:"Identical geometry, far more restless: nine distinct spark behaviours — burst, drift, morph, jitter, flicker, ripple — and beads that nudge the core when they fire.",
+  tags:["+5 accents","tracks 9 / 11 / 13s","9 spark types","0.4–1.2s+"],
+  build:st=>buildOrbit(st,{accents:["#ea580c","#3b82f6","#10b981","#f59e0b","#8b5cf6"]})});
+
+/* ── timer engine ─────────────────────────────────────────
+   Drives the state-machine specimens: glyph sequences, bar-chart scenes, orbit
+   sparks. Self-rescheduling timeouts rather than a requestAnimationFrame loop —
+   rAF is throttled or never fires in embedded and headless renderers, which would
+   silently freeze exactly these specimens while the CSS-driven ones kept moving.
+   Each reschedule re-reads `rate`, so the speed slider retimes them live. */
+let rate=1;
+const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function schedule(t){
+  const jitter=0.8+Math.random()*0.6;
+  t.handle=setTimeout(()=>{ if(!t.idle)t.fn(); schedule(t); },
+                      Math.max(60,(t.base*jitter)/rate));
+}
+if(!reduced)timers.forEach(schedule);
+
+/* ── controls ─────────────────────────────────────────── */
+const root=document.documentElement;
+const spd=$("#spd"),sz=$("#sz"),sw=$("#sw"),ph=$("#ph"),ac=$("#ac");
+function applyPhase(){orbUpdaters.forEach(f=>f(ph.value))}
+spd.addEventListener("input",()=>{
+  root.style.setProperty("--spd",spd.value);rate=parseFloat(spd.value);
+  $("#spdo").textContent=parseFloat(spd.value).toFixed(2)+"×";
+});
+sz.addEventListener("input",()=>{
+  $("#szo").textContent=sz.value;
+  document.querySelectorAll(".stage").forEach(s=>{
+    if(!s.dataset.fixed)s.style.setProperty("--stage",sz.value+"px");
+  });
+});
+sw.addEventListener("input",()=>{root.style.setProperty("--sw",sw.value);
+  $("#swo").textContent=parseFloat(sw.value).toFixed(1)});
+ph.addEventListener("change",applyPhase);
+ac.addEventListener("input",()=>root.style.setProperty("--accent",ac.value));
+$("#reset").addEventListener("click",()=>{
+  spd.value=1;sz.value=112;sw.value=4;ph.value="thinking";ac.value="#ea580c";
+  [spd,sz,sw].forEach(i=>i.dispatchEvent(new Event("input")));
+  ac.dispatchEvent(new Event("input"));applyPhase();
+  document.querySelectorAll(".card").forEach(c=>{c.style.removeProperty("--spd");
+    const r=c.querySelector('.row input');if(r)r.value=1});
+});
+$("#theme").addEventListener("click",()=>{
+  const cur=root.getAttribute("data-theme")
+    || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+  root.setAttribute("data-theme",cur==="dark"?"light":"dark");
+});
+/* stages that set their own size opt out of the global size slider */
+document.querySelectorAll(".stage[style*='--stage']").forEach(s=>s.dataset.fixed="1");
+applyPhase();
+
+/* Only animate what's on screen. 18 specimens run ~345 concurrent animations across
+   810 3D layers; running them all at once saturates the compositor and the whole
+   page stutters — including the specimen you're actually trying to judge.
+   Deliberately a plain viewport test inside the existing frame loop rather than an
+   IntersectionObserver: the observer reports everything as visible under some
+   headless/embedded renderers, which silently defeats the optimisation. Four
+   read-only rect checks per second across 18 cards costs nothing. */
+const cards=[...document.querySelectorAll(".card")];
+function visibility(){
+  const h=innerHeight, pad=220;
+  cards.forEach(c=>{
+    const r=c.getBoundingClientRect();
+    const off=r.bottom < -pad || r.top > h+pad;
+    if(!off && !c._built){ c._built=true; c._build(); }
+    if(off!==c._off){
+      c._off=off;
+      c.classList.toggle("paused",off);
+      if(c._timers)c._timers.forEach(t=>{t.idle=off});
+    }
+  });
+}
+if(!reduced){
+  visibility();
+  addEventListener("scroll",visibility,{passive:true});
+  addEventListener("resize",visibility);
+  setInterval(visibility,400);   /* catches layout shifts the events miss */
+}
+})();
+</script>
