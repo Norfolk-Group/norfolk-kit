@@ -2,7 +2,7 @@
 
 The canonical starter template for Norfolk AI / KIT Capital projects. One repo, one stack, one set of governance rules — so each new project starts from a decided baseline instead of re-litigating architecture.
 
-**This is the only starter kit.** `Norfolk-Group/norfolk-starter` is archived and superseded by this repo.
+**Status:** this repo is canonical for the *stack and governance*. `Norfolk-Group/norfolk-starter` is **not yet retired** — it still holds the `nai-` Claude Code skill wrappers, the Windows/Mac/Replit setup guides, the Cursor config, and the setup health-check scripts. Those are stack-agnostic and need to migrate here before that repo is archived. Tracked in [`docs/plans/`](docs/plans/).
 
 ## The stack
 
