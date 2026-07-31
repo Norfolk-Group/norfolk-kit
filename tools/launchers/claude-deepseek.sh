@@ -17,8 +17,8 @@
 #         DEEPSEEK_MODEL=deepseek-v3.2 ./claude-deepseek.sh
 # DEV TOOLING ONLY (CLAUDE.md §1) — see claude-launcher-lib.sh.
 set -euo pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 || true
-source "$(dirname "${BASH_SOURCE[0]}")/claude-launcher-lib.sh"
+LAUNCHER_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$LAUNCHER_DIR/claude-launcher-lib.sh"
 
 LAUNCHER_NAME="claude-deepseek.sh"
 LAUNCHER_KEY_VAR="DEEPSEEK_API_KEY"

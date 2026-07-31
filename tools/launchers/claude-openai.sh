@@ -15,8 +15,8 @@
 #         OPENAI_MODEL=openai/gpt-5.6-terra ./claude-openai.sh
 # DEV TOOLING ONLY (CLAUDE.md §1) — see claude-launcher-lib.sh.
 set -euo pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 || true
-source "$(dirname "${BASH_SOURCE[0]}")/claude-launcher-lib.sh"
+LAUNCHER_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$LAUNCHER_DIR/claude-launcher-lib.sh"
 
 LAUNCHER_NAME="claude-openai.sh"
 LAUNCHER_KEY_VAR="${OPENAI_KEY_VAR:-OPENROUTER_API_KEY}"

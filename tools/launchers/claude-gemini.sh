@@ -14,8 +14,13 @@
 #
 # DEV TOOLING ONLY (AGENTS.md §1) — see claude-launcher-lib.sh.
 set -euo pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 || true
-source "$(dirname "${BASH_SOURCE[0]}")/claude-launcher-lib.sh"
+# Resolve the launcher directory ONCE, before changing into it. Computing
+# dirname "${BASH_SOURCE[0]}" a second time AFTER the cd re-resolves the
+# original RELATIVE path against the new working directory, so running this
+# from anywhere but tools/launchers looked for
+# tools/launchers/tools/launchers/claude-launcher-lib.sh and failed.
+LAUNCHER_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$LAUNCHER_DIR/claude-launcher-lib.sh"
 
 LAUNCHER_NAME="claude-gemini.sh"
 LAUNCHER_KEY_VAR="${GEMINI_KEY_VAR:-OPENROUTER_API_KEY}"

@@ -16,8 +16,8 @@
 #         KIMI_MODEL=kimi-k2.7-code ./claude-kimi.sh
 # DEV TOOLING ONLY (CLAUDE.md §1) — see claude-launcher-lib.sh.
 set -euo pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 || true
-source "$(dirname "${BASH_SOURCE[0]}")/claude-launcher-lib.sh"
+LAUNCHER_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$LAUNCHER_DIR/claude-launcher-lib.sh"
 
 LAUNCHER_NAME="claude-kimi.sh"
 LAUNCHER_KEY_VAR="MOONSHOT_API_KEY"

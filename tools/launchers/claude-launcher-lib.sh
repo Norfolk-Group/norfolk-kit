@@ -16,17 +16,42 @@
 # documented mechanism for custom endpoints (debugged 2026-07-23, PR #935; the
 # same env contract Z.AI/DashScope document for their Claude Code guides).
 #
-# Key resolution: environment → Doppler → legacy .env. Doppler is the repo's
-# secrets source of truth (docs/reference/deployment-and-env.md); the repo's
-# doppler.yaml project/config are baked as defaults because `doppler setup`
-# silently no-ops in some containers (bug recorded in the ledger 2026-07-24).
+# Key resolution: environment → Doppler → legacy .env. Doppler is the secrets
+# source of truth. The project/config are read from THIS repo's doppler.yaml
+# rather than relying on `doppler setup`, which silently no-ops in some
+# containers (bug recorded in the ledger 2026-07-24) — and rather than being
+# hardcoded, which is how a shared library ends up handing every repo one
+# specific project's secrets.
 #
 # DEV TOOLING ONLY (CLAUDE.md §1): if any of these models becomes a *product*
 # integration it goes through admin_resources + the five-layer pattern.
 
 set -euo pipefail
 
-_lib_repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+_lib_launcher_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# The repo this launcher is being run for — NOT the launcher's own folder.
+_lib_repo_root="$(git -C "$PWD" rev-parse --show-toplevel 2>/dev/null || echo "$PWD")"
+
+# Doppler project/config come from THIS repo's doppler.yaml.
+#
+# They used to be hardcoded to h-analytics/dev — a workaround for `doppler setup`
+# no-opping in some containers, correct for the repo it was written in and wrong
+# for every other one. Because this library is shared by every equipped repo, that
+# default meant running a launcher inside Obra Pía silently fetched H-Analytics'
+# secrets, DATABASE_URL included. That is the same cross-project confusion that
+# decision 0015 exists to prevent, sitting inside the tooling meant to prevent it.
+#
+# So: read the project from the repo, and if there is no doppler.yaml, resolve
+# NOTHING rather than guessing. A missing key is a loud, correct failure; the
+# wrong project's key is a silent, wrong success.
+_lib_read_doppler_yaml() {
+  local key="$1" file="$_lib_repo_root/doppler.yaml"
+  [[ -f "$file" ]] || return 1
+  sed -n "s/^[[:space:]]*${key}:[[:space:]]*['\"]\?\([^'\"[:space:]]*\)['\"]\?[[:space:]]*$/\1/p" "$file" | head -1
+}
+_lib_doppler_project="${DOPPLER_PROJECT:-$(_lib_read_doppler_yaml project || true)}"
+_lib_doppler_config="${DOPPLER_CONFIG:-$(_lib_read_doppler_yaml config || true)}"
 
 # One batched Doppler download per launch (~0.3s for the whole config) instead of a
 # network round-trip per key — faster, and a Doppler outage/logout is ONE loud
@@ -41,9 +66,14 @@ launcher_fetch_doppler_batch() {
     echo "${LAUNCHER_NAME:-launcher}: doppler CLI not installed — resolving secrets from env/.env only." >&2
     return 0
   fi
+  if [[ -z "$_lib_doppler_project" ]]; then
+    _lib_doppler_state="failed"
+    echo "${LAUNCHER_NAME:-launcher}: no Doppler project for this repo — expected a 'project:' in $_lib_repo_root/doppler.yaml, or DOPPLER_PROJECT set. Resolving from env/.env only." >&2
+    return 0
+  fi
   # Failure = doppler's EXIT CODE, not output emptiness (a reachable project with
   # zero secrets is a valid, non-failed state).
-  if _lib_doppler_batch="$(DOPPLER_PROJECT="${DOPPLER_PROJECT:-h-analytics}" DOPPLER_CONFIG="${DOPPLER_CONFIG:-dev}" \
+  if _lib_doppler_batch="$(DOPPLER_PROJECT="$_lib_doppler_project" DOPPLER_CONFIG="${_lib_doppler_config:-dev}" \
     doppler secrets download --no-file --format env-no-quotes 2>/dev/null)"; then
     _lib_doppler_state="ok"
   else
@@ -83,7 +113,7 @@ launcher_run() {
   local key
   key="$(launcher_resolve_secret "$LAUNCHER_KEY_VAR")"
   if [[ -z "$key" ]]; then
-    echo "$LAUNCHER_NAME: $LAUNCHER_KEY_VAR not found in env, Doppler (h-analytics/dev), or .env." >&2
+    echo "$LAUNCHER_NAME: $LAUNCHER_KEY_VAR not found in env, Doppler ($_lib_doppler_project/${_lib_doppler_config:-dev}), or .env." >&2
     echo "  Add it in the Doppler dashboard, or export it in this shell." >&2
     exit 1
   fi

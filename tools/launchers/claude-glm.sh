@@ -14,8 +14,8 @@
 #         GLM_KEY_VAR=ZHIPU_API_KEY ./claude-glm.sh   # use the legacy secret name
 # DEV TOOLING ONLY (CLAUDE.md §1) — see claude-launcher-lib.sh.
 set -euo pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 || true
-source "$(dirname "${BASH_SOURCE[0]}")/claude-launcher-lib.sh"
+LAUNCHER_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$LAUNCHER_DIR/claude-launcher-lib.sh"
 
 LAUNCHER_NAME="claude-glm.sh"
 LAUNCHER_KEY_VAR="${GLM_KEY_VAR:-ZAI_API_KEY}"
