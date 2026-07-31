@@ -16,6 +16,7 @@
   "markers": {
     "AGENTS.md": "client-safe",
     "CLAUDE.md": "client-safe",
+    ".gitattributes": "client-safe",
     ".mcp.json": "client-safe",
     ".env.example": "client-safe",
     "doppler.yaml": "client-safe",
