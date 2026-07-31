@@ -1,0 +1,255 @@
+<title>Triage — what goes in the kit, what doesn't</title>
+
+<style>
+  :root {
+    --bg:#fbfaf8; --fg:#191713; --dim:#6d665d; --line:#e6e1d9; --panel:#fff;
+    --in:#2f6b46; --in-bg:#eaf3ed;
+    --app:#2b5578; --app-bg:#e9f0f6;
+    --later:#8a6a1f; --later-bg:#f7f0dd;
+    --out:#8f3324; --out-bg:#f8ebe7;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root{--bg:#121110;--fg:#eae6e0;--dim:#948c81;--line:#2b2823;--panel:#1a1817;
+      --in:#7fc39b;--in-bg:#16241c;--app:#8ab6dd;--app-bg:#141f28;
+      --later:#d9b45e;--later-bg:#241f12;--out:#e0917f;--out-bg:#261613;}
+  }
+  :root[data-theme="dark"]{--bg:#121110;--fg:#eae6e0;--dim:#948c81;--line:#2b2823;--panel:#1a1817;
+    --in:#7fc39b;--in-bg:#16241c;--app:#8ab6dd;--app-bg:#141f28;
+    --later:#d9b45e;--later-bg:#241f12;--out:#e0917f;--out-bg:#261613;}
+  :root[data-theme="light"]{--bg:#fbfaf8;--fg:#191713;--dim:#6d665d;--line:#e6e1d9;--panel:#fff;
+    --in:#2f6b46;--in-bg:#eaf3ed;--app:#2b5578;--app-bg:#e9f0f6;
+    --later:#8a6a1f;--later-bg:#f7f0dd;--out:#8f3324;--out-bg:#f8ebe7;}
+
+  body{background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:3rem 1.4rem 6rem}
+  .eyebrow{font:600 .7rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+  h1{font-size:clamp(1.9rem,4.5vw,2.7rem);line-height:1.08;margin:.6rem 0 0;letter-spacing:-.025em;text-wrap:balance}
+  .lede{font-size:1.05rem;color:var(--dim);max-width:60ch;margin:.9rem 0 0}
+  h2{font-size:1.15rem;margin:3rem 0 .3rem;letter-spacing:-.01em;display:flex;align-items:center;gap:.6rem}
+  h2 .n{font:600 .72rem var(--mono);color:var(--dim);border:1px solid var(--line);border-radius:4px;padding:.1rem .4rem}
+  .sub{color:var(--dim);font-size:.92rem;margin:.1rem 0 1rem;max-width:66ch}
+  p{max-width:68ch}
+
+  .legend{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.8rem 0 0}
+  .tag{font:600 .68rem var(--mono);letter-spacing:.06em;text-transform:uppercase;
+    border-radius:4px;padding:.2rem .5rem;white-space:nowrap}
+  .t-in{color:var(--in);background:var(--in-bg)}
+  .t-app{color:var(--app);background:var(--app-bg)}
+  .t-later{color:var(--later);background:var(--later-bg)}
+  .t-out{color:var(--out);background:var(--out-bg)}
+
+  .row{display:grid;grid-template-columns:104px 1fr;gap:.9rem;padding:.85rem 0;border-top:1px solid var(--line);align-items:start}
+  .row:last-child{border-bottom:1px solid var(--line)}
+  .row .what{font-weight:600;font-size:.95rem;margin:0 0 .15rem}
+  .row .why{color:var(--dim);font-size:.89rem;margin:0;max-width:64ch}
+  .row .why em{color:var(--fg);font-style:normal;font-weight:500}
+
+  .callout{border-left:2px solid var(--fg);padding:.1rem 0 .1rem 1rem;margin:1.6rem 0;max-width:66ch}
+  .callout p{margin:.3rem 0}
+  .callout .k{font-weight:600}
+
+  .cut{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.2rem;margin-top:1rem}
+  .cut h3{margin:0 0 .2rem;font-size:.95rem}
+  .cut p{margin:0 0 .9rem;color:var(--dim);font-size:.89rem}
+  .cut > div:last-child p:last-child{margin-bottom:0}
+
+  footer{margin-top:4rem;padding-top:1.4rem;border-top:1px solid var(--line);color:var(--dim);font-size:.85rem}
+  @media (max-width:620px){ .row{grid-template-columns:1fr;gap:.35rem} }
+</style>
+
+<div class="wrap">
+
+<div class="eyebrow">Norfolk core-stack · 31 July 2026</div>
+<h1>What goes in the kit.<br>What doesn't.</h1>
+<p class="lede">Fifteen ideas arrived in one day. This is the filtered version — kept, deferred, or thrown out, with the reason. Ricardo's instruction: <em>"I am just telling everything that comes to mind. You need to organize the ideas and throw away what won't work."</em></p>
+
+<div class="legend">
+  <span class="tag t-in">In the kit</span>
+  <span class="tag t-app">App-level, not kit</span>
+  <span class="tag t-later">Later</span>
+  <span class="tag t-out">Thrown out</span>
+</div>
+
+<div class="callout">
+  <p class="k">The distinction that does most of the work here:</p>
+  <p>A starter kit ships things <em>every</em> project needs on day one. A capability only some apps need is a module they install, or an app-level build — not kit weight. Most of today's ideas are excellent and belong in an app, not in the thing every repo inherits.</p>
+</div>
+
+<h2><span class="n">1</span> Architecture</h2>
+<p class="sub">The only irreversible category. Everything here is nearly free upfront and a rebuild later.</p>
+
+<div class="row"><span class="tag t-in">In the kit</span><div>
+  <p class="what">Agentic-native — "create once, use many"</p>
+  <p class="why">Every capability is a callable procedure; the agent is never a second-class caller. <em>The one decision that cannot be retrofitted.</em> Already the rule; tRPC is already the layer. Costs nothing to hold, costs a rewrite to add later.</p>
+</div></div>
+
+<div class="row"><span class="tag t-in">In the kit</span><div>
+  <p class="what">iOS-friendly, works at most screen sizes</p>
+  <p class="why">Same character: cheap upfront, expensive to retrofit. 44px targets, safe areas, and the rule that a phone layout is <em>designed</em>, not derived by narrowing a desktop one.</p>
+</div></div>
+
+<div class="row"><span class="tag t-in">In the kit</span><div>
+  <p class="what">Thin, quarantined agent glue — but no chosen SDK</p>
+  <p class="why">The protection against "OpenAI ships a better SDK" is not a wrapper. It is that the tools live in procedures, so the runtime is a few hundred lines you can throw away. <em>The kit ships the pattern; the app picks the SDK when it needs one.</em> CMA stays on the table — for apps that run seldom, its per-session pricing is negligible and it removes infrastructure work.</p>
+</div></div>
+
+<h2><span class="n">2</span> Authentication</h2>
+<p class="sub">Added last, and it should have been first. This is where money is leaking right now.</p>
+
+<div class="callout">
+  <p class="k">"I am spending thousands of dollars getting WorkOS to work… it is happening right now with H-Analytics. It still does not work."</p>
+  <p>Every app needs login. Every login should look and behave the same. Paying to solve it again per project is the single clearest case for a starter kit that exists — and unlike everything else on this page, <em>it is costing money today</em>.</p>
+</div>
+
+<div class="row"><span class="tag t-in">In the kit</span><div>
+  <p class="what">One auth module, two modes</p>
+  <p class="why"><em>Open</em> — anyone can register (consumer apps). <em>Closed</em> — a person must be pre-approved before they can register, and an unknown email is turned away rather than silently creating an account (enterprise, investor portals). Ricardo is right that this is not conceptually hard. It is expensive because it is re-derived every time, exactly like the empty design contract.</p>
+</div></div>
+
+<div class="row"><span class="tag t-in">In the kit</span><div>
+  <p class="what">The whole flow, not just the login box</p>
+  <p class="why">The cost is never the login screen. It is invitation, email verification, password reset, expired links, session expiry mid-action, org switching, role changes, the first-run experience for an invited user, and what a rejected user sees. <em>Each is a screen and an edge case, and each is where the days go.</em></p>
+</div></div>
+
+<div class="row"><span class="tag t-later">Diagnose first</span><div>
+  <p class="what">Is WorkOS actually the right choice?</p>
+  <p class="why">Chosen in decision 0001 and currently failing expensively at H-Analytics. <em>I do not yet know why, and I will not promise a module wrapping a tool that may be the problem.</em> If the failure is integration complexity, a kit module fixes it permanently. If it is WorkOS itself, no wrapper saves it. One diagnosis answers this, and it should happen before anything is built.</p>
+</div></div>
+
+<h2><span class="n">3</span> Design</h2>
+<p class="sub">The highest-value unbuilt thing on this list, and it needs no agent to start.</p>
+
+<div class="row"><span class="tag t-in">In the kit</span><div>
+  <p class="what">A populated design contract</p>
+  <p class="why"><code>docs/design-system.md</code> already exists in the kit — <em>as an empty template.</em> "The AI messes up something that was working" is the direct consequence of that file being blank: an agent with no record of past decisions re-derives them, and re-deriving is indistinguishable from breaking. <em>Fill it in once, with Ricardo. That hour is what stops the repetition.</em></p>
+</div></div>
+
+<div class="row"><span class="tag t-in">In the kit</span><div>
+  <p class="what">Theme mechanism + a curated set</p>
+  <p class="why">shadcn themes are named CSS variables; 42 exist ready to install. The kit ships the mechanism and a short curated list — <em>not</em> the catalogue.</p>
+</div></div>
+
+<div class="row"><span class="tag t-out">Thrown out</span><div>
+  <p class="what">User-selectable themes in every app</p>
+  <p class="why">Wrong default for client-facing products. An investor picking Cyberpunk for the Obra Pía portal dilutes the brand and produces screenshots that don't look like your company. <em>Revised: user-selectable in internal tools; admin-set per organisation in client-facing apps, from a family that keeps the brand recognisable.</em> Same mechanism, different authority.</p>
+</div></div>
+
+<div class="row"><span class="tag t-later">Later</span><div>
+  <p class="what">Designer agent</p>
+  <p class="why">Genuinely wanted, but sequenced <em>after</em> the contract. An agent with taste and no memory makes the second pain worse while feeling like it addresses it. Build the memory, then the agent that reads it.</p>
+</div></div>
+
+<h2><span class="n">4</span> The copilot</h2>
+
+<div class="row"><span class="tag t-app">App-level</span><div>
+  <p class="what">Rebecca — the copilot panel</p>
+  <p class="why">She already exists in the taxonomy as <em>Rebecca · AI Co-Pilot</em>. A rich copilot is a large build that needs real usage to be good. <em>Putting one in every app by default produces several mediocre copilots instead of one excellent one.</em> Ships to one app, gets good, then spreads. The kit ships the architecture that makes her possible, not her.</p>
+</div></div>
+
+<div class="row"><span class="tag t-later">Later</span><div>
+  <p class="what">Copilot drives the UI</p>
+  <p class="why">The interesting half, and the part that needs real design: navigation happens in the browser, so some tools resolve server-side and some client-side, and the model must see one list. Mechanism confirmed to exist. Not day-one.</p>
+</div></div>
+
+<div class="row"><span class="tag t-out">Thrown out</span><div>
+  <p class="what">Model-chosen UI components</p>
+  <p class="why">The obvious way to stream charts into a chat — Vercel's <code>streamUI</code> — is <em>explicitly not recommended for production by Vercel's own docs.</em> The alternative is better anyway: tools return data, our code renders. The model never picks components.</p>
+</div></div>
+
+<h2><span class="n">5</span> Modules</h2>
+<p class="sub">All good ideas. None of them kit material — they are things an app installs.</p>
+
+<div class="row"><span class="tag t-app">App-level</span><div>
+  <p class="what">Document management</p>
+  <p class="why">The most genuinely recurring of the four. Strongest candidate for the first real module, and the presigned-upload work from Obra Pía is most of the plumbing already.</p>
+</div></div>
+
+<div class="row"><span class="tag t-app">App-level</span><div>
+  <p class="what">Photo enhancement + album</p>
+  <p class="why">Settled: both original and render are kept, and the render always carries a mark saying it is enhanced. Non-destructive, the pairing is a real relation rather than a filename convention, and <em>the mark must travel into exports and reports</em> — the case most likely to be forgotten.</p>
+</div></div>
+
+<div class="row"><span class="tag t-out">Thrown out</span><div>
+  <p class="what">Admin-assignable animation per modal and process</p>
+  <p class="why">Over-built for the value. This is a settings screen, a data model, and a resolver — so that an admin can choose which spinner appears where. <em>Almost nobody will ever change it, and the default will be right.</em> Revised: animations are part of the theme, chosen once by design. If one app genuinely needs per-process assignment, that app builds it.</p>
+</div></div>
+
+<h2><span class="n">6</span> Memory and learning</h2>
+
+<div class="row"><span class="tag t-later">Later</span><div>
+  <p class="what">Retrieval + corrective memory</p>
+  <p class="why">Buildable today with what is already chosen — Voyage embeddings on pgvector. Corrective memory (a user's correction persists and applies next time) is cheap and the thing users actually notice. Real, just not first.</p>
+</div></div>
+
+<div class="row"><span class="tag t-out">Thrown out</span><div>
+  <p class="what">Pinecone</p>
+  <p class="why">Same capability as pgvector + Voyage, which are already in the stack, at the cost of a fourth data store. Pinecone was right when it was the only option.</p>
+</div></div>
+
+<div class="row"><span class="tag t-later">Later</span><div>
+  <p class="what">"Dreaming" / consolidation</p>
+  <p class="why"><em>Unverified — I do not know which product this refers to and will not guess.</em> There is real research on memory consolidation and idle-time computation, but the standing rule after fabricating a package name is to check rather than recall. Needs a source before anything is designed around it.</p>
+</div></div>
+
+<h2><span class="n">7</span> Communications and voice</h2>
+
+<div class="row"><span class="tag t-later">Later</span><div>
+  <p class="what">Email in and out, SMS, RCS</p>
+  <p class="why">Verified as available: Resend does support inbound, and Twilio RCS is generally available. One planning fact worth knowing — <em>RCS sender onboarding is manual brand verification, not an API call.</em> Calendar time, not developer time. Nothing to build until an app needs it.</p>
+</div></div>
+
+<div class="row"><span class="tag t-out">Thrown out</span><div>
+  <p class="what">Evaluating voice vendors now</p>
+  <p class="why">ElevenLabs, Retell, and whoever else — <em>any comparison made today is stale before it ships.</em> The one thing that matters is already true: voice is just another caller of the same procedures, which is affordable precisely because the architecture holds. Re-research at the point of decision, not before.</p>
+</div></div>
+
+<h2><span class="n">8</span> Infrastructure</h2>
+
+<div class="row"><span class="tag t-out">Thrown out</span><div>
+  <p class="what">Cloudflare Workers</p>
+  <p class="why">Not because they couldn't cope — the limits are generous and API waits don't count against CPU. Because they solve nothing here. Edge latency, zero idle cost, spike absorption: none is a problem you have. For SMS webhooks, carrier latency dominates. <em>Buys a second deployment story and a second thing to debug, for a theoretical benefit.</em> R2 stays; Railway alone stands.</p>
+</div></div>
+
+<div class="row"><span class="tag t-out">Thrown out</span><div>
+  <p class="what">Large files in git</p>
+  <p class="why">Nothing over 5MB, enforced by CI rather than remembered. Git keeps every version of every binary forever in every clone, and deleting it later reclaims nothing. <em>The kit itself is currently in violation at 180MB of brand assets</em> — that needs moving to R2.</p>
+</div></div>
+
+<h2><span class="n">9</span> What to build first</h2>
+
+<div class="callout">
+  <p class="k">Ten idea drops today. One repo equipped. Zero apps.</p>
+  <p>The equip test found seven real defects in four hours — none visible in any document. Building is how you find out what's wrong; specifying is how you feel like you're finding out.</p>
+</div>
+
+<p><strong>My recommendation changed when auth came up.</strong> It was: build the Manual app. Auth is worth more, because it is bleeding money this week and the Manual is not.</p>
+
+<div class="row"><span class="tag t-in">First</span><div>
+  <p class="what">Diagnose what is actually failing at H-Analytics</p>
+  <p class="why">Hours, not days. <em>Nothing should be built around WorkOS until it is known whether WorkOS is the problem.</em> The answer decides whether the auth module is a wrapper or a replacement.</p>
+</div></div>
+
+<div class="row"><span class="tag t-in">Then</span><div>
+  <p class="what">The auth module — open and closed modes, every screen</p>
+  <p class="why">Solved once, correctly, including the invitation and recovery flows where the days actually go. Every project after inherits it.</p>
+</div></div>
+
+<div class="row"><span class="tag t-in">Proven in</span><div>
+  <p class="what">The Manual app</p>
+  <p class="why">It needs a login anyway. So it becomes the proving ground for the auth module rather than a separate piece of work — <em>and it is still the first app built under the parity and iOS rules.</em> One build, two things proven.</p>
+</div></div>
+
+<p>Everything else waits. New ideas go on a list, unread, until there is a URL to open.</p>
+
+<footer>
+  Sources: decisions <a href="../decisions/0011-large-files-live-in-r2-not-git.md">0011</a>,
+  <a href="../decisions/0012-naming-agents-orchestrators-specialists-minions.md">0012</a>,
+  <a href="../decisions/0013-agent-runtime-tool-runner-on-railway.md">0013</a>,
+  <a href="../decisions/0014-agentic-native-and-model-portability.md">0014</a> ·
+  brainstorms of 31 July 2026 · <a href="themes.html">themes.html</a><br>
+  Every "thrown out" here is a recommendation, not a lock. Overrule any of them and it gets built.
+</footer>
+
+</div>
