@@ -92,10 +92,12 @@ for (const [path, entry] of Object.entries(manifest.files || {})) {
   if (!allowed.has(sens)) {
     fail(
       "BRAND-BOUNDARY",
-      `\`${path}\` is marked **${sens}**, which a "${orgRule.class}" repo may not hold. ` +
-        (manifest.org && manifest.org !== currentOrg
-          ? "This repo appears to have moved orgs — the file must be removed."
-          : "Equip should never have added it; remove it from this PR."),
+      sens === "kit-only"
+        ? `\`${path}\` is marked **kit-only** — it lives in norfolk-kit and is never copied anywhere. The Manual app reads it; repos do not carry it. Remove it.`
+        : `\`${path}\` is marked **${sens}**, which a "${orgRule.class}" repo may not hold. ` +
+          (manifest.org && manifest.org !== currentOrg
+            ? "This repo appears to have moved orgs — the file must be removed."
+            : "Equip should never have added it; remove it from this PR."),
     );
   }
   if (!entry.sensitivity && sensitivityOf(path) === (markers.unmatchedDefault || "norfolk-only")) {
@@ -147,7 +149,9 @@ if (!AUDIT_ONLY) {
       if (!allowed.has(sens)) {
         fail(
           "BRAND-BOUNDARY",
-          `\`${path}\` (marked **${sens}**) is being written into a "${orgRule.class}" repo, which may not hold it.`,
+          sens === "kit-only"
+            ? `\`${path}\` is marked **kit-only** — it lives in norfolk-kit and is never copied anywhere. The Manual app reads it; repos do not carry it.`
+            : `\`${path}\` (marked **${sens}**) is being written into a "${orgRule.class}" repo, which may not hold it.`,
         );
       }
     }

@@ -32,7 +32,12 @@ Read `.kit/payloads.json` from the kit. Look up the org from §1.
 - Found → use its `class` and `allowedSensitivities`.
 - **Not found** (fork, no remote, multiple remotes, new org) → use `default`: **tooling only, zero brand**, and say plainly in the PR body which org was detected and why the payload was restricted. *(C1/C2.)*
 
-Read `.kit/markers.json`. Every kit file has a sensitivity; **unmatched paths count as `norfolk-only`** (fail closed). Build the payload as: every kit file whose sensitivity ∈ `allowedSensitivities`.
+Read `.kit/markers.json`. Every kit file has a sensitivity; **unmatched paths count as `norfolk-only`** (fail closed). Build the payload as: every kit file whose sensitivity ∈ `allowedSensitivities`, **minus** anything matching `$excludeFromPayload`.
+
+Two markers need care:
+
+- **`kit-only`** — never ships anywhere, no exceptions. The kit's own plans, decision records, and Owner's Guide. No org allows it, so the filter already handles it; the point is that copying them would fork the kit, which is the failure the Manual app exists to prevent. The Manual *reads* them from the kit at render time.
+- **`$excludeFromPayload`** — files with a valid sensitivity that are still not worth shipping (today: the 180MB brand tree, pending curated web sets). Not a security control — the guard still enforces the marker — just a payload decision. Say in the PR body when something was withheld for this reason.
 
 > Ricardo's rule, and the reason this exists: Norfolk-internal material never enters a client repo, and no client ever sees another client's brand. He controls all three orgs, so nothing but this mapping prevents it.
 

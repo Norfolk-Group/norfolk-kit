@@ -71,12 +71,16 @@ if (discover) {
       return statSync(full).isDirectory() ? walk(full) : [rel];
     });
   };
+  const excluded = Object.keys(markers.$excludeFromPayload || {}).filter(
+    (k) => !k.startsWith("$"),
+  );
   paths = walk(".").filter(
     (p) =>
       // never record the manifest's own hash — it would be stale the instant
       // this file is written, and a hash that never verifies teaches people
       // to ignore hash mismatches
       p !== ".kit/manifest.json" &&
+      !excluded.some((pat) => matches(pat, p)) &&
       Object.keys(markers.markers).some((pat) => matches(pat, p)),
   );
 } else {
