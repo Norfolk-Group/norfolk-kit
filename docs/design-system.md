@@ -94,6 +94,35 @@ export const CONTENT_ICONS = {
 
 **Ruled out:** per-row icon choices made ad hoc, colour used to distinguish content types in a list, and a "misc" icon that is visually interesting enough to look intentional.
 
+#### …but not on everything — when to leave icons off
+
+Manus icons every row. **Perplexity's sidebar icons the fixed navigation and leaves the session list as plain text.** Ricardo likes both. They are not in conflict; they answer different questions.
+
+> **Icon a list when the reader is scanning for a *type*. Leave it plain when they are reading for a *name*.**
+
+- **Fixed navigation** — New, Computer, Artifacts, Customize. A short, unchanging set learned by position and shape. Icons make it faster every day after the first.
+- **A user's own content** — sessions, conversations, documents they titled. Unbounded, and the *title* is the information. An icon on every row adds a column of near-identical glyphs that must be visually skipped to reach the words.
+
+Manus's list is genuinely mixed-type (a video, an audio note, a spreadsheet), so the icon carries real information. Perplexity's sessions are all the same type, so an icon would carry none.
+
+**Test before adding one:** *does this glyph tell the reader something the text does not?* If every row would get the same icon, delete the column.
+
+---
+
+### The composer — from Perplexity's desktop app
+
+The strongest available reference for Rebecca's panel, and Ricardo's own daily tool. What it gets right, worth copying deliberately:
+
+- **The input is the hero.** Centred, generously sized, one soft focus glow. Everything else on the page is quiet so the eye starts in the one place that accepts action.
+- **Controls live *inside* the composer, not around it.** Attach, mode (Search / Computer), model selector, voice — all within the input's border, as small pills. The screen has no toolbar, because the toolbar is the input.
+- **The model is a visible, inline choice** (shown: `GPT-5.6 Sol`). Directly supports per-app, per-task model selection ([0014](decisions/0014-agentic-native-and-model-portability.md)) — the user sees which model is answering and can change it without leaving the sentence they are writing.
+- **Voice is a first-class button**, not buried in a menu ([R35](brainstorms/2026-07-31-themes-responsive-voice-requirements.md)).
+- **An empty state that asks a question** — *"What should we work on?"* — rather than explaining the product. Then three concrete, domain-specific suggestions as **text links with a small arrow**, not cards. Cards would compete with the composer; links defer to it.
+- **Warm off-white, not white.** A cream/parchment ground with a single teal accent for links. One accent, used sparingly, is why a dense sidebar still reads calm.
+- **Identity sits at the bottom of the sidebar** — avatar, name, plan tier, organisation. Present, never prominent.
+
+**The transferable principle:** a conversational surface has exactly one hero, and it is the input. Everything else earns its place by not competing with it.
+
 ## Component standards
 
 For each: which variants and sizes exist, when to use which, and which states are defined (default / hover / focus / active / disabled / loading / error / empty).
@@ -168,7 +197,8 @@ A screenshot converts taste into a decision in about a minute. The Manus entry b
 | Reference | Named | Examined? | Extracted |
 |---|---|---|---|
 | **Manus** — sidebar iconography | 2026-07-31 | ✅ screenshot | Content-type icon mapping; style locked, meaning varies. See *Icons carry meaning* above. |
-| **Perplexity** — logo, "very thin wireframes" | 2026-07-31 | ⚠️ from description only | Monoline geometry at low stroke weight → Lucide at 1.5. Directionally safe (it agrees with the Manus evidence) but not verified against the actual mark. |
+| **Perplexity** — logo, "very thin wireframes" | 2026-07-31 | ⚠️ from description only | Monoline geometry at low stroke weight → Lucide at 1.5. Directionally safe (it agrees with the Manus and desktop-app evidence) but not verified against the actual mark. |
+| **Perplexity desktop app** — whole UI | 2026-07-31 | ✅ screenshot | *The composer* section above. Confirmed the thin-monoline reading, and produced the refinement to the icon rule (fixed nav gets icons; the user's own content does not). **Currently the best reference we have for Rebecca's panel** — and the one Ricardo uses daily, which matters more than a site he admires once. |
 | **Cloudflare** — dashboard AI assistant | 2026-07-31 | ❌ behind a login | Nothing yet. Wanted: how it animates work-in-progress, how it occupies the panel, how it shows what it is *doing* rather than only what it has said. This is the copilot's primary reference and it is currently a blank. |
 | **Codex IDE** — UI and workflow | 2026-07-31 | ❌ not examined | Nothing yet. Ricardo has praised it twice — once for cross-device continuity (*"how great it is to even use the phone in a macbook"*), once for UI and workflow generally. **Workflow is the interesting half**: what a coding agent's interface gets right is directly relevant to the copilot, which is the same problem — showing an agent's in-progress work legibly. |
 | **Linear** — website | 2026-07-31 | ❌ browser hung on load | Public site, so this one is checkable — retry. Widely imitated for restrained dark surfaces, dense-but-calm typography and precise motion. Worth extracting deliberately rather than absorbing, since "looks like Linear" is itself now a generic default. |
