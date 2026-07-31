@@ -111,6 +111,11 @@ Build `payloads.json`, sensitivity markers file, the equip skill (SKILL.md, copi
 | 4 | `unmatchedDefault: norfolk-only` | Looks fail-closed, isn't — Norfolk-Group *allows* that sensitivity, so unmarked files ship silently there. This is what turned #3 from a caught error into a boundary crossing | `unmatchedDefault: kit-only` |
 | 5 | `markers` conflated "paths the kit ships" with "paths the guard polices" | **No equipped repo could have its own README or its own `docs/plans/`** without CI going red | `$kitLocal`, excluded from `markers` |
 | 6 | Manifest hashes computed on unnormalised line endings | Every cross-platform re-equip = one giant false conflict; the update mechanism silently useless | `.gitattributes` with `eol=lf` |
+| 7 | **The CI job passed while the guard was failing.** `node check.mjs \| tee` returns *tee's* status under `bash -e` | The guard posted four violations to PR #1 and the run went green. Merge unblocked. Every control above was live and correct, and none of it mattered | `set -o pipefail` |
+
+Finding 7 deserves its own line: everything upstream of it worked, and the whole apparatus was still inert. It was found only because the acceptance test planted a violation *deliberately* and someone checked the run status rather than the comment. A guard that reports correctly and exits wrongly is indistinguishable from a working one until the day it matters.
+
+**Acceptance criterion met** — `norfolk-manual` PR [#1](https://github.com/Norfolk-Group/norfolk-manual/pull/1): planted KIT Capital asset → CI red, two rules firing; asset removed → CI green. Blocked by the machine, not by anyone reading a diff.
 
 **The pattern worth keeping:** #3 was found only because the accented path made `mkdir` *crash*. Had the filename been merely unusual rather than unopenable, the file would have shipped and nothing would have complained. The lesson is not "handle unicode" — it is that a check keyed on pattern-matching fails open when the input is shaped unexpectedly, so the default for an unrecognised input must be the *most* restrictive value available (#4), never a plausible-looking middle one.
 
