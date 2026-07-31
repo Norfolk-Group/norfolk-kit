@@ -6,6 +6,18 @@
     "client:<id>": "May be copied into that client's repos only.",
     "kit-only": "NEVER copied anywhere. Lives in the kit and is READ by the Manual app, not distributed. No org allows it, so the existing filter handles it with no extra machinery — this is the kit's own working material (its plans, its decision records, its Owner's Guide), and copying it into a repo would fork the kit, which is the exact failure the Manual exists to prevent."
   },
+  "$kitLocal": {
+    "$comment": "The kit's OWN working material. Never shipped, and — critically — NOT listed in `markers` below. Anything in `markers` is a path the guard polices in every equipped repo, so listing `README.md` or `docs/plans/**` there would forbid every repo from having its own README or its own plans. These paths are kit-local instead: equip never ships them (they fall to unmatchedDefault = kit-only), and the guard ignores identically-named files in target repos because those belong to the repo, not the kit. The Manual app reads these from the kit at render time. Found 2026-07-31, when the first equipped repo could not have been given a README.",
+    "paths": [
+      "README.md",
+      "docs/README.md",
+      "docs/OWNERS-GUIDE.md",
+      "docs/decisions/**",
+      "docs/brainstorms/**",
+      "docs/plans/**",
+      "docs/artifacts/**"
+    ]
+  },
   "$excludeFromPayload": {
     "$comment": "Paths with a legitimate sensitivity that equip nevertheless does NOT ship, for reasons unrelated to sensitivity. Kept separate from `markers` on purpose: a marker answers 'who may hold this', an exclusion answers 'is this worth shipping'. kit-guard still enforces the marker if one of these ever turns up in a repo, so an exclusion is never a security control — only a payload decision.",
     "brand/**": "180MB, overwhelmingly Illustrator masters and social banners. Shipping it would put 180MB in every repo. Curated web sets (SVG/PNG at web sizes) are a Phase 4 task; until they exist, no brand ships anywhere. Sensitivity markers below stay accurate so the guard keeps working."
@@ -38,13 +50,6 @@
     "docs/business-logic.md": "client-safe",
     "docs/security.md": "client-safe",
     "docs/config-and-env-map.md": "client-safe",
-    "README.md": "kit-only",
-    "docs/README.md": "kit-only",
-    "docs/OWNERS-GUIDE.md": "kit-only",
-    "docs/decisions/**": "kit-only",
-    "docs/brainstorms/**": "kit-only",
-    "docs/plans/**": "kit-only",
-    "docs/artifacts/**": "kit-only",
     "brand/README.md": "client-safe",
     "brand/norfolk/**": "norfolk-only",
     "brand/clients/kit-capital/**": "client:kit-capital"
