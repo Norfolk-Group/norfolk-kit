@@ -34,9 +34,17 @@ So this document records a constraint that binds from the next line of code onwa
 
 ## The constraint, stated concretely
 
-One rule, and everything else follows:
+Ricardo's own words for it, 2026-07-31 — the plain-English version, and the one to remember:
+
+> **"We should always attempt to create once and use many."**
+
+He offered that having said he would not understand *how* an API gets built, which is the point: the rule is a product principle, not a technical one. He does not need the mechanism. He does need the rule to hold, because it is the thing that decides whether the copilot can ever do what he wants it to do.
+
+The technical statement of the same rule:
 
 > **No UI component talks to the database, the filesystem, or an external service directly. It calls a procedure. The copilot calls the same procedure.**
+
+"Create once" is the procedure. "Use many" is every caller — the screen, the copilot, a scheduled report, another app, and whatever exists in two years. Build it twice and you have two behaviours, one of which is wrong and nobody knows which.
 
 This is already half-present in the settled stack — tRPC 11 is exactly this layer, and the buildout plan already carries "agent-native parity" as a review dimension. R26 promotes it from a nice property to the load-bearing rule.
 
@@ -50,6 +58,14 @@ R30 is the part that needs genuine design and is easy to get wrong. "The copilot
 ## Key decisions
 
 - **Parity accepted as an architectural constraint, effective immediately.** Cheap to hold from the start, close to a rewrite to retrofit.
+
+- **shadcn/ui is the component base for the copilot panel.** Ricardo, 2026-07-31: *"shadcn has wonderful primitives for a lot of that."* Already settled in the stack and already wired as an MCP server, so this is confirmation rather than a new choice. Relevant primitives exist for most of the panel: collapsible/resizable for the column itself, scroll area, sheet, command, dialog, progress, skeleton, and a charts layer for R28's in-conversation graphs.
+
+  What shadcn does **not** give us, and therefore what actually needs designing: the streaming message list, tool-call state as it resolves in front of the user, and the animated in-progress states Ricardo is after. Those are the character of the thing. The primitives are the floor, not the design.
+
+- **Design reference: Cloudflare's dashboard assistant.** Ricardo, 2026-07-31: *"My favorite copilot is the one in cloudflare that helps the users. Super cool design with proper animations."*
+
+  Recorded as the reference to study before designing. **Not yet examined** — it sits behind a Cloudflare login, so nobody has actually looked at it as of this writing. A screenshot or short screen recording from Ricardo would pin the target far better than a written guess at what he likes about it; the specific qualities worth extracting are how it animates work-in-progress, how it occupies the panel, and how it shows what it is doing rather than just what it has said.
 
 ## Outstanding questions
 
