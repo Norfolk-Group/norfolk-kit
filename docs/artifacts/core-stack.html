@@ -204,6 +204,23 @@ code{font-family:var(--mono);font-size:.92em;color:var(--gold)}
 </section>
 
 <section>
+  <h2><span class="n">03b</span>One contract, two editors · one baseline, eight drivers</h2>
+  <p class="sec-note">Added 2026-07-31 after validation against Anthropic's and Cursor's official docs (~90% aligned, zero contradictions found in the kit).</p>
+  <div class="stack">
+    <div class="card"><div class="cat">Rules file</div><div class="who">AGENTS.md <span class="pill ok">ADOPTED</span></div>
+      <div class="why">One contract at repo root — the vendor-neutral standard (Linux Foundation, co-founded by Anthropic) that <b>Cursor, Codex, Gemini CLI and Copilot read natively</b>. Claude Code reads it through a one-line bridge in CLAUDE.md. Cursor joins as a friend any time, zero duplicate rules to maintain.</div></div>
+    <div class="card"><div class="cat">Plugins</div><div class="who">Pinned in the repo <span class="pill ok">ADOPTED</span></div>
+      <div class="why">superpowers + compound-engineering + greptile are declared in a checked-in settings file — <b>every clone and Codespace gets them automatically</b>. The hand-editing of settings done on 07-31 never happens again. Skills use the open Agent Skills format, which Cursor also reads directly.</div></div>
+    <div class="card"><div class="cat">Model fleet</div><div class="who">8 drivers <span class="pill ok">BUILT</span></div>
+      <div class="why">Claude is the baseline; Kimi · GLM · Qwen · Grok · DeepSeek · GPT · <b>Gemini (new)</b> · <b>Llama (new)</b> run as cheap drivers via launchers, every slug verified against the provider's live catalog, drift checkable with one command. Apps call the same models as APIs through the Vercel AI SDK. GLM-5.2 is the closest to Opus for bulk work.</div></div>
+    <div class="card"><div class="cat">Hands</div><div class="who">Browser + computer work <span class="pill ok">AVAILABLE</span></div>
+      <div class="why">Browser pane, Claude in Chrome, and Playwright (drives any browser) on both machines — the capability lane that replaces Manus's browsing agent.</div></div>
+    <div class="card"><div class="cat">Consolidation targets</div><div class="who">Manus · Perplexity · Office <span class="pill build">IN PROGRESS</span></div>
+      <div class="why">Manus exits when Obra Pía cuts over; Perplexity's job is covered by the deep-research pattern (proven 07-31, four agents, cited verdicts); Excel/Word/PowerPoint route through the official docx/pptx/xlsx skills already installed. Each cancellation logs its saving in the SaaS tracker.</div></div>
+  </div>
+</section>
+
+<section>
   <h2><span class="n">04</span>Brand inventory — organized by ownership</h2>
   <p class="sec-note"><b>Norfolk AI</b> is the tech company, <b>Norfolk Consulting Group</b> its business arm — both Ricardo's. <b>KIT Capital is a client</b>, whose properties follow it. The equip verb is org-aware: Norfolk repos get Norfolk brand; a client's repos get <em>that client's marks only</em> — vendor assets never leak into client work, and no client sees another's. All sources located on Ricardo's PC; import is a curation, gaps flagged honestly.</p>
   <div class="tblwrap"><table>
@@ -230,11 +247,14 @@ code{font-family:var(--mono);font-size:.92em;color:var(--gold)}
   <p class="sec-note">The build order the plan will sequence — brand and decisions first (fast, high-visibility), then the verbs, then the reviews with you.</p>
   <div class="next">
     <div class="it"><b>Brand import</b> — curate the nine logo sets + avatars into <code>brand/</code>; close the three gaps (Partners export, Rituel dark variant, Colliers resolution)</div>
-    <div class="it"><b>Decision records</b> — write today's research verdicts into the kit as records 0005+ (hosting, Supabase-no, Voyage, Docker posture) so they're law, not memory</div>
-    <div class="it"><b>The verbs</b> — build <code>equip</code> then <code>tidy</code> as kit skills; first live run: equip Obra Pía (replacing yesterday's manual hour)</div>
-    <div class="it"><b>Canonical layout</b> — draft the repo anatomy, walk it through with you before tidy ever enforces it</div>
-    <div class="it"><b>Reviews with you</b> — Governance Rules read-through · design-system.md populated with real standards · avatar/logo canonical picks blessed</div>
+    <div class="it"><b>Decision records 0005+</b> — write this week's research verdicts into the kit as permanent records (hosting, Supabase-no, Voyage, Docker, two-editor architecture) so they're law, not memory</div>
+    <div class="it"><b>The verbs</b> — build <code>equip</code> then <code>tidy</code> as kit skills; first live run: equip Obra Pía (replacing the 07-30 manual hour)</div>
+    <div class="it"><b>Canonical layout</b> — draft the repo anatomy, walk it through with Ricardo before tidy ever enforces it</div>
+    <div class="it"><b>Reviews with Ricardo</b> — Governance Rules read-through · design-system.md populated with real standards · avatar/logo canonical picks blessed</div>
+    <div class="it"><b>The consolidation</b> — retire Manus and Perplexity as Claude Code absorbs their jobs; record each saving in the SaaS tracker</div>
+    <div class="it"><b>Parallel thread:</b> Obra Pía WorkOS auth swap (branch ready in the Codespace) → Railway deploy → DNS cutover → cancel Manus</div>
   </div>
+  <p class="sec-note" style="margin-top:18px">Plain-language companion: <code>docs/OWNERS-GUIDE.md</code> — the what/how/why written for Ricardo, including the phrases that make all of this happen.</p>
 </section>
 
 <footer>
