@@ -54,24 +54,17 @@ This is what makes re-equipping meaningful: after a kit update, run equip again 
 - **Prose / Markdown** (`AGENTS.md`, docs): never overwrite. Write the kit version alongside as `<name>.kit.md` and summarise the difference in the PR body in one or two sentences a non-programmer can act on.
 - **Binary / brand**: never overwrite. Flag only.
 
-## 4. Write the manifest
+## 4. Write the manifest — with the script, never by hand
 
-Write `.kit/manifest.json` in the target repo:
+Copy `.kit/payloads.json`, `.kit/markers.json`, `tools/kit-guard/` and `.github/workflows/kit-guard.yml` into the repo first (all `client-safe`), then run:
 
-```json
-{
-  "kitRepo": "Norfolk-Group/norfolk-kit",
-  "kitSha": "<pinned SHA from §1.4>",
-  "equippedAt": "<ISO date>",
-  "org": "<detected org>",
-  "payloadClass": "<norfolk|client|personal|unknown>",
-  "files": {
-    "<path>": { "sha256": "<hash of the file as written>", "sensitivity": "<marker>" }
-  }
-}
+```bash
+node tools/kit-guard/write-manifest.mjs --kit-sha <pinned SHA> --org <detected org> --discover
 ```
 
-The manifest is the machine-readable claim of what you did. `kit-guard` checks the diff against it — anything you wrote but did not claim fails the build. Also copy `.kit/payloads.json` and `.kit/markers.json` into the repo (both `client-safe`) so the guard can run there.
+**Do not hand-write `.kit/manifest.json`.** It is the claim `kit-guard` checks the diff against — if you author both the claim and the change, the guard is comparing your word to your word and checks nothing. The script hashes the real bytes on disk, so a file you wrote but did not intend to claim still surfaces as an unclaimed write.
+
+The script exits non-zero and names the files if anything on disk violates the org's boundary. If that happens: **remove those files and re-run.** Never work around it — it is telling you the payload filter in §2 was applied wrongly.
 
 ## 5. Deliver as a pull request
 
