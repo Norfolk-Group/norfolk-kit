@@ -171,6 +171,49 @@ The most important section. Be specific.
 
 ---
 
+### Dense lists — from Linear
+
+Linear is the counterpart to the composer above. Same design family — thin monoline icons, one accent, near-zero chrome — at **the opposite density**, and both are correct because the jobs differ. Perplexity's screen has one thing to do. Linear's has forty rows to scan.
+
+**This is the surface most Norfolk apps are actually made of** — investors, distributions, documents, properties. Worth copying carefully.
+
+#### The row is a fixed grid
+
+Every row has the same anatomy, in the same order, aligned down the whole list:
+
+```
+[priority] [ID] [status] [title ······················] [labels] [assignee] [date]
+```
+
+Left-anchored identity, flexible title, right-anchored metadata. **The eye learns the shape once and then reads only the column it cares about.** A list where rows have different arrangements is a list that must be read rather than scanned.
+
+Give IDs `font-variant-numeric: tabular-nums` so they form a true column.
+
+#### Encode state in form, not only in words
+
+- **Status is a shape** — a filled check circle for Done, a dashed ring for Backlog. Recognisable before it is read.
+- **Priority is a tiny bar glyph** (ascending bars), with `---` for none. Sortable at a glance without a word of text.
+
+A status column of the words *Done / Backlog / In progress* is slower to scan than the same information as shape, and takes four times the width.
+
+#### Labels: colour the dot, not the pill
+
+`audit-finding` carries a small orange dot; `tech-debt` a grey one. **The pill itself stays neutral.** Fully coloured pills turn a list into confetti and make the one genuinely urgent thing invisible. A 6px dot is enough — colour is for *finding*, text is for *knowing*.
+
+#### Group headers instead of boxes
+
+Sections (`Backlog 2`, `Done 27`) are a tinted header row with a count and an inline `+` that adds into that group. **No cards, no borders around groups.** Density comes from removing chrome, not from shrinking type — the type here is a comfortable size; it is the boxes that are missing.
+
+#### Counts belong beside the thing they count
+
+`Inbox 2`, `Reviews 3`, right-aligned and muted in the nav. Present, never shouting. No badges, no red circles for what is merely unread.
+
+#### The density rule, stated
+
+> **Choose the density before choosing the layout.** A *focus* surface (composer, form, single record) gets a max width, generous space, one hero. A *scan* surface (list, table, dashboard) gets the full width, a fixed row grid, and state encoded as form. Applying either one's rules to the other produces a screen that fights its own job.
+
+---
+
 ## Voice — how the product talks
 
 > *Ricardo, 2026-07-31: "I love the languaging of Richard Thaler and David Brooks."*
@@ -218,7 +261,7 @@ A screenshot converts taste into a decision in about a minute. The Manus entry b
 | **Perplexity desktop app** — whole UI | 2026-07-31 | ✅ screenshot | *The composer* section above. Confirmed the thin-monoline reading, and produced the refinement to the icon rule (fixed nav gets icons; the user's own content does not). **Currently the best reference we have for Rebecca's panel** — and the one Ricardo uses daily, which matters more than a site he admires once. |
 | **Cloudflare** — dashboard AI assistant | 2026-07-31 | ❌ behind a login | Nothing yet. Wanted: how it animates work-in-progress, how it occupies the panel, how it shows what it is *doing* rather than only what it has said. This is the copilot's primary reference and it is currently a blank. |
 | **Codex IDE** — UI and workflow | 2026-07-31 | ❌ not examined | Nothing yet. Ricardo has praised it twice — once for cross-device continuity (*"how great it is to even use the phone in a macbook"*), once for UI and workflow generally. **Workflow is the interesting half**: what a coding agent's interface gets right is directly relevant to the copilot, which is the same problem — showing an agent's in-progress work legibly. |
-| **Linear** — website | 2026-07-31 | ❌ browser hung on load | Public site, so this one is checkable — retry. Widely imitated for restrained dark surfaces, dense-but-calm typography and precise motion. Worth extracting deliberately rather than absorbing, since "looks like Linear" is itself now a generic default. |
+| **Linear** — the app | 2026-07-31 | ✅ screenshot (Ricardo's own workspace) | *Dense lists* section above. The counterpart to Perplexity: same design family, opposite density. **Most Norfolk screens are this kind**, so it is the more directly useful of the two. |
 | **ElevenLabs** — website | 2026-07-31 | ❌ browser hung on load | Public, checkable, retry. |
 | **Qurrent AI** — website *and content* | 2026-07-31 | ❌ not examined | Public. Note Ricardo named the **content**, not only the design — so this belongs partly under *Voice* above. |
 | **Richard Thaler / David Brooks** — prose | 2026-07-31 | ✅ known bodies of work | The voice section above. The most actionable reference of the day, because it governs every string rather than one surface. |
