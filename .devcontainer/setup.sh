@@ -15,11 +15,11 @@ if ! command -v doppler >/dev/null 2>&1; then
 fi
 doppler --version
 
-echo "==> Claude Code"
-if ! command -v claude >/dev/null 2>&1; then
-  npm install -g @anthropic-ai/claude-code
-fi
-claude --version || true
+# Claude Code itself is installed by the OFFICIAL devcontainer feature
+# (ghcr.io/anthropics/devcontainer-features/claude-code in devcontainer.json)
+# — Anthropic maintains it, we don't. Verify only:
+echo "==> Claude Code (installed by official devcontainer feature)"
+claude --version || echo "WARN: claude not found — check the devcontainer feature"
 
 echo "==> pnpm + deps"
 corepack enable
