@@ -31,6 +31,8 @@ doppler run -- .\tools\launchers\claude-kimi.ps1
 | `claude-deepseek` | DeepSeek | `DEEPSEEK_API_KEY` | `api.deepseek.com/anthropic` |
 | `claude-grok` | OpenRouter | `OPENROUTER_API_KEY` | `openrouter.ai/api` |
 | `claude-openai` | OpenRouter | `OPENROUTER_API_KEY` | `openrouter.ai/api` |
+| `claude-gemini` | OpenRouter (Google) | `OPENROUTER_API_KEY` | `openrouter.ai/api` |
+| `claude-llama` | OpenRouter (Meta) | `OPENROUTER_API_KEY` | `openrouter.ai/api` — second-opinion driver, see header note |
 
 `claude-launcher-lib.sh` / `.ps1` hold the shared logic — key validation, model-slot mapping, and the passthrough. Each launcher sets only what differs. Fix a shared bug in the lib, not in six copies.
 

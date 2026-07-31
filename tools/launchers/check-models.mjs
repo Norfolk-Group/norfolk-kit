@@ -43,8 +43,10 @@ const CONFIGURED = {
   glm: { file: "claude-glm.sh", primary: "glm-5.2[1m]", fast: "glm-4.5-air" },
   qwen: { file: "claude-qwen.sh", primary: "qwen3.7-max-us", fast: "qwen3.7-plus" },
   deepseek: { file: "claude-deepseek.sh", primary: null, fast: null }, // fill in when read
-  grok: { file: "claude-grok.sh", primary: null, fast: null },
+  grok: { file: "claude-grok.sh", primary: "x-ai/grok-4.5", fast: "x-ai/grok-4.3" },
   openai: { file: "claude-openai.sh", primary: null, fast: null },
+  gemini: { file: "claude-gemini.sh", primary: "google/gemini-3.6-flash", fast: "google/gemini-3.5-flash-lite" },
+  llama: { file: "claude-llama.sh", primary: "meta-llama/llama-4-maverick", fast: "meta-llama/llama-3.3-70b-instruct" },
 };
 
 async function fetchJSON(url, headers) {
@@ -151,10 +153,18 @@ async function checkOpenRouter(env) {
   const gpt = models
     .filter((m) => m.id.startsWith("openai/gpt-"))
     .sort((a, b) => (b.created ?? 0) - (a.created ?? 0));
+  const gemini = models
+    .filter((m) => /^google\/gemini-[\d.]+-(pro|flash)$/.test(m.id))
+    .sort((a, b) => (b.created ?? 0) - (a.created ?? 0));
+  const llama = models
+    .filter((m) => m.id.startsWith("meta-llama/llama-") && !m.id.includes("guard"))
+    .sort((a, b) => (b.created ?? 0) - (a.created ?? 0));
   return {
-    provider: "OpenRouter (Grok/GPT)",
+    provider: "OpenRouter (Grok/GPT/Gemini/Llama)",
     detectedFlagshipGrok: grok[0]?.id ?? null,
     detectedFlagshipGpt: gpt[0]?.id ?? null,
+    detectedFlagshipGemini: gemini[0]?.id ?? null,
+    detectedFlagshipLlama: llama[0]?.id ?? null,
     note: "OpenRouter aggregates all providers — sorted by listing recency (created), which is the closest available signal to 'newest'.",
   };
 }
@@ -189,6 +199,8 @@ async function main() {
     if (v.detectedFlagship) console.log(`  detected flagship: ${v.detectedFlagship}`);
     if (v.detectedFlagshipGrok) console.log(`  detected Grok flagship: ${v.detectedFlagshipGrok}`);
     if (v.detectedFlagshipGpt) console.log(`  detected GPT flagship: ${v.detectedFlagshipGpt}`);
+    if (v.detectedFlagshipGemini) console.log(`  detected Gemini flagship: ${v.detectedFlagshipGemini}`);
+    if (v.detectedFlagshipLlama) console.log(`  detected Llama flagship: ${v.detectedFlagshipLlama}`);
     if (v.note) console.log(`  note: ${v.note}`);
     console.log();
   }
