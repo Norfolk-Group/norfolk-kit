@@ -1,0 +1,184 @@
+#!/usr/bin/env node
+/**
+ * kit-guard — the control that does not depend on anyone reading a diff.
+ *
+ * WHY THIS EXISTS: the equip and tidy skills write changes AND write the
+ * plain-English summary the owner approves on. That is circular trust: a wrong
+ * or flattering summary is undetectable by the one person in the loop. This
+ * check is the machine half — it refuses to let a PR merge if it violates the
+ * boundaries, whatever the summary says.
+ *
+ * Four rules, all fail-closed:
+ *   1. BRAND BOUNDARY  — every kit-managed file present in the repo must carry
+ *      a sensitivity this org is allowed to hold. Catches both a bad payload
+ *      and a standing violation (e.g. a repo transferred between orgs).
+ *   2. MANIFEST SCOPE  — a kit/tidy PR may not add or modify kit-managed paths
+ *      that the manifest does not claim. Stops silent scope creep.
+ *   3. NO DELETIONS    — equip/tidy PRs carry zero deletions. Real deletions go
+ *      in a separate deletions-only PR so approval is unambiguous.
+ *   4. MARKER COVERAGE — an unmatched path is treated as norfolk-only, so
+ *      forgetting to mark a new file fails loudly in a client repo instead of
+ *      leaking quietly.
+ *
+ * Usage (CI):  node tools/kit-guard/check.mjs --base origin/main --head HEAD
+ * Usage (dry): node tools/kit-guard/check.mjs --audit-only
+ */
+
+import { readFileSync, existsSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+
+const args = process.argv.slice(2);
+const argOf = (n, d = null) => {
+  const i = args.indexOf(n);
+  return i >= 0 && args[i + 1] ? args[i + 1] : d;
+};
+const AUDIT_ONLY = args.includes("--audit-only");
+const BASE = argOf("--base", "origin/main");
+const HEAD = argOf("--head", "HEAD");
+
+const failures = [];
+const notes = [];
+const fail = (rule, msg) => failures.push({ rule, msg });
+
+// ── inputs ────────────────────────────────────────────────────────────────
+const read = (p) => JSON.parse(readFileSync(p, "utf8"));
+
+if (!existsSync(".kit/manifest.json")) {
+  console.log("kit-guard: no .kit/manifest.json — repo is not equipped. Nothing to check.");
+  process.exit(0);
+}
+const manifest = read(".kit/manifest.json");
+const payloads = existsSync(".kit/payloads.json") ? read(".kit/payloads.json") : null;
+const markers = existsSync(".kit/markers.json") ? read(".kit/markers.json") : null;
+
+if (!payloads || !markers) {
+  fail("SETUP", "`.kit/payloads.json` and `.kit/markers.json` must both be present in an equipped repo — equip installs them. Without them this check cannot enforce anything, so it fails rather than passing blind.");
+  report();
+}
+
+// which org is this repo in, right now?
+const repoEnv = process.env.GITHUB_REPOSITORY || "";
+const currentOrg = repoEnv.includes("/") ? repoEnv.split("/")[0] : manifest.org || "";
+const orgRule = payloads.payloads[currentOrg] || payloads.default;
+const allowed = new Set(orgRule.allowedSensitivities || []);
+
+notes.push(`repo org: ${currentOrg || "(unknown)"} → payload class "${orgRule.class}"`);
+notes.push(`allowed sensitivities: ${[...allowed].join(", ") || "(none)"}`);
+if (manifest.org && currentOrg && manifest.org !== currentOrg) {
+  notes.push(`NOTE: manifest was written for org "${manifest.org}" but this repo now lives in "${currentOrg}" — evaluating against the CURRENT org, as it should be.`);
+}
+
+// ── glob matching (only the two forms markers.json uses) ──────────────────
+function matches(pattern, path) {
+  if (pattern.endsWith("/**")) return path.startsWith(pattern.slice(0, -2));
+  return pattern === path;
+}
+function sensitivityOf(path) {
+  // most specific (longest) matching pattern wins
+  let best = null;
+  for (const [pattern, sens] of Object.entries(markers.markers)) {
+    if (matches(pattern, path) && (!best || pattern.length > best.pattern.length)) {
+      best = { pattern, sens };
+    }
+  }
+  return best ? best.sens : markers.unmatchedDefault || "norfolk-only";
+}
+const isKitManaged = (path) =>
+  Object.keys(markers.markers).some((p) => matches(p, path));
+
+// ── RULE 1 + 4: brand boundary over everything the manifest claims ────────
+for (const [path, entry] of Object.entries(manifest.files || {})) {
+  const sens = entry.sensitivity || sensitivityOf(path);
+  if (!allowed.has(sens)) {
+    fail(
+      "BRAND-BOUNDARY",
+      `\`${path}\` is marked **${sens}**, which a "${orgRule.class}" repo may not hold. ` +
+        (manifest.org && manifest.org !== currentOrg
+          ? "This repo appears to have moved orgs — the file must be removed."
+          : "Equip should never have added it; remove it from this PR."),
+    );
+  }
+  if (!entry.sensitivity && sensitivityOf(path) === (markers.unmatchedDefault || "norfolk-only")) {
+    notes.push(`unmarked path defaulted to ${markers.unmatchedDefault}: ${path}`);
+  }
+}
+
+// ── diff-based rules (skipped in audit mode) ──────────────────────────────
+if (!AUDIT_ONLY) {
+  let diff = "";
+  try {
+    diff = execFileSync("git", ["diff", "--name-status", `${BASE}...${HEAD}`], {
+      encoding: "utf8",
+    });
+  } catch (e) {
+    fail("SETUP", `could not compute the diff (${BASE}...${HEAD}): ${e.message}`);
+    report();
+  }
+
+  const claimed = new Set(Object.keys(manifest.files || {}));
+  // .kit/manifest.json itself is written by every equip run
+  claimed.add(".kit/manifest.json");
+
+  for (const line of diff.split("\n").filter(Boolean)) {
+    const [status, ...rest] = line.split("\t");
+    const path = rest[rest.length - 1];
+    const code = status[0];
+
+    // RULE 3 — no deletions in an equip/tidy PR
+    if (code === "D") {
+      fail(
+        "NO-DELETIONS",
+        `\`${path}\` is deleted in this PR. Equip and tidy PRs carry zero deletions — move it to a separate deletions-only PR so the approval is unambiguous.`,
+      );
+      continue;
+    }
+
+    // RULE 2 — no kit-managed writes the manifest does not claim
+    if ((code === "A" || code === "M" || code === "R") && isKitManaged(path) && !claimed.has(path)) {
+      fail(
+        "MANIFEST-SCOPE",
+        `\`${path}\` is a kit-managed path but is not listed in \`.kit/manifest.json\`. Either equip should claim it, or it does not belong in this PR.`,
+      );
+    }
+
+    // RULE 1 (again, on the diff) — catches files added outside the manifest path too
+    if ((code === "A" || code === "M") && isKitManaged(path)) {
+      const sens = sensitivityOf(path);
+      if (!allowed.has(sens)) {
+        fail(
+          "BRAND-BOUNDARY",
+          `\`${path}\` (marked **${sens}**) is being written into a "${orgRule.class}" repo, which may not hold it.`,
+        );
+      }
+    }
+  }
+}
+
+report();
+
+// ── output ────────────────────────────────────────────────────────────────
+function report() {
+  const uniq = [...new Map(failures.map((f) => [f.rule + f.msg, f])).values()];
+  console.log("## kit-guard\n");
+  notes.forEach((n) => console.log(`- ${n}`));
+  console.log("");
+
+  if (uniq.length === 0) {
+    console.log("✅ **Passed.** Boundaries intact, no out-of-manifest writes, no deletions.");
+    process.exit(0);
+  }
+
+  console.log(`❌ **${uniq.length} violation${uniq.length === 1 ? "" : "s"} — this PR must not merge.**\n`);
+  for (const rule of ["BRAND-BOUNDARY", "MANIFEST-SCOPE", "NO-DELETIONS", "SETUP"]) {
+    const hits = uniq.filter((f) => f.rule === rule);
+    if (!hits.length) continue;
+    console.log(`### ${rule}`);
+    hits.forEach((h) => console.log(`- ${h.msg}`));
+    console.log("");
+  }
+  console.log(
+    "> This check exists because the same agent writes both the change and the summary you read. " +
+      "It does not care what the summary says.",
+  );
+  process.exit(1);
+}
