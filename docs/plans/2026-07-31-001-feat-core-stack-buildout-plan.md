@@ -99,6 +99,23 @@ Build `payloads.json`, sensitivity markers file, the equip skill (SKILL.md, copi
 - The **fine-grained PAT** as an org Codespaces secret (SpecFlow C6) — one sitting with Ricardo. Equip pre-flights for it and prints the fallback, so this blocks convenience, not correctness.
 - `kit-guard.yml` has never run in GitHub Actions. First real PR is the test.
 
+### What the first live equip found *(2026-07-31)*
+
+`norfolk-manual` was created and equipped for real. The scratch-repo tests in Phase 2 all passed and were all correct — but they tested *whether the boundary holds*, and every one of these six defects is about *what ships* or *what the guard considers its business*. Only a real repo surfaces those.
+
+| # | Defect | Would have caused | Fix |
+|---|---|---|---|
+| 1 | Kit's own plans/decisions/Owner's Guide marked `norfolk-only` | Copied into every Norfolk repo — forking the kit, the exact failure the Manual exists to prevent | `kit-only` marker; no org allows it |
+| 2 | Brand tree in the payload | **180MB** into every repo | `$excludeFromPayload`; curated web sets deferred to Phase 4 |
+| 3 | **`git` quotes non-ASCII paths** — the quoted form matches no pattern, so the file skipped *both* the scope and boundary rules | A silent, complete bypass. 20 files hit it here, all KIT Capital assets, and they were mid-copy into a Norfolk repo | Read NUL-separated output (`-z`) everywhere |
+| 4 | `unmatchedDefault: norfolk-only` | Looks fail-closed, isn't — Norfolk-Group *allows* that sensitivity, so unmarked files ship silently there. This is what turned #3 from a caught error into a boundary crossing | `unmatchedDefault: kit-only` |
+| 5 | `markers` conflated "paths the kit ships" with "paths the guard polices" | **No equipped repo could have its own README or its own `docs/plans/`** without CI going red | `$kitLocal`, excluded from `markers` |
+| 6 | Manifest hashes computed on unnormalised line endings | Every cross-platform re-equip = one giant false conflict; the update mechanism silently useless | `.gitattributes` with `eol=lf` |
+
+**The pattern worth keeping:** #3 was found only because the accented path made `mkdir` *crash*. Had the filename been merely unusual rather than unopenable, the file would have shipped and nothing would have complained. The lesson is not "handle unicode" — it is that a check keyed on pattern-matching fails open when the input is shaped unexpectedly, so the default for an unrecognised input must be the *most* restrictive value available (#4), never a plausible-looking middle one.
+
+Kit commits: `d16ee5e`, `89e65d1`, `c88ada8`, `2d94d13`.
+
 ### Phase 3 — `norfolk-manual` + the Manual app v1 *(L · equip's first live test)*
 Create the fresh repo → **equip it for real** (the zero-risk proving ground, origin R18) → build the app on the equipped foundation: renders kit content (rules, decisions, stack, fleet, build state, Owner's Guide) — **renderer, never a fork** — plus the Update button with the I8–I10/M4–M5 safety behaviors. Railway-hosted, tRPC (agent-native parity), no DB in v1.
 **Done when:** Ricardo opens a URL, sees his always-current manual, presses Update, approves the resulting PR, and watches the manual re-render.

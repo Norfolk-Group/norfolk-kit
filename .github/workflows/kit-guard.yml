@@ -27,7 +27,13 @@ jobs:
 
       - name: Run kit-guard
         id: guard
+        # set -o pipefail is load-bearing. GitHub's default shell is `bash -e`,
+        # where a pipeline returns the LAST command's status — so `node ... |
+        # tee` reports tee's success and the job passes while the guard is
+        # screaming. Observed on norfolk-manual PR #1 (2026-07-31): four
+        # violations posted to the PR, run marked green, merge unblocked.
         run: |
+          set -o pipefail
           node tools/kit-guard/check.mjs \
             --base "origin/${{ github.base_ref }}" \
             --head "${{ github.event.pull_request.head.sha }}" \
