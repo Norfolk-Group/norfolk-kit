@@ -1,0 +1,391 @@
+<title>Themes — Norfolk core-stack</title>
+
+<style>
+  :root {
+    --page-bg: #fbfaf9;
+    --page-fg: #1c1a18;
+    --page-dim: #6b6560;
+    --page-line: #e4e0db;
+    --page-panel: #ffffff;
+    --page-accent: #7a4a2b;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page-bg: #131211; --page-fg: #ecE8e4; --page-dim: #948c85;
+      --page-line: #2c2926; --page-panel: #1b1918; --page-accent: #d09a6a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --page-bg: #131211; --page-fg: #ece8e4; --page-dim: #948c85;
+    --page-line: #2c2926; --page-panel: #1b1918; --page-accent: #d09a6a;
+  }
+  :root[data-theme="light"] {
+    --page-bg: #fbfaf9; --page-fg: #1c1a18; --page-dim: #6b6560;
+    --page-line: #e4e0db; --page-panel: #ffffff; --page-accent: #7a4a2b;
+  }
+
+  body {
+    background: var(--page-bg); color: var(--page-fg);
+    font-family: var(--sans); line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+
+  .eyebrow {
+    font: 600 0.7rem/1 var(--mono); letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--page-accent);
+  }
+  h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.1; margin: 0.6rem 0 0; text-wrap: balance; letter-spacing: -0.02em; }
+  h2 { font-size: 1.3rem; margin: 3.5rem 0 0.5rem; letter-spacing: -0.01em; text-wrap: balance; }
+  h3 { font-size: 0.95rem; margin: 2rem 0 0.4rem; }
+  .lede { font-size: 1.05rem; color: var(--page-dim); max-width: 62ch; margin: 0.8rem 0 0; }
+  p { max-width: 68ch; }
+  a { color: var(--page-accent); }
+  code { font: 0.85em var(--mono); background: color-mix(in srgb, var(--page-fg) 7%, transparent); padding: 0.12em 0.4em; border-radius: 3px; }
+
+  /* ── theme picker ─────────────────────────────────────────── */
+  .picker { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.6rem 0 0; }
+  .chip {
+    display: flex; align-items: center; gap: 0.55rem;
+    border: 1px solid var(--page-line); background: var(--page-panel);
+    border-radius: 999px; padding: 0.45rem 0.9rem 0.45rem 0.5rem;
+    font: 500 0.85rem var(--sans); color: var(--page-fg);
+    cursor: pointer; transition: border-color .18s, transform .18s;
+  }
+  .chip:hover { border-color: var(--page-accent); }
+  .chip[aria-pressed="true"] { border-color: var(--page-accent); box-shadow: inset 0 0 0 1px var(--page-accent); }
+  .chip:focus-visible { outline: 2px solid var(--page-accent); outline-offset: 2px; }
+  .dots { display: flex; }
+  .dots i { width: 13px; height: 13px; border-radius: 50%; display: block; border: 1.5px solid var(--page-panel); }
+  .dots i + i { margin-left: -5px; }
+
+  .toggles { display: flex; gap: 0.5rem; margin: 1rem 0 0; flex-wrap: wrap; align-items: center; }
+  .seg { display: inline-flex; border: 1px solid var(--page-line); border-radius: 7px; overflow: hidden; }
+  .seg button {
+    border: 0; background: var(--page-panel); color: var(--page-dim);
+    font: 500 0.78rem var(--sans); padding: 0.4rem 0.85rem; cursor: pointer;
+  }
+  .seg button[aria-pressed="true"] { background: var(--page-accent); color: var(--page-bg); }
+  .seg button:focus-visible { outline: 2px solid var(--page-accent); outline-offset: -2px; }
+  .hint { font-size: 0.78rem; color: var(--page-dim); }
+
+  /* ── the app preview ──────────────────────────────────────── */
+  .stage {
+    margin: 1.4rem 0 0; border: 1px solid var(--page-line); border-radius: 12px;
+    background: var(--page-panel); padding: 1.1rem; overflow-x: auto;
+  }
+  .device {
+    margin: 0 auto; transition: max-width .35s cubic-bezier(.4,0,.2,1);
+    border-radius: 10px; overflow: hidden; border: 1px solid rgba(0,0,0,.14);
+    box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 8px 26px rgba(0,0,0,.09);
+  }
+
+  /* everything below reads ONLY from theme vars, like the real app */
+  .app {
+    display: grid; grid-template-columns: 168px 1fr 250px;
+    min-height: 430px; background: var(--bg); color: var(--fg);
+    font-family: var(--font-sans); font-size: 13px;
+  }
+  .app * { border-color: var(--border); }
+
+  .side { background: var(--sidebar); border-right: 1px solid var(--sidebar-border); padding: 0.85rem 0.7rem; }
+  .brandrow { display: flex; align-items: center; gap: 0.5rem; padding: 0 0.3rem 0.9rem; }
+  .brandmark { width: 20px; height: 20px; border-radius: 5px; background: var(--sidebar-primary); flex: none; }
+  .brandtxt { font-weight: 650; font-size: 12.5px; color: var(--sidebar-foreground); letter-spacing: -0.01em; }
+  .nav { display: flex; flex-direction: column; gap: 1px; }
+  .nav a {
+    display: flex; align-items: center; gap: 0.5rem; text-decoration: none;
+    padding: 0.42rem 0.5rem; border-radius: calc(var(--radius) * 0.8);
+    color: var(--sidebar-foreground); opacity: .72; font-size: 12.5px;
+  }
+  .nav a.on { background: var(--sidebar-accent); color: var(--sidebar-accent-foreground); opacity: 1; font-weight: 600; }
+  .nav .ico { width: 13px; height: 13px; border-radius: 3px; background: currentColor; opacity: .5; flex: none; }
+
+  .main { padding: 1rem 1.1rem; min-width: 0; }
+  .h { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.9rem; }
+  .h h4 { margin: 0; font-size: 15px; letter-spacing: -0.01em; }
+  .h p { margin: 2px 0 0; font-size: 11.5px; color: var(--muted-foreground); }
+  .btn {
+    background: var(--primary); color: var(--primary-foreground); border: 0;
+    border-radius: calc(var(--radius) * 0.8); padding: 0.36rem 0.75rem;
+    font: 600 11.5px var(--font-sans); cursor: pointer; white-space: nowrap;
+  }
+
+  .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.55rem; }
+  .kpi { background: var(--card); color: var(--card-foreground); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.6rem 0.7rem; }
+  .kpi .k { font-size: 9.5px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted-foreground); }
+  .kpi .v { font-size: 17px; font-weight: 680; margin-top: 2px; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .kpi .d { font-size: 10.5px; color: var(--muted-foreground); }
+
+  .panel { margin-top: 0.7rem; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.75rem; }
+  .panel .t { font-size: 11.5px; font-weight: 640; margin-bottom: 0.6rem; }
+  .bars { display: flex; align-items: flex-end; gap: 6px; height: 82px; }
+  .bars span { flex: 1; border-radius: 3px 3px 0 0; display: block; transition: height .5s cubic-bezier(.4,0,.2,1); }
+  .axis { display: flex; gap: 6px; margin-top: 5px; }
+  .axis span { flex: 1; text-align: center; font-size: 9px; color: var(--muted-foreground); }
+
+  /* copilot */
+  .cop { background: var(--sidebar); border-left: 1px solid var(--sidebar-border); display: flex; flex-direction: column; }
+  .cop .top { padding: 0.6rem 0.7rem; border-bottom: 1px solid var(--sidebar-border); display: flex; align-items: center; gap: 0.45rem; }
+  .avatar { width: 19px; height: 19px; border-radius: 50%; background: var(--primary); flex: none; }
+  .who { font-size: 11.5px; font-weight: 640; color: var(--sidebar-foreground); }
+  .role { font-size: 9.5px; color: var(--muted-foreground); }
+  .thread { flex: 1; padding: 0.6rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  .msg { border-radius: var(--radius); padding: 0.45rem 0.6rem; font-size: 11.5px; max-width: 92%; }
+  .msg.me { background: var(--primary); color: var(--primary-foreground); align-self: flex-end; }
+  .msg.her { background: var(--card); color: var(--card-foreground); border: 1px solid var(--border); }
+  .tool {
+    display: flex; align-items: center; gap: 0.4rem; font-size: 10px;
+    color: var(--muted-foreground); background: var(--muted);
+    border-radius: calc(var(--radius) * 0.7); padding: 0.3rem 0.5rem; align-self: flex-start;
+  }
+  .spin { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid currentColor; border-top-color: transparent; animation: sp .75s linear infinite; flex: none; }
+  @keyframes sp { to { transform: rotate(360deg); } }
+  .tick { width: 9px; height: 9px; border-radius: 50%; background: var(--primary); flex: none; }
+  .composer { padding: 0.55rem; border-top: 1px solid var(--sidebar-border); }
+  .composer div {
+    border: 1px solid var(--input); background: var(--background);
+    border-radius: calc(var(--radius) * 0.8); padding: 0.4rem 0.55rem;
+    font-size: 11px; color: var(--muted-foreground);
+  }
+
+  /* narrow: iOS-ish stacking */
+  .device[data-w="phone"] .app { grid-template-columns: 1fr; min-height: 560px; }
+  .device[data-w="phone"] .side { display: none; }
+  .device[data-w="phone"] .cop { border-left: 0; border-top: 1px solid var(--sidebar-border); }
+  .device[data-w="phone"] .kpis { grid-template-columns: 1fr 1fr; }
+  .device[data-w="tablet"] .app { grid-template-columns: 150px 1fr; }
+  .device[data-w="tablet"] .cop { display: none; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 0.88rem; margin-top: 0.7rem; }
+  th, td { text-align: left; padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--page-line); vertical-align: top; }
+  th { font: 600 0.72rem var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--page-dim); }
+  .scroller { overflow-x: auto; }
+
+  .note {
+    border-left: 2px solid var(--page-accent); padding: 0.1rem 0 0.1rem 1rem;
+    margin: 1.4rem 0; color: var(--page-dim); font-size: 0.92rem;
+  }
+  .note strong { color: var(--page-fg); }
+  ul { max-width: 68ch; padding-left: 1.1rem; }
+  li { margin: 0.3rem 0; }
+  .rest { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.7rem; }
+  .rest span { font: 0.72rem var(--mono); color: var(--page-dim); border: 1px solid var(--page-line); border-radius: 4px; padding: 0.15rem 0.45rem; }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<div class="wrap">
+
+  <div class="eyebrow">Norfolk core-stack · design</div>
+  <h1>Themes</h1>
+  <p class="lede">Every app lets the user pick a theme. The themes are preset by the codebase — a user chooses from a curated list, never a colour picker. Below are three, applied to a real app shell so you can see what changes.</p>
+
+  <h2>Pick one</h2>
+  <div class="picker" role="group" aria-label="Theme">
+    <button class="chip" data-t="elegant-luxury" aria-pressed="true">
+      <span class="dots"><i style="background:#9b2c2c"></i><i style="background:#fef3c7"></i><i style="background:#faf7f5"></i></span>
+      Elegant Luxury
+    </button>
+    <button class="chip" data-t="vintage-paper" aria-pressed="false">
+      <span class="dots"><i style="background:#a67c52"></i><i style="background:#d4c8aa"></i><i style="background:#f5f1e6"></i></span>
+      Vintage Paper
+    </button>
+    <button class="chip" data-t="graphite" aria-pressed="false">
+      <span class="dots"><i style="background:#606060"></i><i style="background:#c0c0c0"></i><i style="background:#f0f0f0"></i></span>
+      Graphite
+    </button>
+  </div>
+
+  <div class="toggles">
+    <div class="seg" role="group" aria-label="Appearance">
+      <button data-m="light" aria-pressed="true">Light</button>
+      <button data-m="dark" aria-pressed="false">Dark</button>
+    </div>
+    <div class="seg" role="group" aria-label="Screen size">
+      <button data-w="desk" aria-pressed="true">Desktop</button>
+      <button data-w="tablet" aria-pressed="false">iPad</button>
+      <button data-w="phone" aria-pressed="false">iPhone</button>
+    </div>
+    <span class="hint" id="hint">1180px</span>
+  </div>
+
+  <div class="stage">
+    <div class="device" id="device" data-w="desk">
+      <div class="app" id="app">
+        <aside class="side">
+          <div class="brandrow"><span class="brandmark"></span><span class="brandtxt">Obra Pía</span></div>
+          <nav class="nav">
+            <a href="#" class="on"><span class="ico"></span>Overview</a>
+            <a href="#"><span class="ico"></span>Investors</a>
+            <a href="#"><span class="ico"></span>Documents</a>
+            <a href="#"><span class="ico"></span>Distributions</a>
+            <a href="#"><span class="ico"></span>Properties</a>
+            <a href="#"><span class="ico"></span>Reports</a>
+          </nav>
+        </aside>
+
+        <main class="main">
+          <div class="h">
+            <div>
+              <h4>Portfolio overview</h4>
+              <p>Quarter to date · 31 July 2026</p>
+            </div>
+            <button class="btn">Export</button>
+          </div>
+
+          <div class="kpis">
+            <div class="kpi"><div class="k">Committed</div><div class="v">$48.2M</div><div class="d">across 4 vehicles</div></div>
+            <div class="kpi"><div class="k">Called</div><div class="v">$31.7M</div><div class="d">65.8% of commitments</div></div>
+            <div class="kpi"><div class="k">Distributed</div><div class="v">$12.4M</div><div class="d">0.39× DPI</div></div>
+          </div>
+
+          <div class="panel">
+            <div class="t">Capital called by quarter</div>
+            <div class="bars" id="bars"></div>
+            <div class="axis"><span>Q3·25</span><span>Q4·25</span><span>Q1·26</span><span>Q2·26</span><span>Q3·26</span><span>Q4·26</span><span>Q1·27</span></div>
+          </div>
+        </main>
+
+        <aside class="cop">
+          <div class="top">
+            <span class="avatar"></span>
+            <span><span class="who">Rebecca</span><br><span class="role">AI Co-Pilot</span></span>
+          </div>
+          <div class="thread">
+            <div class="msg me">Show Q2 distributions by investor</div>
+            <div class="tool"><span class="tick"></span>Queried 4 vehicles</div>
+            <div class="msg her">$3.1M across 27 investors. The largest is Colliers at $412k.</div>
+            <div class="msg me">Export it and email to the board</div>
+            <div class="tool"><span class="spin"></span>Building report…</div>
+          </div>
+          <div class="composer"><div>Ask Rebecca…</div></div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>Fonts shown are system substitutes.</strong> These themes specify Poppins, Libre Baskerville and Montserrat, which cannot load here — this page blocks outside requests. Colour, spacing, radius and shadow are the real values; the letterforms are not. In a real app the fonts load and the difference is considerable.
+  </div>
+
+  <h2>What a theme actually controls</h2>
+  <p>A theme is a set of named values, not a stylesheet. Every component reads the names, so switching a theme changes everything at once and nothing needs rewriting.</p>
+
+  <div class="scroller">
+    <table>
+      <thead><tr><th>Group</th><th>Controls</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr><td>Surfaces</td><td><code>background</code>, <code>card</code>, <code>popover</code>, <code>sidebar</code></td><td>The layers the eye separates content into</td></tr>
+        <tr><td>Text</td><td><code>foreground</code>, <code>muted-foreground</code></td><td>Primary vs secondary reading</td></tr>
+        <tr><td>Action</td><td><code>primary</code>, <code>accent</code>, <code>destructive</code></td><td>What is clickable, and what is dangerous</td></tr>
+        <tr><td>Charts</td><td><code>chart-1</code> … <code>chart-5</code></td><td>Series colours that stay legible in both modes — the part most themes get wrong</td></tr>
+        <tr><td>Shape</td><td><code>radius</code>, shadow offset/blur/opacity</td><td>Sharp and flat, or soft and raised</td></tr>
+        <tr><td>Type</td><td><code>font-sans</code>, <code>font-serif</code>, <code>font-mono</code></td><td>Carries more character than colour does</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Every theme ships light and dark</h3>
+  <p>Not an inversion — a second designed palette. Toggle Dark above and watch Vintage Paper: the cream becomes warm brown rather than grey, because the theme defines both.</p>
+
+  <h2>iOS and small screens</h2>
+  <p>Every app must work on a phone. Press iPad and iPhone above: the navigation collapses, the copilot moves below the content instead of beside it, and the KPI row reflows to two columns. Same components, same theme, different arrangement.</p>
+  <ul>
+    <li><strong>The copilot is a panel on desktop and a sheet on phone.</strong> A 250px column on a 390px screen is unusable.</li>
+    <li><strong>Tap targets are 44px minimum</strong> — Apple's floor, and the reason phone layouts are not just narrow desktop ones.</li>
+    <li><strong>Safe areas matter.</strong> Notch and home indicator eat real estate; anything pinned to an edge needs <code>env(safe-area-inset-*)</code>.</li>
+  </ul>
+
+  <h2>The catalogue</h2>
+  <p>Three are shown live. Forty-two exist in the shadcn registry, installable as-is:</p>
+  <div class="rest">
+    <span>modern-minimal</span><span>violet-bloom</span><span>t3-chat</span><span>twitter</span><span>mocha-mousse</span><span>bubblegum</span><span>amethyst-haze</span><span>notebook</span><span>doom-64</span><span>catppuccin</span><span>perpetuity</span><span>kodama-grove</span><span>cosmic-night</span><span>tangerine</span><span>quantum-rose</span><span>nature</span><span>bold-tech</span><span>amber-minimal</span><span>supabase</span><span>neo-brutalism</span><span>solar-dusk</span><span>claymorphism</span><span>cyberpunk</span><span>pastel-dreams</span><span>clean-slate</span><span>caffeine</span><span>ocean-breeze</span><span>retro-arcade</span><span>midnight-bloom</span><span>candyland</span><span>northern-lights</span><span>sunset-horizon</span><span>starry-night</span><span>claude</span><span>vercel</span><span>darkmatter</span><span>mono</span><span>soft-pop</span><span>sage-garden</span>
+  </div>
+
+  <h2>Decisions this needs</h2>
+  <ul>
+    <li><strong>Curated, not open.</strong> Forty-two is a catalogue, not a product. Each app should offer perhaps four, chosen to suit it. Obra Pía is not a Doom 64 kind of application.</li>
+    <li><strong>Brand vs theme.</strong> If an investor picks Cyberpunk for the Obra Pía portal, is that still Obra Pía? Either brand colours override the theme, or theming is limited to a family that keeps the brand intact. <em>Recommendation: the second — offer a small family that reads as the same product.</em></li>
+    <li><strong>Whose choice is stored.</strong> Per-user, per-organisation, or set by an admin? Different answers, different data model.</li>
+  </ul>
+
+  <div class="note">
+    Nothing here is built yet. This page exists so the shape can be judged before code is written — and to make the three questions above answerable by looking rather than imagining.
+  </div>
+</div>
+
+<script>
+  const THEMES = {
+    "elegant-luxury": {
+      light: {"background":"#faf7f5","foreground":"#1a1a1a","card":"#faf7f5","card-foreground":"#1a1a1a","primary":"#9b2c2c","primary-foreground":"#ffffff","muted":"#f0ebe8","muted-foreground":"#57534e","accent":"#fef3c7","accent-foreground":"#7f1d1d","border":"#f5e8d2","input":"#f5e8d2","chart-1":"#b91c1c","chart-2":"#9b2c2c","chart-3":"#7f1d1d","chart-4":"#b45309","chart-5":"#92400e","radius":"0.375rem","sidebar":"#f0ebe8","sidebar-foreground":"#1a1a1a","sidebar-primary":"#9b2c2c","sidebar-accent":"#fef3c7","sidebar-accent-foreground":"#7f1d1d","sidebar-border":"#f5e8d2","font-sans":"Poppins, -apple-system, sans-serif"},
+      dark: {"background":"#1c1917","foreground":"#f5f5f4","card":"#292524","card-foreground":"#f5f5f4","primary":"#b91c1c","primary-foreground":"#faf7f5","muted":"#1f1c1a","muted-foreground":"#d6d3d1","accent":"#b45309","accent-foreground":"#fef3c7","border":"#44403c","input":"#44403c","chart-1":"#f87171","chart-2":"#ef4444","chart-3":"#dc2626","chart-4":"#fbbf24","chart-5":"#f59e0b","radius":"0.375rem","sidebar":"#1c1917","sidebar-foreground":"#f5f5f4","sidebar-primary":"#b91c1c","sidebar-accent":"#b45309","sidebar-accent-foreground":"#fef3c7","sidebar-border":"#44403c","font-sans":"Poppins, -apple-system, sans-serif"}
+    },
+    "vintage-paper": {
+      light: {"background":"#f5f1e6","foreground":"#4a3f35","card":"#fffcf5","card-foreground":"#4a3f35","primary":"#a67c52","primary-foreground":"#ffffff","muted":"#ece5d8","muted-foreground":"#7d6b56","accent":"#d4c8aa","accent-foreground":"#4a3f35","border":"#dbd0ba","input":"#dbd0ba","chart-1":"#a67c52","chart-2":"#8d6e4c","chart-3":"#735a3a","chart-4":"#b3906f","chart-5":"#c0a080","radius":"0.25rem","sidebar":"#ece5d8","sidebar-foreground":"#4a3f35","sidebar-primary":"#a67c52","sidebar-accent":"#d4c8aa","sidebar-accent-foreground":"#4a3f35","sidebar-border":"#dbd0ba","font-sans":"'Libre Baskerville', Georgia, serif"},
+      dark: {"background":"#2d2621","foreground":"#ece5d8","card":"#3a322c","card-foreground":"#ece5d8","primary":"#c0a080","primary-foreground":"#2d2621","muted":"#312b26","muted-foreground":"#c5bcac","accent":"#59493e","accent-foreground":"#ece5d8","border":"#4a4039","input":"#4a4039","chart-1":"#c0a080","chart-2":"#b3906f","chart-3":"#a67c52","chart-4":"#8d6e4c","chart-5":"#735a3a","radius":"0.25rem","sidebar":"#2d2621","sidebar-foreground":"#ece5d8","sidebar-primary":"#c0a080","sidebar-accent":"#59493e","sidebar-accent-foreground":"#ece5d8","sidebar-border":"#4a4039","font-sans":"'Libre Baskerville', Georgia, serif"}
+    },
+    "graphite": {
+      light: {"background":"#f0f0f0","foreground":"#333333","card":"#f5f5f5","card-foreground":"#333333","primary":"#606060","primary-foreground":"#ffffff","muted":"#d9d9d9","muted-foreground":"#666666","accent":"#c0c0c0","accent-foreground":"#333333","border":"#d0d0d0","input":"#e0e0e0","chart-1":"#606060","chart-2":"#476666","chart-3":"#909090","chart-4":"#a8a8a8","chart-5":"#c0c0c0","radius":"0.35rem","sidebar":"#eaeaea","sidebar-foreground":"#333333","sidebar-primary":"#606060","sidebar-accent":"#c0c0c0","sidebar-accent-foreground":"#333333","sidebar-border":"#d0d0d0","font-sans":"Montserrat, -apple-system, sans-serif"},
+      dark: {"background":"#1a1a1a","foreground":"#d9d9d9","card":"#202020","card-foreground":"#d9d9d9","primary":"#a0a0a0","primary-foreground":"#1a1a1a","muted":"#2a2a2a","muted-foreground":"#808080","accent":"#404040","accent-foreground":"#d9d9d9","border":"#353535","input":"#303030","chart-1":"#a0a0a0","chart-2":"#7e9ca0","chart-3":"#707070","chart-4":"#585858","chart-5":"#404040","radius":"0.35rem","sidebar":"#1f1f1f","sidebar-foreground":"#d9d9d9","sidebar-primary":"#a0a0a0","sidebar-accent":"#404040","sidebar-accent-foreground":"#d9d9d9","sidebar-border":"#353535","font-sans":"Inter, -apple-system, sans-serif"}
+    }
+  };
+
+  const WIDTHS = { desk: "1180px", tablet: "834px", phone: "390px" };
+  const app = document.getElementById("app");
+  const device = document.getElementById("device");
+  const hint = document.getElementById("hint");
+  let theme = "elegant-luxury", mode = "light";
+
+  function apply() {
+    const vars = THEMES[theme][mode];
+    for (const [k, v] of Object.entries(vars)) app.style.setProperty("--" + k, v);
+    drawBars(vars);
+  }
+
+  function drawBars(vars) {
+    const heights = [34, 52, 45, 71, 63, 88, 78];
+    const series = ["chart-1", "chart-2", "chart-3", "chart-4", "chart-5"];
+    const bars = document.getElementById("bars");
+    bars.innerHTML = "";
+    heights.forEach((h, i) => {
+      const b = document.createElement("span");
+      b.style.height = h + "%";
+      b.style.background = vars[series[i % series.length]];
+      bars.appendChild(b);
+    });
+  }
+
+  document.querySelectorAll(".chip").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      theme = btn.dataset.t;
+      document.querySelectorAll(".chip").forEach((b) =>
+        b.setAttribute("aria-pressed", String(b === btn)));
+      apply();
+    });
+  });
+
+  document.querySelectorAll("[data-m]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      mode = btn.dataset.m;
+      document.querySelectorAll("[data-m]").forEach((b) =>
+        b.setAttribute("aria-pressed", String(b === btn)));
+      apply();
+    });
+  });
+
+  document.querySelectorAll("[data-w]").forEach((btn) => {
+    if (!btn.dataset.w || btn.id === "device") return;
+    btn.addEventListener("click", () => {
+      const w = btn.dataset.w;
+      device.dataset.w = w;
+      device.style.maxWidth = WIDTHS[w];
+      hint.textContent = WIDTHS[w];
+      document.querySelectorAll(".seg [data-w]").forEach((b) =>
+        b.setAttribute("aria-pressed", String(b === btn)));
+    });
+  });
+
+  apply();
+</script>
