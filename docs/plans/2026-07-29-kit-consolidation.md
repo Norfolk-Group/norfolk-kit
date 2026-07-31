@@ -25,8 +25,8 @@ Consolidating three overlapping starter efforts into one canonical kit.
 
 ## Next
 
-- [ ] **Harvest from `norfolk-starter`** — the 12 `nai-` skills, the three setup guides, `.cursor`/`.cursorrules`/`.agents`, `scripts/check-norfolk-setup.*`, and `.github/` workflows. Review each against this kit's stack before copying; some `nai-` skills may reference Prisma/Clerk and need rewording for Drizzle/WorkOS.
-- [ ] **Then** archive `norfolk-starter` with a README pointing here. Not before — archiving first would bury the skills.
+- [x] **Harvest from `norfolk-starter`** — DONE 2026-07-31. Kept: the three setup guides (→ `docs/setup/`) and the check/restore scripts (→ `tools/setup/`). **Not kept: the 12 `nai-` skills** — read before deciding (nai-feature, nai-finance sampled in full): they are thin persona-wrapper routers ("You are Rafael…", "You are Isabela…") that route work into styles now handled with far more depth by the standard superpowers + compound-engineering bundle (R9), and they're built on named human personas — the pattern deliberately removed elsewhere in the kit. Their one durable idea (cost-aware work sizing) already lives in Ricardo's global rules. `.cursor`/`.cursorrules` not kept — Cursor isn't in the toolchain; `.github/` workflows were Next.js/Prisma-specific.
+- [x] **Then** archive `norfolk-starter` — DONE 2026-07-31, description updated to point here, repo archived (read-only; delete later if desired — Ricardo authorized full deletion, archive chosen as the free reversible version of the same intent).
 - [ ] Inspect and remove the `norfolk-starter/` directory inside H-Analytics.
 - [ ] Application scaffold: `src/procedures/`, Drizzle schema, WorkOS auth module, R2 presigned-upload module (with `forcePathStyle`), Resend setup, Sentry init, tRPC + MCP server wiring, `package.json`, `railway.toml`.
 - [ ] `pnpm docs:artifacts` generator + the five HTML artifacts (components, motion, icons, architecture, navigation) per §10 of the governance rule.
