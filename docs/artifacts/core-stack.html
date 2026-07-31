@@ -1,0 +1,243 @@
+<title>The Core-Stack — Norfolk's Toolbox</title>
+<style>
+:root{
+  --ground:#f7f6f4; --panel:#ffffff; --ink:#1c1917; --ink-soft:#57534e;
+  --ink-faint:#8b8580; --rule:#e3dfda; --gold:#b45309; --gold-soft:#fef3c7;
+  --good:#166534; --good-bg:#f0fdf4; --warn:#92400e; --warn-bg:#fffbeb;
+  --no:#991b1b; --no-bg:#fef2f2; --build:#1e40af; --build-bg:#eff6ff;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{--ground:#141210;--panel:#1c1917;--ink:#f5f5f4;--ink-soft:#b5aea8;
+  --ink-faint:#857d76;--rule:#302b27;--gold:#fbbf24;--gold-soft:#3a2c10;
+  --good:#4ade80;--good-bg:#0c2416;--warn:#fbbf24;--warn-bg:#2c2008;
+  --no:#f87171;--no-bg:#2c1212;--build:#93c5fd;--build-bg:#0f1d33}
+}
+:root[data-theme="dark"]{--ground:#141210;--panel:#1c1917;--ink:#f5f5f4;--ink-soft:#b5aea8;
+  --ink-faint:#857d76;--rule:#302b27;--gold:#fbbf24;--gold-soft:#3a2c10;
+  --good:#4ade80;--good-bg:#0c2416;--warn:#fbbf24;--warn-bg:#2c2008;
+  --no:#f87171;--no-bg:#2c1212;--build:#93c5fd;--build-bg:#0f1d33}
+:root[data-theme="light"]{--ground:#f7f6f4;--panel:#ffffff;--ink:#1c1917;--ink-soft:#57534e;
+  --ink-faint:#8b8580;--rule:#e3dfda;--gold:#b45309;--gold-soft:#fef3c7;
+  --good:#166534;--good-bg:#f0fdf4;--warn:#92400e;--warn-bg:#fffbeb;
+  --no:#991b1b;--no-bg:#fef2f2;--build:#1e40af;--build-bg:#eff6ff}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px 90px}
+header{padding:60px 0 34px;border-bottom:2px solid var(--gold)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-faint);margin:0 0 14px}
+h1{font-size:clamp(30px,4.6vw,46px);line-height:1.04;letter-spacing:-.025em;font-weight:650;margin:0 0 14px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{max-width:64ch;color:var(--ink-soft);font-size:16.5px;margin:0}
+section{padding-top:52px}
+h2{font-size:22px;letter-spacing:-.015em;font-weight:640;margin:0 0 6px}
+.sec-note{color:var(--ink-soft);max-width:70ch;margin:0 0 24px;font-size:14.5px}
+h2 .n{font-family:var(--mono);font-size:12px;color:var(--gold);margin-right:10px;letter-spacing:.08em}
+
+/* pills */
+.pill{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;
+  padding:2px 8px;border-radius:999px;font-weight:600;white-space:nowrap;vertical-align:middle}
+.pill.ok{color:var(--good);background:var(--good-bg)}
+.pill.gap{color:var(--warn);background:var(--warn-bg)}
+.pill.no{color:var(--no);background:var(--no-bg)}
+.pill.build{color:var(--build);background:var(--build-bg)}
+
+/* toolbox grid */
+.toolbox{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.drawer{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:20px 22px;
+  border-top:3px solid var(--gold)}
+.drawer h3{margin:0 0 4px;font-size:15.5px;font-weight:650;display:flex;align-items:center;gap:9px;justify-content:space-between}
+.drawer .what{color:var(--ink-faint);font-size:12px;font-family:var(--mono);letter-spacing:.05em;margin:0 0 12px}
+.drawer ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px}
+.drawer li{font-size:13.5px;color:var(--ink-soft);padding-left:16px;position:relative}
+.drawer li::before{content:"—";position:absolute;left:0;color:var(--gold)}
+.drawer li strong{color:var(--ink);font-weight:600}
+
+/* verb flows */
+.verb{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:22px;margin-bottom:16px}
+.verb h3{margin:0 0 4px;font-size:17px}
+.verb h3 code{font-family:var(--mono);background:var(--gold-soft);color:var(--gold);
+  padding:2px 10px;border-radius:6px;font-size:14.5px}
+.verb .sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px}
+.flow{display:flex;flex-wrap:wrap;gap:0;align-items:stretch}
+.step{flex:1 1 150px;min-width:150px;background:var(--ground);border:1px solid var(--rule);
+  border-radius:8px;padding:12px 14px;position:relative;margin-right:34px;margin-bottom:10px}
+.step:last-child{margin-right:0;border-color:var(--gold);background:var(--gold-soft)}
+.step:not(:last-child)::after{content:"→";position:absolute;right:-26px;top:50%;
+  transform:translateY(-50%);color:var(--gold);font-size:18px;font-weight:700}
+.step .who{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-faint);display:block;margin-bottom:3px}
+.step .do{font-size:13px;color:var(--ink);line-height:1.4}
+.step:last-child .do{font-weight:600}
+.guard{margin-top:6px;font-size:12.5px;color:var(--ink-faint)}
+.guard b{color:var(--warn)}
+
+/* stack table */
+.stack{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:16px 18px}
+.card .cat{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+.card .who{font-size:19px;font-weight:680;margin:3px 0 6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.card .why{font-size:13.5px;color:var(--ink-soft);line-height:1.5}
+.card .risk{margin-top:9px;font-size:12.5px;color:var(--warn);border-top:1px dashed var(--rule);padding-top:8px}
+.card .risk::before{content:"risk on record — ";font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+.card.rejected{border-style:dashed;opacity:.92}
+.card.rejected .who{color:var(--no);text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--no)}
+.card .trigger{margin-top:9px;font-size:12.5px;color:var(--ink-faint);border-top:1px dashed var(--rule);padding-top:8px}
+.card .trigger::before{content:"revisit only if — ";font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--build)}
+
+/* brand table */
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--rule);border-radius:10px;overflow:hidden;font-size:13.5px}
+.tblwrap{overflow-x:auto;border-radius:10px}
+th{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);
+  text-align:left;padding:11px 14px;border-bottom:1px solid var(--rule);font-weight:600}
+td{padding:10px 14px;border-bottom:1px solid var(--rule);color:var(--ink-soft);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td:first-child{color:var(--ink);font-weight:600;white-space:nowrap}
+
+/* next steps */
+.next{counter-reset:st;display:flex;flex-direction:column;gap:10px}
+.next .it{background:var(--panel);border:1px solid var(--rule);border-radius:9px;padding:13px 16px 13px 52px;position:relative;font-size:14px;color:var(--ink-soft)}
+.next .it::before{counter-increment:st;content:counter(st);position:absolute;left:16px;top:50%;transform:translateY(-50%);
+  width:24px;height:24px;border-radius:50%;background:var(--gold-soft);color:var(--gold);font-family:var(--mono);
+  font-size:12px;font-weight:700;display:grid;place-items:center}
+.next .it b{color:var(--ink)}
+footer{margin-top:60px;border-top:1px solid var(--rule);padding-top:18px;font-family:var(--mono);
+  font-size:11px;color:var(--ink-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+code{font-family:var(--mono);font-size:.92em;color:var(--gold)}
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">Norfolk Kit · Reference · 2026-07-31</p>
+  <h1>The Core-Stack: <em>one toolbox, two verbs,</em> zero terminals</h1>
+  <p class="lede">Everything a Norfolk / KIT Capital project starts with or conforms to, housed in one GitHub repo (<code>Norfolk-Group/norfolk-kit</code>). Each tool works alone; two spoken verbs carry them into any repo; every change arrives as a pull request you approve in plain English.</p>
+</header>
+
+<section>
+  <h2><span class="n">01</span>What's in the toolbox</h2>
+  <p class="sec-note">Six drawers. Independent tools — no drawer requires another. <span class="pill ok">BUILT</span> means it exists in the kit today; <span class="pill build">TO BUILD</span> is sequenced in the plan.</p>
+  <div class="toolbox">
+    <div class="drawer"><h3>Tools <span class="pill ok">BUILT</span></h3><p class="what">tools/launchers · .mcp.json</p>
+      <ul><li><strong>6 alt-model launchers</strong> — run Claude Code on Kimi, GLM, Qwen, Grok, DeepSeek, GPT (.sh + .ps1 twins)</li>
+      <li><strong>check-models.mjs</strong> — one command verifies each launcher still points at that provider's flagship</li>
+      <li><strong>MCP servers</strong> — Neon, WorkOS, Railway, context7, shadcn, keyless</li></ul></div>
+    <div class="drawer"><h3>Rules <span class="pill ok">BUILT</span></h3><p class="what">docs/ · docs/decisions</p>
+      <ul><li><strong>Governance Rule v2</strong> — /docs is law; precedence, tiers, CI gates</li>
+      <li><strong>Decision records 0001–0004</strong> — each states what it <em>rules out</em>, so choices can't be quietly "improved"</li>
+      <li><strong>Docs router</strong> — change-type → which files to read first</li></ul></div>
+    <div class="drawer"><h3>Skills <span class="pill build">TO BUILD</span></h3><p class="what">the two verbs + plugin bundle</p>
+      <ul><li><strong>equip</strong> &amp; <strong>tidy</strong> — see drawer 02 below</li>
+      <li><strong>Superpowers</strong> — all skills (brainstorm, TDD, debugging, verification…)</li>
+      <li><strong>compound-engineering + greptile</strong> — auto-enabled in every environment</li></ul></div>
+    <div class="drawer"><h3>Brand <span class="pill build">TO BUILD</span></h3><p class="what">brand/ — curated import from Dropbox</p>
+      <ul><li><strong>9 canonical logos</strong> located &amp; mapped (see drawer 04)</li>
+      <li><strong>Avatars</strong> — Synthesia RC sets</li>
+      <li><strong>Usage notes</strong> — dark/light variants, minimum sizes</li></ul></div>
+    <div class="drawer"><h3>Design <span class="pill ok">BUILT</span> <span class="pill build">+ REVIEW</span></h3><p class="what">design-system.md · motion library</p>
+      <ul><li><strong>Motion library</strong> — 19 animations, 5 families, live catalog page</li>
+      <li><strong>design-system.md</strong> — skeleton today; to be populated with real standards in review with Ricardo</li></ul></div>
+    <div class="drawer"><h3>Layout <span class="pill build">TO BUILD</span></h3><p class="what">the canonical repo anatomy</p>
+      <ul><li><strong>One documented map</strong> of where code, docs, scripts, brand, artifacts &amp; archive live</li>
+      <li><strong>What counts as junk</strong> — the standard <code>tidy</code> audits against</li></ul></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">02</span>The two verbs</h2>
+  <p class="sec-note">Spoken in plain English to Claude Code, in any repo, any environment. Deliberately separate: one only <em>adds</em>, the other <em>moves</em> — so equipping mid-project can never trigger a reorganization you didn't ask for.</p>
+
+  <div class="verb">
+    <h3><code>"equip this repo"</code> — additive · run ~once per repo</h3>
+    <p class="sub">Works on brand-new and ten-year-old repos alike.</p>
+    <div class="flow">
+      <div class="step"><span class="who">You</span><span class="do">Say the verb</span></div>
+      <div class="step"><span class="who">Claude Code</span><span class="do">Reads the kit from GitHub + what this repo already has</span></div>
+      <div class="step"><span class="who">Claude Code</span><span class="do">Adds what's missing; flags conflicts, never overwrites</span></div>
+      <div class="step"><span class="who">You</span><span class="do">Read plain-English PR summary → approve</span></div>
+    </div>
+    <p class="guard">Yesterday's baseline: this took <b>an hour of terminal pain</b> (chmod, auth, stash, GPG). Target: minutes of your attention.</p>
+  </div>
+
+  <div class="verb">
+    <h3><code>"tidy this repo"</code> — reorganizing · run periodically</h3>
+    <p class="sub">Audits any repo against the canonical layout — equipped or not.</p>
+    <div class="flow">
+      <div class="step"><span class="who">You</span><span class="do">Say the verb</span></div>
+      <div class="step"><span class="who">Claude Code</span><span class="do">Audits vs canonical layout: misplaced files, stale artifacts, junk at root</span></div>
+      <div class="step"><span class="who">Claude Code</span><span class="do">Proposes moves; questionable items → <code>archive/</code>, dated</span></div>
+      <div class="step"><span class="who">You</span><span class="do">Review → approve</span></div>
+    </div>
+    <p class="guard"><b>Never silently deletes.</b> True deletions are listed for explicit approval in the PR description.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">03</span>The settled stack — one answer per category</h2>
+  <p class="sec-note">Deep-researched 2026-07-31 by four parallel agents against official July-2026 pricing and docs. Risks stated, not hidden. These become kit decision records — nobody re-opens them casually.</p>
+  <div class="stack">
+    <div class="card"><div class="cat">Hosting</div><div class="who">Railway <span class="pill ok">KEEP</span></div>
+      <div class="why">The only option that runs the real stack — long-lived Express servers, cron, workers, WebSockets — with zero rewrite. ~$5–15/mo per app. Vercel's functions cap at ~13 min and would force re-architecting every app.</div>
+      <div class="risk">8-hr outage May 2026 (GCP suspension). Mitigated: data (Neon) and files (R2) live off Railway — an outage degrades, never destroys. Add a status monitor.</div></div>
+    <div class="card"><div class="cat">Database</div><div class="who">Neon <span class="pill ok">KEEP</span></div>
+      <div class="why">Instant, near-free database branches for safe testing — the reference standard. 80% storage price cut post-acquisition. Migrated this week, working.</div></div>
+    <div class="card"><div class="cat">Auth</div><div class="who">WorkOS <span class="pill ok">KEEP</span></div>
+      <div class="why">Built for invite-only portals; enterprise SSO ready when investors demand it; 1M users free; an admin screen a non-programmer can run.</div></div>
+    <div class="card"><div class="cat">File storage</div><div class="who">Cloudflare R2 <span class="pill ok">KEEP</span></div>
+      <div class="why"><b>$0 downloads, forever</b> — structurally decisive for a document-download portal. 252 files migrated yesterday, in production.</div></div>
+    <div class="card"><div class="cat">Embeddings / AI search</div><div class="who">Voyage AI <span class="pill ok">STANDARD</span></div>
+      <div class="why">Cheapest frontier option ($0.06/M vs $0.12–0.15 rivals); the only vendor Anthropic names; new models still shipping post-MongoDB acquisition. Undo-cost if ever needed: ~$3.</div>
+      <div class="risk">MongoDB could steer it toward their own bundle someday — the $3 escape hatch covers it.</div></div>
+    <div class="card"><div class="cat">Secrets · Email · Errors</div><div class="who">Doppler · Resend · Sentry <span class="pill ok">KEEP</span></div>
+      <div class="why">In production, working, not re-opened.</div></div>
+    <div class="card rejected"><div class="cat">All-in-one platform</div><div class="who">Supabase <span class="pill no">NOT ADOPTED</span></div>
+      <div class="why">Would downgrade two pillars (weaker branching than Neon, consumer-grade auth vs WorkOS) to gain one dashboard — and its client-direct security model fights the tRPC architecture. Would burn this week's completed migrations.</div>
+      <div class="trigger">realtime collaboration (live presence/cursors) becomes a hard requirement — and even then, try a standalone realtime service first.</div></div>
+    <div class="card rejected"><div class="cat">Hosting alternative</div><div class="who">Vercel (as host) <span class="pill no">QUESTION CLOSED</span></div>
+      <div class="why">Doesn't run servers — runs short-lived functions. The Vercel <b>AI SDK</b> (a code library) stays in the stack; Vercel the <b>host</b> is out. The frontend+backend split adds two dashboards and CORS plumbing for CDN benefits the apps don't need.</div></div>
+    <div class="card"><div class="cat">Containers</div><div class="who">Docker <span class="pill ok">INVISIBLE BY DESIGN</span></div>
+      <div class="why">Already working for you unseen: every Codespace <em>is</em> a container; Railway auto-packages every deploy (Railpack). Standard containers = insurance — moving hosts is days, not months. <b>The kit never requires hand-written Dockerfiles;</b> exceptions (self-hosted Docker-only tools, PDF renderers) need a decision record.</div></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">04</span>Brand inventory — nine canonical marks</h2>
+  <p class="sec-note">All located on Ricardo's PC (Dropbox). Import is a <em>curation</em> — source folders mix canonical logos with screenshots and third-party marks. Gaps flagged honestly.</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Brand</th><th>Status</th><th>What was found</th></tr></thead>
+    <tbody>
+      <tr><td>Norfolk AI</td><td><span class="pill ok">READY</span></td><td>Full color set — azul / branco / gradiente / amarelo / wireframe, PNG+SVG pairs, + animated logo</td></tr>
+      <tr><td>Norfolk Consulting</td><td><span class="pill ok">READY</span></td><td>Vortex logo full export set (1×/2×/4×/SVG/LinkedIn/Google) · Knight chess-horse (+gold) · .ai/.eps sources</td></tr>
+      <tr><td>KIT Capital</td><td><span class="pill ok">READY</span></td><td>Spherical (transparent + solid), flat marks</td></tr>
+      <tr><td>KIT Capital Partners</td><td><span class="pill gap">GAP</span></td><td>Only .ai design sources (azul/branco) — needs one-time PNG/SVG export</td></tr>
+      <tr><td>Obra Pía</td><td><span class="pill ok">READY</span></td><td>The portal-arch logo (+@2x) and Foundation logo</td></tr>
+      <tr><td>El Claustro</td><td><span class="pill ok">READY</span></td><td>Official 2025 set from Clarena — RGB A–D + CMYK/RGB PDF</td></tr>
+      <tr><td>La Plage</td><td><span class="pill ok">READY</span></td><td>Single PNG (in JuanK's Rituel folder)</td></tr>
+      <tr><td>Rituel du Sol</td><td><span class="pill gap">GAP</span></td><td>White-only version — invisible on light backgrounds; request or derive a dark variant</td></tr>
+      <tr><td>Colliers</td><td><span class="pill gap">GAP</span></td><td>Single 3KB PNG — likely too low-res beyond small web use; verify</td></tr>
+      <tr><td>Le Petit Salón · Salón du Ciel</td><td><span class="pill build">BONUS</span></td><td>Sister-venue logos found alongside — include unless Ricardo objects</td></tr>
+      <tr><td>Avatars</td><td><span class="pill ok">READY</span></td><td>Synthesia RC Avatar 1 &amp; RC Avatar 2 Field — canonical picks at import</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="n">05</span>What happens next</h2>
+  <p class="sec-note">The build order the plan will sequence — brand and decisions first (fast, high-visibility), then the verbs, then the reviews with you.</p>
+  <div class="next">
+    <div class="it"><b>Brand import</b> — curate the nine logo sets + avatars into <code>brand/</code>; close the three gaps (Partners export, Rituel dark variant, Colliers resolution)</div>
+    <div class="it"><b>Decision records</b> — write today's research verdicts into the kit as records 0005+ (hosting, Supabase-no, Voyage, Docker posture) so they're law, not memory</div>
+    <div class="it"><b>The verbs</b> — build <code>equip</code> then <code>tidy</code> as kit skills; first live run: equip Obra Pía (replacing yesterday's manual hour)</div>
+    <div class="it"><b>Canonical layout</b> — draft the repo anatomy, walk it through with you before tidy ever enforces it</div>
+    <div class="it"><b>Reviews with you</b> — Governance Rules read-through · design-system.md populated with real standards · avatar/logo canonical picks blessed</div>
+  </div>
+</section>
+
+<footer>
+  <span>norfolk-kit · core-stack reference</span>
+  <span>brainstorm 2026-07-31 · requirements R1–R12 · research: 4 agents, official sources</span>
+</footer>
+</div>
