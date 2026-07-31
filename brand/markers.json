@@ -1,0 +1,24 @@
+{
+  "$comment": "Sensitivity map consumed by the equip skill and the kit-guard CI check. Folder position alone is never the boundary — this file is. Add a brand => add its marker in the same commit. Markers: norfolk-only (never enters client repos), client:<id> (only enters that client's repos), client-safe (tooling-grade, may enter any repo).",
+  "markers": {
+    "brand/norfolk/**": "norfolk-only",
+    "brand/clients/kit-capital/**": "client:kit-capital",
+    "tools/**": "client-safe",
+    "docs/setup/**": "client-safe",
+    "docs/SYSTEM-GOVERNANCE-RULE.md": "client-safe",
+    "docs/decisions/**": "norfolk-only",
+    "docs/OWNERS-GUIDE.md": "norfolk-only",
+    "docs/brainstorms/**": "norfolk-only",
+    "docs/plans/**": "norfolk-only",
+    "docs/artifacts/**": "norfolk-only",
+    "src/components/animations/**": "client-safe",
+    ".claude/**": "client-safe",
+    ".cursor/**": "client-safe",
+    ".devcontainer/**": "client-safe",
+    "AGENTS.md": "client-safe",
+    "CLAUDE.md": "client-safe",
+    ".mcp.json": "client-safe",
+    ".env.example": "client-safe",
+    "doppler.yaml": "client-safe"
+  }
+}
