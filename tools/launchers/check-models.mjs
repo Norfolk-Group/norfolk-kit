@@ -25,12 +25,9 @@
  * newest" — that one means the model may already be gone).
  */
 
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
-
-const HERE = dirname(fileURLToPath(import.meta.url));
-const LAUNCHERS_DIR = join(HERE); // run this script from tools/launchers/
+// No filesystem reads: the launchers' current models live in CONFIGURED below
+// rather than being parsed out of the .sh files, so this script has zero
+// dependency on shell-parsing fragility.
 
 // ── what's currently hardcoded in each launcher ─────────────────────────
 // Kept as data here (not re-parsed from the .sh files) so this script has
@@ -47,6 +44,21 @@ const CONFIGURED = {
   openai: { file: "claude-openai.sh", primary: null, fast: null },
   gemini: { file: "claude-gemini.sh", primary: "google/gemini-3.6-flash", fast: "google/gemini-3.5-flash-lite" },
   llama: { file: "claude-llama.sh", primary: "meta-llama/llama-4-maverick", fast: "meta-llama/llama-3.3-70b-instruct" },
+};
+
+// Which CONFIGURED entries each provider result speaks to, and which detected
+// field to compare against. OpenRouter serves four launchers from one response.
+const DRIFT_MAP = {
+  "Moonshot (Kimi)": [{ cfg: "kimi", field: "detectedFlagship" }],
+  "Z.AI (GLM)": [{ cfg: "glm", field: "detectedFlagship" }],
+  "DashScope (Qwen)": [{ cfg: "qwen", field: "detectedFlagship" }],
+  "DeepSeek": [{ cfg: "deepseek", field: "detectedFlagship" }],
+  "OpenRouter (Grok/GPT/Gemini/Llama)": [
+    { cfg: "grok", field: "detectedFlagshipGrok" },
+    { cfg: "openai", field: "detectedFlagshipGpt" },
+    { cfg: "gemini", field: "detectedFlagshipGemini" },
+    { cfg: "llama", field: "detectedFlagshipLlama" },
+  ],
 };
 
 async function fetchJSON(url, headers) {
@@ -202,20 +214,35 @@ async function main() {
     if (v.detectedFlagshipGemini) console.log(`  detected Gemini flagship: ${v.detectedFlagshipGemini}`);
     if (v.detectedFlagshipLlama) console.log(`  detected Llama flagship: ${v.detectedFlagshipLlama}`);
     if (v.note) console.log(`  note: ${v.note}`);
+
+    // Compare what the launcher has hardcoded against what the provider is
+    // actually serving. One OpenRouter response covers four launchers, so the
+    // mapping is field-by-field rather than one-per-result.
+    for (const { cfg, field } of DRIFT_MAP[v.provider] ?? []) {
+      const configured = CONFIGURED[cfg]?.primary;
+      const detected = v[field];
+      if (!configured) {
+        console.log(`  ⓘ ${cfg}: no primary recorded in CONFIGURED — fill it in`);
+        continue;
+      }
+      if (!detected) continue; // heuristic found nothing; not evidence of drift
+      if (configured !== detected) {
+        driftFound = true;
+        console.log(`  ✗ DRIFT ${cfg}: launcher has ${configured}, provider's newest is ${detected}`);
+      } else {
+        console.log(`  ✓ ${cfg}: ${configured} is current`);
+      }
+    }
     console.log();
   }
 
   console.log(
     driftFound
       ? "Drift detected — update the launcher(s) above and this file's CONFIGURED map in the same commit."
-      : "Run complete. Compare 'detected flagship' lines above against each launcher's LAUNCHER_PRIMARY by eye — auto-diffing is intentionally not wired up yet (see TODO below).",
+      : "No drift: every recorded LAUNCHER_PRIMARY matches the provider's newest model.",
   );
+  if (driftFound) process.exitCode = 1;
 }
-
-// TODO: once this has been run by hand a few times and the heuristics are
-// trusted, wire CONFIGURED[x].primary against detectedFlagship directly and
-// set driftFound + a non-zero exit code, so this can run in CI / on a
-// schedule and only bother a human when something actually changed.
 
 main().catch((err) => {
   console.error("check-models.mjs failed:", err);

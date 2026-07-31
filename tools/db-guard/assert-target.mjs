@@ -29,7 +29,6 @@
  *   node tools/db-guard/assert-target.mjs --stamp production
  */
 
-import { readFileSync } from "node:fs";
 
 const args = process.argv.slice(2);
 const argOf = (n) => {
