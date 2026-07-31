@@ -107,9 +107,13 @@ for (const [path, entry] of Object.entries(manifest.files || {})) {
 
 // ── diff-based rules (skipped in audit mode) ──────────────────────────────
 if (!AUDIT_ONLY) {
+  // -z is not cosmetic. Without it git QUOTES any path containing a non-ASCII
+  // character ("brand/.../OBRA P\303\215A.svg"), the quoted form matches no
+  // marker pattern, and the file skips BOTH the scope and boundary checks —
+  // a silent bypass for any filename with an accent in it. Found 2026-07-31.
   let diff = "";
   try {
-    diff = execFileSync("git", ["diff", "--name-status", `${BASE}...${HEAD}`], {
+    diff = execFileSync("git", ["diff", "--name-status", "-z", `${BASE}...${HEAD}`], {
       encoding: "utf8",
     });
   } catch (e) {
@@ -121,11 +125,22 @@ if (!AUDIT_ONLY) {
   // .kit/manifest.json itself is written by every equip run
   claimed.add(".kit/manifest.json");
 
-  for (const line of diff.split("\n").filter(Boolean)) {
-    const [status, ...rest] = line.split("\t");
-    const path = rest[rest.length - 1];
-    const code = status[0];
+  // -z format: status NUL path NUL, except renames/copies which emit
+  // status NUL oldpath NUL newpath NUL. The new path is the one to judge;
+  // tidy legitimately moves files, so a rename is not a deletion.
+  const tokens = diff.split("\0").filter(Boolean);
+  const entries = [];
+  for (let i = 0; i < tokens.length; ) {
+    const code = tokens[i++][0];
+    if (code === "R" || code === "C") {
+      i++; // old path
+      entries.push({ code, path: tokens[i++] });
+    } else {
+      entries.push({ code, path: tokens[i++] });
+    }
+  }
 
+  for (const { code, path } of entries) {
     // RULE 3 — no deletions in an equip/tidy PR
     if (code === "D") {
       fail(

@@ -10,8 +10,9 @@
     "$comment": "Paths with a legitimate sensitivity that equip nevertheless does NOT ship, for reasons unrelated to sensitivity. Kept separate from `markers` on purpose: a marker answers 'who may hold this', an exclusion answers 'is this worth shipping'. kit-guard still enforces the marker if one of these ever turns up in a repo, so an exclusion is never a security control — only a payload decision.",
     "brand/**": "180MB, overwhelmingly Illustrator masters and social banners. Shipping it would put 180MB in every repo. Curated web sets (SVG/PNG at web sizes) are a Phase 4 task; until they exist, no brand ships anywhere. Sensitivity markers below stay accurate so the guard keeps working."
   },
-  "version": 2,
-  "unmatchedDefault": "norfolk-only",
+  "version": 3,
+  "$unmatchedDefaultRationale": "kit-only, not norfolk-only. `norfolk-only` LOOKS fail-closed but is not: Norfolk-Group allows that sensitivity, so an unmarked file ships silently into every Norfolk repo. Found on 2026-07-31 when `git ls-files` quoted a path containing an accent (OBRA PÍA), the quoted form matched no pattern, and a KIT Capital client asset was about to be copied into a Norfolk repo. `kit-only` is allowed by no org, so an unmarked file ships nowhere and someone notices the absence.",
+  "unmatchedDefault": "kit-only",
   "markers": {
     "AGENTS.md": "client-safe",
     "CLAUDE.md": "client-safe",
