@@ -59,6 +59,41 @@ Never override per icon. An icon at a different weight in one corner of a screen
 
 **Ruled out:** filled/solid icon sets, duotone, two icon libraries in one app, emoji as interface icons, and raising stroke weight to "make icons more visible" (the fix for that is size or contrast, not weight).
 
+#### Icons carry meaning, not decoration
+
+> *Ricardo, 2026-07-31, on Manus's sidebar: "good matching of icons."*
+
+The reference is a list where **every item's icon says what that item is** — a chart for an analytics task, a waveform for an audio note, a video frame for a YouTube search, a building for a hotel design brief, a plain folder for a folder. Dozens of different glyphs in one column, and it reads as calm rather than noisy.
+
+The discipline that makes that work is worth stating exactly, because getting it half-right produces the opposite:
+
+> **Style is locked. Meaning varies.** Same library, same stroke, same size, same colour for every item in a list. The *only* thing that changes between rows is which glyph — and it changes because the content is genuinely different, never for variety.
+
+Break that and it falls apart immediately: mixed weights read as a rendering bug, mixed sizes read as broken alignment, and coloured icons turn a list into a chart nobody can parse.
+
+**So every list of mixed content maps content type → icon, declared in one place.** Not chosen per row by whoever wrote the row:
+
+```ts
+// one map, imported everywhere — same reasoning as agent-taxonomy.ts (0012)
+export const CONTENT_ICONS = {
+  spreadsheet: BarChart3,
+  document:    FileText,
+  presentation:Presentation,
+  video:       Video,
+  audio:       AudioLines,
+  image:       Image,
+  folder:      Folder,
+  contract:    FileSignature,
+  // …
+} as const
+```
+
+**A generic fallback is mandatory** and must be deliberately dull — an unrecognised type gets the plain document glyph, never a guess. An icon that confidently means the wrong thing is worse than one that means nothing.
+
+**Where this applies immediately:** the document management module (R23), the photo album (R25), and any file list. It is also why the copilot can label what it is doing with an icon that is *right* rather than ornamental.
+
+**Ruled out:** per-row icon choices made ad hoc, colour used to distinguish content types in a list, and a "misc" icon that is visually interesting enough to look intentional.
+
 ## Component standards
 
 For each: which variants and sizes exist, when to use which, and which states are defined (default / hover / focus / active / disabled / loading / error / empty).
@@ -87,6 +122,65 @@ The most important section. Be specific.
 - Components that must not change without approval.
 - Legacy quirks that exist for a known reason — with the reason, so nobody "fixes" them.
 - Intentional constraints (e.g. one icon library only; no colour outside the token set; no inline styles).
+
+---
+
+## Voice — how the product talks
+
+> *Ricardo, 2026-07-31: "I love the languaging of Richard Thaler and David Brooks."*
+
+Words are design material. Every label, error, empty state, confirmation and copilot reply is written by someone, and if nobody decides how the product sounds, each one sounds like whoever wrote it that day.
+
+**The reference is unusually precise.** Thaler (*Nudge*, *Misbehaving*) and Brooks share a specific register: serious ideas in plain language, explained through concrete cases rather than abstraction, warm without being chummy, and — the important part — **they assume the reader is intelligent but not a specialist.** Neither writes down. Neither hides behind jargon. Thaler brings dry wit and admits uncertainty; Brooks builds from a small observed detail to the general point.
+
+Translated into product copy:
+
+| Do | Don't |
+|---|---|
+| "Three investors haven't signed yet." | "3 pending signature workflow items." |
+| "We couldn't reach the bank. Try again in a minute." | "Error 502: upstream timeout." |
+| "This will email all 27 investors. Sure?" | "Confirm bulk notification dispatch?" |
+| "Nothing here yet — distributions appear once the first one is recorded." | "No data available." |
+| "That password needs 10 characters or more." | "Invalid input. Password does not meet complexity requirements." |
+
+The rules underneath those examples:
+
+1. **Name things the way a person would.** A user manages *notifications*, not *webhook configuration*. Never let an internal noun reach the interface.
+2. **Concrete beats abstract.** Numbers, names, dates. "Three investors" not "multiple recipients."
+3. **Say what happened and what to do next.** An error with no next step is just bad news.
+4. **No apologising, no exclamation marks, no cheerleading.** "Saved." not "Great job! Your changes have been saved successfully!"
+5. **Admit uncertainty plainly** when the system is unsure. Thaler's habit, and it builds more trust than false confidence — especially for a copilot.
+6. **A control says exactly what will happen.** Button reads *Publish*; the confirmation reads *Published*.
+7. **Short sentences. Ordinary words.** If a shorter word works, it is the right word.
+
+**This is also Rebecca's voice** (agent naming, [0012](decisions/0012-naming-agents-orchestrators-specialists-minions.md)). A copilot that talks like a support macro undoes the whole point of having one.
+
+**Ruled out:** exclamation marks in interface copy, emoji in system messages, "Oops!", "Something went wrong" with no detail, machine nouns in user-facing text, and copy that congratulates the user for routine actions.
+
+---
+
+## Design references
+
+Products Ricardo has named as things he likes. **A reference is only useful once someone has actually looked at it** — an impression of a product produces a plausible-sounding rule that is subtly wrong, which is the same failure mode this file exists to prevent. So each entry records whether it has been examined, and what was extracted.
+
+A screenshot converts taste into a decision in about a minute. The Manus entry below is the worked example: one screenshot, one durable rule.
+
+| Reference | Named | Examined? | Extracted |
+|---|---|---|---|
+| **Manus** — sidebar iconography | 2026-07-31 | ✅ screenshot | Content-type icon mapping; style locked, meaning varies. See *Icons carry meaning* above. |
+| **Perplexity** — logo, "very thin wireframes" | 2026-07-31 | ⚠️ from description only | Monoline geometry at low stroke weight → Lucide at 1.5. Directionally safe (it agrees with the Manus evidence) but not verified against the actual mark. |
+| **Cloudflare** — dashboard AI assistant | 2026-07-31 | ❌ behind a login | Nothing yet. Wanted: how it animates work-in-progress, how it occupies the panel, how it shows what it is *doing* rather than only what it has said. This is the copilot's primary reference and it is currently a blank. |
+| **Codex IDE** — UI and workflow | 2026-07-31 | ❌ not examined | Nothing yet. Ricardo has praised it twice — once for cross-device continuity (*"how great it is to even use the phone in a macbook"*), once for UI and workflow generally. **Workflow is the interesting half**: what a coding agent's interface gets right is directly relevant to the copilot, which is the same problem — showing an agent's in-progress work legibly. |
+| **Linear** — website | 2026-07-31 | ❌ browser hung on load | Public site, so this one is checkable — retry. Widely imitated for restrained dark surfaces, dense-but-calm typography and precise motion. Worth extracting deliberately rather than absorbing, since "looks like Linear" is itself now a generic default. |
+| **ElevenLabs** — website | 2026-07-31 | ❌ browser hung on load | Public, checkable, retry. |
+| **Qurrent AI** — website *and content* | 2026-07-31 | ❌ not examined | Public. Note Ricardo named the **content**, not only the design — so this belongs partly under *Voice* above. |
+| **Richard Thaler / David Brooks** — prose | 2026-07-31 | ✅ known bodies of work | The voice section above. The most actionable reference of the day, because it governs every string rather than one surface. |
+
+**Eight references named on 31 July; two extracted.** That ratio is the point of this table. Visual taste arrives faster than it can be examined, and the gap between the two is where invented rules come from.
+
+**Fastest way to close a row:** a screenshot. The Manus row went from named to a durable rule in about a minute because Ricardo sent one image. Description alone produced only the Perplexity row, which is still marked unverified.
+
+**Rule: do not write design rules from an unexamined reference.** Leave the row blank. A blank row is honest and cheap; an invented rule is expensive and looks identical to a real one until someone builds on it.
 
 ---
 
