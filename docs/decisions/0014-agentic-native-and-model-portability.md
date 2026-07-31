@@ -26,18 +26,37 @@ Recording it here as the *most important* decision is the right weight. It is th
 
 [0013](0013-agent-runtime-tool-runner-on-railway.md) chose **Tool Runner**, an Anthropic SDK feature. It was the smallest thing that worked and it works only with Anthropic models. Ricardo's requirement makes that unacceptable — and he is right to insist. Frontier model leadership has changed hands repeatedly, and an app that can only run one vendor's models inherits that vendor's pricing, availability, and roadmap permanently.
 
-### The decision
+### The decision — corrected once more, and this is the version that holds
 
-**The agent loop runs through the Vercel AI SDK's provider-agnostic layer** — already in the stack (v7, `ai` + `@ai-sdk/react`, with a first-class `Agent` abstraction since v6). Same process, same tools, swappable model.
+Ricardo clarified within the hour, and the clarification is sharper than the original:
 
-| | Tool Runner | AI SDK |
-|---|---|---|
-| Providers | Anthropic only | Anthropic, OpenAI, Google, and others behind one interface |
-| Loop | Handled | Handled |
-| Client streaming | Roll your own | `useChat`, already chosen |
-| Cost of switching model | Rewrite the loop | Change a line |
+> *"do not rule out CMA because I'd rather not depend on Anthropic. Most apps will run very seldomly so dependence is no big deal. What I fear is that OpenAI or KIMI will have a better SDK and I won't be able to change."*
 
-The AI SDK is a slightly thicker abstraction. That is the price of the requirement, it is small, and it is worth paying.
+**The fear is SDK lock-in, not model lock-in.** Those need opposite responses, which is why the first two attempts at this decision were both wrong.
+
+A provider-agnostic wrapper protects against *model* switching. It does nothing about the scenario Ricardo actually fears — a materially better agent framework appearing from OpenAI, Moonshot, or someone not yet named. In that case a wrapper is not a shield; it is one more thing to tear out.
+
+**What actually protects against it is already built: the tools are not owned by the runtime.**
+
+Under agentic-native (decision 1), every capability lives in a tRPC procedure. The agent runtime is glue — a few hundred lines that hand Claude a tool list, run the loop, and stream results. Rewrite that glue for a new SDK and **every capability survives untouched**, because the capabilities were never inside the SDK.
+
+That is the whole protection. It is structural, it is free, and it is the same rule as "create once, use many."
+
+### Therefore: the runtime is a deliberately late, deliberately cheap decision
+
+| | Cost to change later |
+|---|---|
+| Agentic-native architecture | Rebuild the app |
+| Tool definitions (tRPC procedures) | They *are* the app |
+| **Agent runtime / SDK** | **A few hundred lines of glue** |
+
+This record has now changed its runtime answer twice in one day — Tool Runner, then AI SDK, now this — each time correctly, given new information. That is the signal: **it is the wrong decision to be making now.** It is the cheapest thing on the list to change and the most sensitive to information we do not yet have.
+
+**Decision: no runtime is chosen until an app needs one.** Build the tools. Keep the glue thin and quarantined in one file. Choose the SDK when there is something to run, and re-choose it freely whenever a better one appears — because it will.
+
+**CMA (Claude Managed Agents) is explicitly NOT ruled out.** [0013](0013-agent-runtime-tool-runner-on-railway.md) deferred it partly on per-session cost, which assumed steady interactive use. Ricardo's "most apps will run very seldomly" removes that objection entirely: $0.08 per session-hour, billed only while actually running, is negligible for an app used a few times a week — and it buys away sandbox and infrastructure work. For low-traffic, occasionally-run apps it may well be the *best* option, not merely an acceptable one.
+
+The AI SDK remains the client-side choice (`useChat`, data-not-components). That is a UI decision and unaffected by any of this.
 
 ### Why "choices depending on the app" is the sharper requirement
 
