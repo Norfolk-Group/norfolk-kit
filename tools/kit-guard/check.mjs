@@ -8,23 +8,27 @@
  * check is the machine half — it refuses to let a PR merge if it violates the
  * boundaries, whatever the summary says.
  *
- * Four rules, all fail-closed:
+ * Five rules, all fail-closed:
  *   1. BRAND BOUNDARY  — every kit-managed file present in the repo must carry
  *      a sensitivity this org is allowed to hold. Catches both a bad payload
  *      and a standing violation (e.g. a repo transferred between orgs).
  *   2. MANIFEST SCOPE  — a kit/tidy PR may not add or modify kit-managed paths
  *      that the manifest does not claim. Stops silent scope creep.
- *   3. NO DELETIONS    — equip/tidy PRs carry zero deletions. Real deletions go
- *      in a separate deletions-only PR so approval is unambiguous.
- *   4. MARKER COVERAGE — an unmatched path is treated as norfolk-only, so
- *      forgetting to mark a new file fails loudly in a client repo instead of
- *      leaking quietly.
+ *   3. NO DELETIONS    — equip/tidy PRs carry zero deletions. Real removals go
+ *      on a `deletions/`-prefixed branch, where they are allowed, so approval
+ *      is unambiguous.
+ *   4. MARKER COVERAGE — an unmatched path is treated as kit-only, which no org
+ *      may hold, so forgetting to mark a new file means it ships nowhere
+ *      instead of leaking somewhere.
+ *   5. FILE SIZE       — nothing over 5MB. Large assets go in R2 and the repo
+ *      stores the URL. Git keeps every version of a binary forever in every
+ *      clone, and removing it later reclaims nothing.
  *
  * Usage (CI):  node tools/kit-guard/check.mjs --base origin/main --head HEAD
  * Usage (dry): node tools/kit-guard/check.mjs --audit-only
  */
 
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, statSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 
 const args = process.argv.slice(2);
@@ -35,6 +39,16 @@ const argOf = (n, d = null) => {
 const AUDIT_ONLY = args.includes("--audit-only");
 const BASE = argOf("--base", "origin/main");
 const HEAD = argOf("--head", "HEAD");
+
+// A branch that declares itself a deletions PR may contain deletions.
+const BRANCH = argOf("--branch", process.env.GITHUB_HEAD_REF || "");
+const DELETIONS_BRANCH = BRANCH.startsWith("deletions/");
+
+// Large files belong in R2, not in git (Ricardo, 2026-07-31). Git stores every
+// version of every binary forever, so a 40MB asset committed twice is 80MB in
+// the clone of everyone who ever touches the repo, permanently — `git rm` does
+// not reclaim it. Enforced rather than remembered.
+const MAX_FILE_BYTES = Number(argOf("--max-file-bytes", 5 * 1024 * 1024));
 
 const failures = [];
 const notes = [];
@@ -141,12 +155,18 @@ if (!AUDIT_ONLY) {
   }
 
   for (const { code, path } of entries) {
-    // RULE 3 — no deletions in an equip/tidy PR
+    // RULE 3 — no deletions, unless the branch declares itself a deletions PR.
+    // Without this escape hatch the rule is a trap: the design REQUIRES real
+    // deletions to arrive in their own PR, and the guard would refuse that PR
+    // too, so nothing could ever be removed. The branch name is the declaration
+    // of intent — it is visible in the PR title area before anyone clicks merge.
     if (code === "D") {
-      fail(
-        "NO-DELETIONS",
-        `\`${path}\` is deleted in this PR. Equip and tidy PRs carry zero deletions — move it to a separate deletions-only PR so the approval is unambiguous.`,
-      );
+      if (!DELETIONS_BRANCH) {
+        fail(
+          "NO-DELETIONS",
+          `\`${path}\` is deleted in this PR. Equip and tidy PRs carry zero deletions — put removals on a \`deletions/\`-prefixed branch so the approval is unambiguous.`,
+        );
+      }
       continue;
     }
 
@@ -156,6 +176,20 @@ if (!AUDIT_ONLY) {
         "MANIFEST-SCOPE",
         `\`${path}\` is a kit-managed path but is not listed in \`.kit/manifest.json\`. Either equip should claim it, or it does not belong in this PR.`,
       );
+    }
+
+    // RULE 5 — large files belong in R2, not git. Applies to EVERY added file,
+    // kit-managed or not: git keeps every version of a binary forever in every
+    // clone, and removing it later does not reclaim the space.
+    if ((code === "A" || code === "M") && existsSync(path)) {
+      const bytes = statSync(path).size;
+      if (bytes > MAX_FILE_BYTES) {
+        const mb = (n) => (n / 1024 / 1024).toFixed(1);
+        fail(
+          "FILE-SIZE",
+          `\`${path}\` is ${mb(bytes)}MB, over the ${mb(MAX_FILE_BYTES)}MB limit. Large files go in R2 and the repo stores the URL. Git keeps every version forever in every clone, and \`git rm\` later does not reclaim it.`,
+        );
+      }
     }
 
     // RULE 1 (again, on the diff) — catches files added outside the manifest path too
@@ -188,7 +222,7 @@ function report() {
   }
 
   console.log(`❌ **${uniq.length} violation${uniq.length === 1 ? "" : "s"} — this PR must not merge.**\n`);
-  for (const rule of ["BRAND-BOUNDARY", "MANIFEST-SCOPE", "NO-DELETIONS", "SETUP"]) {
+  for (const rule of ["BRAND-BOUNDARY", "FILE-SIZE", "MANIFEST-SCOPE", "NO-DELETIONS", "SETUP"]) {
     const hits = uniq.filter((f) => f.rule === rule);
     if (!hits.length) continue;
     console.log(`### ${rule}`);
