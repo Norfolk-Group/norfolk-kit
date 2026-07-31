@@ -76,9 +76,28 @@ Distill the brainstorm's research verdicts into permanent records (origin: R10, 
 Curate the nine brands + two bonus venue logos from the mapped Dropbox sources into `brand/norfolk/` and `brand/clients/kit-capital/` (origin: R5 + org-structure decision), with sensitivity markers (C4) and a usage note per brand (dark/light variants, minimum sizes). Close the three gaps: KIT Partners `.ai` → PNG/SVG export; Rituel dark variant derived or requested; Colliers resolution verified. **With Ricardo:** avatar picks; bonus-logo yes/no; gap dispositions.
 **Done when:** all brands in kit with markers; gaps closed or explicitly waived; core-stack.html brand table shows all-READY.
 
-### Phase 2 — The equip verb + safety architecture *(L · the heart)*
+### Phase 2 — The equip verb + safety architecture *(L · the heart)* — **mostly built**
 Build `payloads.json`, sensitivity markers file, the equip skill (SKILL.md, copied-not-fetched distribution), `kit-manifest.json` writer, `kit-guard.yml` CI check, identity pre-flight, PAT setup walk-through (one-time, with Ricardo), merge strategies, resume semantics. Test matrix: empty repo · messy repo · client-org repo · personal repo · unmapped org · re-equip after kit change · re-equip after local edit.
 **Done when:** the full test matrix passes on scratch repos; a deliberately-planted brand violation is **rejected by CI**, not by vigilance.
+
+**Built and verified (2026-07-31, commits `65a3828`, `a3a364f`):**
+
+| Component | State |
+|---|---|
+| `.kit/payloads.json` — org→payload mapping (C1/C2) | ✅ built |
+| `.kit/markers.json` — per-path sensitivity, `unmatchedDefault: norfolk-only` (C4) | ✅ built; moved out of `brand/` — it maps the whole repo, not just brand |
+| `.kit/README.md` — plain-language explanation of the config layer | ✅ built |
+| `tools/kit-guard/check.mjs` — 4 fail-closed rules (C5) | ✅ built, **5/5 scenarios verified** |
+| `tools/kit-guard/write-manifest.mjs` — machine-generated manifest (C5/I1) | ✅ built, 2/2 verified |
+| `.github/workflows/kit-guard.yml` — blocking PR check | ✅ built, not yet exercised on a real PR |
+| `.claude/skills/equip/SKILL.md` — the procedure | ✅ written, **not yet run end-to-end** |
+
+**Guard scenarios verified on a scratch repo:** norfolk asset into a client repo (caught twice, by two independent rules) · clean pass in Norfolk org · org-transfer standing violation caught with no diff · unmapped org restricted to tooling · deletion rejected. A malformed `--base` ref also fails closed rather than passing blind.
+
+**Still open — the half that needs a live run:**
+- The **equip test matrix** (empty · messy · client-org · personal · unmapped · re-equip after kit change · re-equip after local edit). Phase 3 is the first live equip, so the matrix runs against it rather than against throwaway repos.
+- The **fine-grained PAT** as an org Codespaces secret (SpecFlow C6) — one sitting with Ricardo. Equip pre-flights for it and prints the fallback, so this blocks convenience, not correctness.
+- `kit-guard.yml` has never run in GitHub Actions. First real PR is the test.
 
 ### Phase 3 — `norfolk-manual` + the Manual app v1 *(L · equip's first live test)*
 Create the fresh repo → **equip it for real** (the zero-risk proving ground, origin R18) → build the app on the equipped foundation: renders kit content (rules, decisions, stack, fleet, build state, Owner's Guide) — **renderer, never a fork** — plus the Update button with the I8–I10/M4–M5 safety behaviors. Railway-hosted, tRPC (agent-native parity), no DB in v1.
