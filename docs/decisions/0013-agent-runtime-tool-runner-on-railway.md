@@ -1,6 +1,18 @@
-# 0013 — Agent runtime: Tool Runner in our own server. Not Workers, not Managed Agents
+# 0013 — Agent runtime: the loop runs in our own server. Not Workers, not Managed Agents
 
-**Date:** 2026-07-31 · **Status:** Accepted · **Decided by:** Claude (CTO call, documented for Ricardo)
+**Date:** 2026-07-31 · **Status:** Accepted, then **amended the same day** · **Decided by:** Claude (CTO call, documented for Ricardo)
+
+> ## ⚠️ Amendment, 2026-07-31 — decision 1 reversed
+>
+> This record originally chose **Tool Runner** for the agent loop. Tool Runner is an Anthropic SDK feature and works only with Anthropic models.
+>
+> Hours later Ricardo stated a requirement that makes that wrong: *"I will forever depend on Anthropic so I will need choices depending on the app."* Model portability is a requirement, not a preference.
+>
+> **Revised decision: the loop runs through the Vercel AI SDK's provider-agnostic agent abstraction, not Tool Runner.** Same place (our Express process on Railway), same tools (tRPC procedures), swappable model. See [0014](0014-agentic-native-and-model-portability.md) for the full reasoning.
+>
+> Everything else in this record stands unchanged: no Workers, Managed Agents deferred, AI SDK v7 on the client, data-not-components.
+>
+> Left visible rather than rewritten. The original reasoning was sound *given what was known* — it optimised for the smallest thing that worked, and portability had not yet been stated as a constraint. The lesson is about sequencing, not judgement: **runtime choices should not be made before the portability requirement is known**, because that requirement eliminates otherwise-attractive options.
 **Context:** [copilot & parity requirements](../brainstorms/2026-07-31-copilot-and-parity-requirements.md) (R26–R32)
 **Verified against official docs 2026-07-31.** Ricardo named "Cloudflare worker", "Vercel SDK", "Claude Managed Agent SDK" and "Cursor dev agents". Those are four different things at four different layers, and one of them was a conflation of two products. Researched rather than assumed.
 
