@@ -123,6 +123,23 @@ The strongest available reference for Rebecca's panel, and Ricardo's own daily t
 
 **The transferable principle:** a conversational surface has exactly one hero, and it is the input. Everything else earns its place by not competing with it.
 
+#### Do not fill the space
+
+The browser view at full width settles it: in a ~2000px viewport, the composer and its suggestions occupy a **~510px centred column**, and the rest of the screen is empty. Deliberately.
+
+The reflex — human and agent alike — is to stretch content to the available width, because empty space reads as unfinished. It isn't. A composer stretched to 1800px is a worse composer: the eye has further to travel, the text loses its measure, and the page stops having a focus.
+
+**Rules:**
+- Conversational and reading surfaces get a **max width**, centred. Roughly 480–560px for a composer, 65ch for prose. Extra viewport becomes margin.
+- **Dense surfaces are the exception** — tables, dashboards, data grids genuinely use the width. Know which kind of surface you are building before choosing.
+- Never expand a control just because there is room.
+
+#### Two more details from the same screen
+
+**Sub-navigation drops the icons.** Top-level items (New, Computer, Spaces, Artifacts, Customize) have icons; the items nested beneath — Connectors, Skills, Workflows, Memory — are plain text, as is the whole History list. **Icons mark the top level of a hierarchy, not every level.** Iconing sub-items flattens the hierarchy you were trying to express.
+
+**The model selector reads "Orchestrator."** Perplexity ships a mode whose name is a *role*, not a model — the user chooses what kind of help they want, and the system picks the model. That is precisely the tier vocabulary in [0012](decisions/0012-naming-agents-orchestrators-specialists-minions.md), independently arrived at by a product Ricardo uses daily. Worth noting as validation: **the user-facing choice should be a role, with the model underneath it** — which also makes per-app model swapping ([0014](decisions/0014-agentic-native-and-model-portability.md)) invisible to the user, as it should be.
+
 ## Component standards
 
 For each: which variants and sizes exist, when to use which, and which states are defined (default / hover / focus / active / disabled / loading / error / empty).
