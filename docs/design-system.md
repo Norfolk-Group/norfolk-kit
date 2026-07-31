@@ -27,8 +27,37 @@ State which themes exist (light / dark / named variants) and which tokens differ
 ### Typography
 Families, where each is loaded from, and the scale — sizes, weights, line-heights, letter-spacing. Note any font used for one specific purpose only.
 
-### Spacing · Radii · Shadows · Icons
-The spacing scale. The radius scale and what each level is for. Where shadows are permitted. Which icon library is canonical — **one library**, named, with a rule for what to do when the needed icon is missing.
+### Spacing · Radii · Shadows
+The spacing scale. The radius scale and what each level is for. Where shadows are permitted.
+
+### Icons and line weight — **DECIDED, applies to every Norfolk project**
+
+> *Ricardo, 2026-07-31: "I love design of Perplexity logo and very thin wireframes. I also like the iconography of Manus."*
+>
+> The common thread across all three references is **monoline geometry at low stroke weight** — forms built from strokes of a single consistent thickness, thinner than most defaults, with geometric rather than organic construction. This is the house style.
+
+**Library: Lucide.** One library, no exceptions. It is shadcn's default (so every block arrives with it), it is monoline by construction, and — critically — its stroke width is a prop rather than baked into the artwork.
+
+**Stroke width: `1.5`.** Lucide's default is `2`, which reads chunky and generic. `1.5` is the thin-wireframe register Ricardo is describing. Set once, globally:
+
+```tsx
+<LucideProvider strokeWidth={1.5}>
+```
+
+Never override per icon. An icon at a different weight in one corner of a screen is the exact drift this file exists to prevent.
+
+| Context | Size | Stroke |
+|---|---|---|
+| Inline with body text | 16px | 1.5 |
+| Buttons, nav, toolbars | 18–20px | 1.5 |
+| Empty states, feature marks | 32–48px | **1.25** — thinner, because stroke weight reads heavier as size grows |
+| Below 14px | — | **don't.** Sub-14px monoline at 1.5 turns to mud. Use a label. |
+
+**Hairlines match.** Borders, dividers and table rules are `1px`. The point of a thin-wireframe aesthetic is that *everything* is thin — an icon at 1.5 next to a 2px border looks like an accident.
+
+**When Lucide lacks an icon:** first check whether the concept can use an existing icon (it usually can — inventing a bespoke metaphor is worse than reusing a familiar one). If genuinely absent, draw it on Lucide's own 24×24 grid at 1.5 stroke with round caps and joins, and add it here. **Never mix in a second icon set** — Heroicons, Feather and Phosphor all look almost right and land subtly wrong beside Lucide.
+
+**Ruled out:** filled/solid icon sets, duotone, two icon libraries in one app, emoji as interface icons, and raising stroke weight to "make icons more visible" (the fix for that is size or contrast, not weight).
 
 ## Component standards
 
