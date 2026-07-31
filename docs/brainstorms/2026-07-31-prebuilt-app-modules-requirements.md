@@ -41,10 +41,17 @@ Useful prior art already in the kit: `src/lib/animation-registry.ts`, `src/lib/a
 - R24 implies image generation spend per upload, and R2 storage (decision 0011: large files never enter git).
 - R24 output is large binary — R2 by definition.
 
+## Key decisions
+
+- **R24a — Both the photograph and the render are kept; the render is always disclosed.** Ricardo's ruling, 2026-07-31: *"Both photos and renders will be kept in the library and the render should carry a symbol or brief explanation that it is an enhanced view of the property or the person or landscape or whatever."*
+
+  This settles the disclosure question. It matters beyond good manners: for investor- and buyer-facing apps (Obra Pía, El Claustro, La Plage), an AI-beautified render of a *real* building that a viewer reasonably takes for a photograph is treated as material in several jurisdictions' real-estate marketing rules. Retaining the original and marking the render keeps the app on the right side of that without anyone having to think about it per-image.
+
+  Implications for design: the enhancement is **non-destructive** — the original is never replaced, only superseded in display. The pairing (original ↔ render) is a first-class relationship in the data model, not a filename convention. The disclosure mark travels with the render everywhere it appears, including in exports and reports, which is the case most likely to be forgotten.
+
 ## Outstanding questions
 
 ### Resolve before planning
-- **[Affects R24][Business decision] Disclosure.** For property and investor-facing apps (Obra Pía, El Claustro, La Plage), replacing a real photograph with an AI-beautified render of the same subject has disclosure implications — a prospective investor or buyer seeing an enhanced render of an actual building may reasonably assume it is a photograph. Real-estate marketing rules in several jurisdictions treat that as material. **Recommendation:** renders carry a visible label and the original is retained, with the admin able to choose per-album whether enhancement is permitted at all. This is Ricardo's ruling to make, not a technical default to pick.
 - **[Affects R21–R25][Product] What is a "module"?** A copied folder, an npm package, or a documented recipe the agent applies? This determines everything downstream and is the actual first design question.
 
 ### Deferred to planning
