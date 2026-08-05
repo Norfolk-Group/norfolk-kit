@@ -94,9 +94,9 @@ tools/launchers/   run Claude Code against Kimi / GLM / Qwen / Grok / DeepSeek /
 
 ## Governance
 
-`docs/` is the source of truth. Before any code or UI change, read the relevant docs, follow them, and update them in the same PR. The full rule — including precedence when sources disagree, the CONTRACT/REFERENCE tiers, decision records, and the CI gates that enforce all of it — is [`docs/SYSTEM-GOVERNANCE-RULE.md`](docs/SYSTEM-GOVERNANCE-RULE.md).
+`docs/` governs this Kit implementation only. Universal Norfolk doctrine and rationale are being migrated to the private `Norfolk-Group/norfolk-ai-product-os` candidate, which wins if these legacy policy passages conflict. Before any Kit code or UI change, read the relevant local implementation notes and update them in the same PR. [`docs/SYSTEM-GOVERNANCE-RULE.md`](docs/SYSTEM-GOVERNANCE-RULE.md) is preserved as a superseded legacy source pending duplicate-content cleanup; it is not a second canonical Product OS.
 
 Two rules worth stating on the front page because they are the most commonly violated:
 
 1. **No secrets in code, ever.** Doppler is the only home for credentials.
-2. **`/docs` outranks the code.** If they disagree, that's a bug to surface — not a licence to quietly rewrite the doc to match whatever the code happens to do.
+2. **Product OS outranks Kit; Kit implementation notes outrank conflicting Kit code.** Surface either conflict rather than silently rewriting the losing source.
