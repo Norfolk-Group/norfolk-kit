@@ -26,6 +26,8 @@
     "docs:artifacts:check": "tsx tools/artifacts/build.ts --check",
     "docs:catalogs": "tsx tools/artifacts/catalogs-cli.ts",
     "docs:catalogs:check": "tsx tools/artifacts/catalogs-cli.ts --check",
+    "preflight:workos": "tsx tools/preflight/workos/check.ts",
+    "docs:auth": "tsx tools/auth-artifact/build.ts",
     "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:production && pnpm build:storybook && pnpm docs:artifacts:check && pnpm docs:catalogs:check && pnpm test:browser"
   },
   "dependencies": {
@@ -34,6 +36,7 @@
     "@tailwindcss/vite": "4.3.3",
     "@trpc/client": "11.18.0",
     "@trpc/server": "11.18.0",
+    "@workos-inc/node": "10.9.0",
     "drizzle-orm": "0.45.2",
     "express": "5.2.1",
     "framer-motion": "12.42.2",

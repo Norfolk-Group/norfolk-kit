@@ -3,6 +3,7 @@ import { z } from "zod";
 import {
   CapabilityForbiddenError,
   readReferenceStatus,
+  readAuthSession,
   type CallerContext,
 } from "../../capabilities/index.js";
 
@@ -18,6 +19,7 @@ const authorizedProcedure = t.procedure.use(async ({ ctx, next }) => {
 });
 
 export const appRouter = t.router({
+  auth: t.router({ me: authorizedProcedure.query(({ ctx }) => readAuthSession(ctx)) }),
   reference: t.router({
     status: authorizedProcedure
       .input(z.object({ subject: z.string().min(1).max(100) }))

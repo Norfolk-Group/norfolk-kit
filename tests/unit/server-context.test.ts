@@ -10,7 +10,7 @@ describe("reference HTTP identity boundary", () => {
     else process.env.NODE_ENV = originalNodeEnvironment;
   });
 
-  it("refuses synthetic identity headers in production", () => {
+  it("refuses synthetic identity headers in production", async () => {
     process.env.NODE_ENV = "production";
     const request = {
       header(name: string) {
@@ -22,8 +22,8 @@ describe("reference HTTP identity boundary", () => {
       },
     } as unknown as Request;
 
-    expect(() => createHttpContext(request)).toThrowError(expect.objectContaining({
+    await expect(createHttpContext(request)).rejects.toMatchObject({
       code: "VERIFIED_IDENTITY_REQUIRED",
-    }));
+    });
   });
 });

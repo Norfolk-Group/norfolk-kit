@@ -2,7 +2,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { readReferenceStatus, type CallerContext, type ReferenceStatusResult } from "../../capabilities/index.js";
+import { readAuthSession, readReferenceStatus, type CallerContext, type ReferenceStatusResult } from "../../capabilities/index.js";
 
 const resultSchema = z.object({
   subject: z.string(),
@@ -38,6 +38,10 @@ export function createMcpServer(context: CallerContext): McpServer {
       };
     },
   );
+  server.registerTool("auth_session", { description: "Read the current authorized session context" }, async () => {
+    const result = readAuthSession(context);
+    return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
+  });
   return server;
 }
 
