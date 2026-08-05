@@ -8,7 +8,7 @@ export default defineConfig({
   resolve: { alias: { "@": path.join(root, "src") } },
   test: {
     environment: "node",
-    include: ["tests/unit/**/*.test.ts", "tests/integration/**/*.test.ts"],
+    include: ["tests/unit/**/*.test.ts", "tests/integration/**/*.test.ts", "tests/motion/**/*.test.ts", "tests/artifacts/**/*.test.ts"],
     exclude: ["tests/integration/production-start.test.ts"],
     coverage: { provider: "v8", reporter: ["text", "json-summary"] },
   },
