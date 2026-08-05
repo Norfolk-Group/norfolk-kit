@@ -51,6 +51,8 @@
     "docs/business-logic.md": "client-safe",
     "docs/security.md": "client-safe",
     "docs/config-and-env-map.md": "client-safe",
+    "docs/product-os-adoption.md": "client-safe",
+    "product-os.lock.json": "client-safe",
     "brand/README.md": "client-safe",
     "brand/norfolk/**": "norfolk-only",
     "brand/clients/kit-capital/**": "client:kit-capital"
