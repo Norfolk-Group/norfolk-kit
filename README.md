@@ -1,8 +1,10 @@
 # Norfolk Kit
 
-The canonical starter template for Norfolk AI / KIT Capital projects. One repo, one stack, one set of governance rules — so each new project starts from a decided baseline instead of re-litigating architecture.
+The executable starter and reference implementation for Norfolk AI products and client engagements. One runnable stack and one capability architecture let each product begin from a tested baseline instead of re-litigating infrastructure.
 
-**Status:** this repo is canonical for the *stack and governance*. `Norfolk-Group/norfolk-starter` is **not yet retired** — it still holds the `nai-` Claude Code skill wrappers, the Windows/Mac/Replit setup guides, the Cursor config, and the setup health-check scripts. Those are stack-agnostic and need to migrate here before that repo is archived. Tracked in [`docs/plans/`](docs/plans/).
+The private **Norfolk AI Product OS** owns canonical doctrine, standards, and rationale. Kit implements a compatible “how”: application scaffolding, adapters, components, modules, checks, and adoption tooling. Client accounts—including KIT Capital—consume this system but do not define Norfolk AI identity or own its reusable IP.
+
+**Status:** the U12 reference foundation is runnable locally on `feat/product-os-reference-foundation`; it has not been published or adopted. `Norfolk-Group/norfolk-starter` is **not retired**. Its unique content must be preserved and parity-checked before a separate archive or deletion approval. Tracked in [`docs/plans/`](docs/plans/).
 
 ## The stack
 
@@ -44,6 +46,18 @@ doppler run -- pnpm dev
 
 Then edit `doppler.yaml` — replace `CHANGE-ME` with the Doppler project name.
 
+## Run the reference foundation
+
+```bash
+pnpm install --frozen-lockfile
+pnpm dev:server     # Express + tRPC on 3000
+pnpm dev            # React + Vite on 5173
+```
+
+`pnpm verify` runs lint, type checks, unit/integration tests, production build and launch, Storybook, offline-artifact freshness, and the pinned Playwright viewport matrix. Install the pinned Chromium once with `pnpm exec playwright install chromium`.
+
+The local reference uses synthetic caller headers so adapter parity can be tested without a tenant. Production mode rejects them. A product must install the verified WorkOS AuthKit context before exposing capability routes.
+
 ## Accounts to provision per project
 
 Each is independent; do them in parallel. Every credential goes **into Doppler only** — never into a file, never into a commit, never pasted into a third-party agent platform.
@@ -59,17 +73,22 @@ Each is independent; do them in parallel. Every credential goes **into Doppler o
 
 See [`.env.example`](.env.example) for the complete key surface.
 
-**Railway → Doppler wiring:** generate a **service token** scoped to the `prd` config only, read-only (Doppler → project → `prd` → Access → Service Tokens). Put it in Railway's Variables as `DOPPLER_TOKEN`, and set the start command to `doppler run -- node dist/index.js`. Never use a personal token for this.
+**Railway → Doppler wiring:** generate a **service token** scoped to the `prd` config only, read-only (Doppler → project → `prd` → Access → Service Tokens). Put it in Railway's Variables as `DOPPLER_TOKEN`, and set the start command to `doppler run -- pnpm start`. Never use a personal token for this.
 
 ## What's in here
 
 ```
 .devcontainer/     Codespace definition + bootstrap (Doppler, Claude Code, deps, PATH)
-.claude/CLAUDE.md  the agent contract — how work gets done in this repo
+AGENTS.md           the vendor-neutral agent contract; CLAUDE.md imports it
 .mcp.json          MCP servers: neon, workos, railway, context7, shadcn
 doppler.yaml       which Doppler project/config this repo resolves to
 .env.example       every expected key, names only
 docs/              the project contract — see docs/README.md for the index
+src/capabilities/  transport-neutral authorized application capabilities
+src/adapters/      tRPC and MCP adapters over the same capability core
+src/client/        React reference interface and Storybook specimens
+src/server/        Express host and Drizzle boundary
+tools/artifacts/   deterministic self-contained review artifact builder
 tools/launchers/   run Claude Code against Kimi / GLM / Qwen / Grok / DeepSeek / GPT
 ```
 

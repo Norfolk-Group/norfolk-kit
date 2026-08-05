@@ -1,6 +1,6 @@
 # Docs Index
 
-**Tier: CONTRACT** · Last verified: 2026-07-29
+**Tier: CONTRACT** · Last verified: 2026-08-05
 
 This is a **router, not a summary**. Find the row matching the change you're about to make and read those files first. A file not listed here is not part of the project contract.
 
