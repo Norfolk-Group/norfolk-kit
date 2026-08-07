@@ -1,6 +1,8 @@
 # SYSTEM GOVERNANCE RULE (v2)
 
-`/docs` is this project's source of truth for architecture, business logic, API structure, and design system. Before any code or UI change, the agent MUST consult it, follow it, and update it in the same PR when behavior or UI changes. A change made without consulting `/docs` is invalid.
+> **Superseded legacy source during Product OS migration.** This body is preserved for provenance. The private `Norfolk-Group/norfolk-ai-product-os` candidate owns universal doctrine; this file governs only Kit implementation details that do not conflict with it. After cutover, duplicate policy will be replaced by concise implementation notes and links.
+
+`/docs` is this Kit implementation's local source for architecture, business logic, API structure, and executable design notes. Before any Kit code or UI change, the agent MUST consult it, follow it when compatible with Product OS, and update it in the same PR when behavior or UI changes. A change made without consulting the relevant Product OS and Kit sources is invalid.
 
 That much is v1. Everything below exists because v1 was unenforceable, unbounded, and silent about conflicts.
 

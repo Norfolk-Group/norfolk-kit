@@ -1,10 +1,10 @@
 # Design System
 
-**Tier: CONTRACT** · Last verified: *(set when first populated)*
+**Tier: CONTRACT** · Last verified: 2026-08-05
 
 This file is the UI/UX source of truth for this project. It documents the visual foundations, component standards, layout rules, UX principles, accessibility requirements, interaction patterns, and forbidden UI patterns that all agents and developers must follow. Its purpose is to prevent design drift, preserve intentional design decisions, and keep every UI change consistent with the established product experience.
 
-> **New project:** this is a skeleton. Populate every section before the first UI work, and set `Last verified`. An empty design system is not a licence to improvise — it's a blocking task.
+The U12 executable reference uses the small neutral foundation below. It proves the component, Storybook, browser-review, and offline-artifact pipeline; it is not a client brand or the completed Product OS design canon. Products inherit approved Norfolk foundations and then declare their product, brand, theme, density, and output contracts before extending this reference.
 
 ---
 
@@ -15,20 +15,28 @@ Every colour as a literal token with its value. Never introduce a colour that is
 
 | Token | Value | Used for |
 |---|---|---|
-| `--background` | | page surface |
-| `--foreground` | | body text |
-| `--primary` | | primary action |
-| `--destructive` | | destructive action |
-| `--muted` / `--muted-foreground` | | secondary surfaces and text |
-| `--border` / `--input` / `--ring` | | edges and focus |
+| `--background` | `#f6f4ed` | warm neutral page surface |
+| `--foreground` | `#172227` | body text |
+| `--surface` | `rgba(255, 255, 255, 0.55)` | quiet raised surface |
+| `--primary` | `#28756b` | primary action and ready state |
+| `--primary-quiet` | `#376a64` | small labels on light surfaces |
+| `--destructive` | `#a33e35` | destructive or error state |
+| `--pending` | `#8c816b` | indeterminate/pending state |
+| `--muted` | `#ecebe5` | secondary surface |
+| `--muted-foreground` | `#526064` | secondary text |
+| `--quiet-foreground` | `#687276` | tertiary metadata |
+| `--border` / `--input` | `#d6d5cd` | edges and inputs |
+| `--border-strong` | `#abb0ab` | interactive edge |
+| `--divider` | `#deddd6` | internal rule |
+| `--ring` | `#84b8b1` | visible focus |
 
-State which themes exist (light / dark / named variants) and which tokens differ per theme.
+The reference foundation defines light only. A product may not infer a dark or branded palette by transforming these values; it declares an approved theme contract first.
 
 ### Typography
-Families, where each is loaded from, and the scale — sizes, weights, line-heights, letter-spacing. Note any font used for one specific purpose only.
+Inter is pinned through `@fontsource/inter@5.3.0` and bundled locally at weights 400, 500, and 600. No runtime font request is permitted. Body copy uses 400; controls and headings use 500 or 600. Display headings use responsive `2.5rem–5rem`, line-height `0.98`, and negative tracking; body copy uses `1rem–1.05rem` with line-height `1.6`. Numeric columns use tabular numerals.
 
 ### Spacing · Radii · Shadows
-The spacing scale. The radius scale and what each level is for. Where shadows are permitted.
+Use a 4px spacing base and compose at 8, 12, 16, 20, 24, 32, 48, and 64px. Controls have a minimum 44px target. Reference surfaces use 12px radius; pill controls use a full radius. Borders are 1px. The reference has no shadow: hierarchy comes from space, tone, and hairlines.
 
 ### Icons and line weight — **DECIDED, applies to every Norfolk project**
 
@@ -142,32 +150,35 @@ The reflex — human and agent alike — is to stretch content to the available 
 
 ## Component standards
 
-For each: which variants and sizes exist, when to use which, and which states are defined (default / hover / focus / active / disabled / loading / error / empty).
+The first executable specimen is `StatusCard` at `src/client/components/StatusCard.tsx`. It defines loading, ready, and error states with an `aria-live` region; Storybook renders all three. Loading uses a dashed geometric mark, not a fabricated percentage, and respects reduced motion. Error copy names the next action.
 
-Buttons · Forms · Inputs · Cards · Modals & dialogs · Tables · Alerts · Loaders & skeletons · Empty states · Navigation · Badges · Tooltips
+Reference review buttons define default, hover, keyboard-focus, and 44px target behavior and offer explicit approve, reject, and defer outcomes. A product must add disabled, loading, and error behavior before using a button for asynchronous work.
+
+Forms, inputs, dialogs, tables, alerts, skeletons, empty states, navigation, badges, and tooltips are not silently invented from this specimen. They enter Kit only after their Product OS component contracts and complete applicable state matrices are accepted.
 
 ## Layout rules
 
-Grid. Breakpoints with pixel values. Responsive behaviour. Mobile patterns vs desktop patterns. Maximum content widths. How wide content (tables, diagrams, code) is handled.
+The reference is a focus surface capped at `48rem` with a reading measure below `36rem`. At widths below `40rem`, review actions become a vertical full-width stack. Mobile keeps 16px side clearance and 44px targets. Dense tables and dashboards are scan surfaces and use the fixed-grid rules below rather than stretching focus content.
 
 ## UX principles
 
-- **Accessibility** — contrast minimums, focus visibility, keyboard navigation, semantics, motion-reduction support.
-- **Interaction** — what's clickable and how it signals that; hover vs focus; destructive-action confirmation.
-- **Error handling** — where errors appear, tone, and what the user can do next.
-- **Loading** — skeleton vs spinner vs optimistic; what appears within 100ms.
-- **Animation** — the permitted durations and easing curves, and what each is for. New motion uses an existing curve.
-- **Feedback** — how success is confirmed; toast vs inline vs redirect.
+- **Accessibility** — use semantic landmarks and controls, visible `:focus-visible`, 44px touch targets, WCAG 2.2 AA contrast, keyboard operation, and reduced-motion behavior.
+- **Interaction** — controls use a pointer plus visible hover and focus. Consequential actions name their effect and use the shared human-only approval policy.
+- **Error handling** — state what failed and what the person can do next; never use “Something went wrong” alone.
+- **Loading** — below 100ms show no ceremony; otherwise preserve layout and show honest indeterminate progress unless measured stages support a determinate value.
+- **Animation** — the U12 reference permits only the 1.5s linear rotation of its dashed loading mark and removes it under reduced motion. Rich motion follows decision 0004 and the later lineage reconciliation.
+- **Feedback** — keep the result beside the action when the outcome matters to the current surface. The review specimen shows the recorded approve/reject/defer state inline.
 
 ## Forbidden patterns
 
-The most important section. Be specific.
-
-- UI anti-patterns that must not be introduced.
-- Visual styles ruled out (and why).
-- Components that must not change without approval.
-- Legacy quirks that exist for a known reason — with the reason, so nobody "fixes" them.
-- Intentional constraints (e.g. one icon library only; no colour outside the token set; no inline styles).
+- No unrecorded color, font, spacing, radius, shadow, easing, or component variant.
+- No external font, script, stylesheet, image, or CDN request in generated review artifacts.
+- No invented determinate progress or elapsed-time claim.
+- No client-specific palette, identity, terminology, or data in Kit.
+- No second icon library, emoji interface icon, per-icon stroke override, or decorative icon that carries no information.
+- No inline style as a local escape from tokens.
+- No hidden visual-baseline replacement: changes require a visible approve, reject, or defer outcome.
+- Do not treat preserved legacy animation sources as canonical until the Figma/Replit/H-Analytics/Kit lineage unit records the decision.
 
 ---
 

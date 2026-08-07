@@ -1,8 +1,8 @@
 # Docs Index
 
-**Tier: CONTRACT** · Last verified: 2026-07-29
+**Tier: CONTRACT** · Last verified: 2026-08-05
 
-This is a **router, not a summary**. Find the row matching the change you're about to make and read those files first. A file not listed here is not part of the project contract.
+This is a **router, not a summary** for the Kit implementation. Find the row matching the change you're about to make and read those files first. The private Norfolk AI Product OS candidate owns universal doctrine and wins cross-repository conflicts. Legacy universal policy in Kit is being replaced with concise implementation notes and must not be treated as a second editable canon.
 
 ## Route by change type
 

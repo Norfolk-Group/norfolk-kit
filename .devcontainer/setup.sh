@@ -23,7 +23,8 @@ claude --version || echo "WARN: claude not found — check the devcontainer feat
 
 echo "==> pnpm + deps"
 corepack enable
-if [ -f package.json ]; then pnpm install --frozen-lockfile || pnpm install; fi
+corepack prepare pnpm@11.13.0 --activate
+if [ -f package.json ]; then pnpm install --frozen-lockfile; fi
 
 echo "==> alt-model launchers executable"
 chmod +x tools/launchers/*.sh 2>/dev/null || true

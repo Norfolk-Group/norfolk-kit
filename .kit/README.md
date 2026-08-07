@@ -2,6 +2,8 @@
 
 Three small files. Together they answer one question: **when the kit is copied into a repo, which parts of it are that repo allowed to hold?**
 
+Product OS adoption also uses these boundaries. The signed release manifest supplies incoming hashes and sensitivity; `tools/product-os-adopt/plan.mjs` verifies and plans, while `kit-guard` independently enforces the resulting pull request. Adoption never writes the default branch or executes a deletion.
+
 You do not need to edit these by hand. Ask for the change in plain English and it gets made here.
 
 | File | What it decides |
