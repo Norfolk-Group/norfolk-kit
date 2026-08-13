@@ -19,7 +19,10 @@ describe("compiled production entry point", () => {
 
   it("starts the built server through the documented start command", async () => {
     const port = await availablePort();
-    const child = spawn("pnpm", ["start"], {
+    const isWindows = process.platform === "win32";
+    const command = isWindows ? (process.env.ComSpec ?? "cmd.exe") : "pnpm";
+    const args = isWindows ? ["/d", "/s", "/c", "pnpm.cmd", "start"] : ["start"];
+    const child = spawn(command, args, {
       cwd: process.cwd(),
       env: { ...process.env, PORT: String(port) },
       stdio: ["ignore", "pipe", "pipe"],
