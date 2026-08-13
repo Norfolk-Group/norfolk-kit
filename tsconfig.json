@@ -24,6 +24,7 @@
     "src/server",
     "src/capabilities",
     "src/adapters",
+    "src/reporting",
     "tests",
     "tools/artifacts",
     ".storybook",

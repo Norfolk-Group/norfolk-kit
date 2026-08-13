@@ -24,6 +24,7 @@ Configuration values live in Doppler. This repository records names, ownership, 
 - pnpm permits the pinned `esbuild` lifecycle script explicitly; no other dependency build is implicitly trusted.
 - Playwright uses its lockfile-pinned Chromium with locale `en-US`, timezone `UTC`, device scale 1, and named desktop/tablet/mobile viewports.
 - Inter `5.3.0` is bundled from `@fontsource/inter`; the app, Storybook, and offline artifact do not fetch a font.
+- Financial report output also bundles IBM Plex Sans Condensed and IBM Plex Mono `5.3.0` from Fontsource. Renderers embed or package them; no report depends on a viewer-installed or remotely fetched font.
 
 ## Deploy wiring
 

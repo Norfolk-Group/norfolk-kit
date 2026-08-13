@@ -1,6 +1,6 @@
 # Docs Index
 
-**Tier: CONTRACT** · Last verified: 2026-08-05
+**Tier: CONTRACT** · Last verified: 2026-08-13
 
 This is a **router, not a summary** for the Kit implementation. Find the row matching the change you're about to make and read those files first. The private Norfolk AI Product OS candidate owns universal doctrine and wins cross-repository conflicts. Legacy universal policy in Kit is being replaced with concise implementation notes and must not be treated as a second editable canon.
 
@@ -14,6 +14,7 @@ This is a **router, not a summary** for the Kit implementation. Find the row mat
 | Auth, sessions, roles, permissions | `security.md` · `decisions/` (auth records) |
 | File upload/download, storage, video | `decisions/0002-presigned-direct-uploads.md` |
 | Money, fees, returns, investor-facing math | `business-logic.md` — **and full review panel** |
+| Investor reports, PDF/HTML/XLSX/CSV/PNG/PPTX exports | `export-output-contract.md` · `design-system.md` · `business-logic.md` |
 | Deployment, environments, secrets | `config-and-env-map.md` |
 | Anything, if it contradicts a documented decision | `decisions/` — surface the conflict, don't resolve it silently |
 
@@ -26,6 +27,7 @@ This is a **router, not a summary** for the Kit implementation. Find the row mat
 | `business-logic.md` | CONTRACT | Domain rules, workflows, roles, edge cases |
 | `api.md` | CONTRACT | Procedures, inputs/outputs, authz, error handling |
 | `design-system.md` | CONTRACT | Visual foundations, components, layout, UX, forbidden patterns |
+| `export-output-contract.md` | CONTRACT | Format-specific design, provenance, and verification for distributable reports |
 | `security.md` | CONTRACT | Auth, sessions, permissions, data handling, threat notes |
 | `config-and-env-map.md` | REFERENCE | Doppler keys by name, environments, deploy wiring |
 | `decisions/` | CONTRACT | One record per decision — includes what each rules out |
