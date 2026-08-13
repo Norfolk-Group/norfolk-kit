@@ -11,6 +11,7 @@ export const RENDERER_FEATURES = [
   "bookmarks",
   "tagged-pdf",
   "pdf-a",
+  "native-docx-structure",
   "native-xlsx-numbers",
   "transparent-background",
 ] as const;

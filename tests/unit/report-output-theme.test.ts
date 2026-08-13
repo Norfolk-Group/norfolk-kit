@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   norfolkFinancialMonochromeTheme,
+  REPORT_OUTPUT_FORMATS,
   resolveReportOutputTheme,
   ReportOutputThemeResolutionError,
   validateReportOutputTheme,
@@ -16,6 +17,11 @@ import {
 describe("Norfolk financial report output theme", () => {
   it("ships a readable monochrome default with restrained chart accents", () => {
     expect(validateReportOutputTheme(norfolkFinancialMonochromeTheme)).toEqual([]);
+    expect(REPORT_OUTPUT_FORMATS).toContain("docx");
+    expect(norfolkFinancialMonochromeTheme).toMatchObject({
+      version: 2,
+      supportedFormats: expect.arrayContaining(["docx"]),
+    });
     expect(norfolkFinancialMonochromeTheme.typography.denseNumeric).toMatchObject({
       family: "IBM Plex Sans Condensed",
       minimumPointSize: 10,
@@ -231,5 +237,44 @@ describe("renderer capability negotiation", () => {
       fontFamilies: ["IBM Plex Sans Condensed"],
       features: [{ feature: "tagged-pdf" }],
     }, multiFormatRenderer)).toThrow(UnsupportedRendererProfileError);
+  });
+
+  it("requires DOCX renderers to preserve native editable document structure", () => {
+    const docxRenderer: RendererCapabilities = {
+      id: "example-docx-sdk",
+      execution: "server",
+      formats: ["docx"],
+      features: [
+        "local-font-embedding",
+        "controlled-page-breaks",
+        "repeated-table-headers",
+        "native-docx-structure",
+      ],
+      fontFamilies: ["Inter", "IBM Plex Sans Condensed", "IBM Plex Mono"],
+    };
+
+    expect(negotiateRenderer({
+      format: "docx",
+      fontFamilies: ["Inter", "IBM Plex Sans Condensed"],
+      features: [
+        { feature: "controlled-page-breaks" },
+        { feature: "repeated-table-headers" },
+        { feature: "native-docx-structure" },
+      ],
+    }, docxRenderer)).toEqual({
+      rendererId: "example-docx-sdk",
+      format: "docx",
+      fallbacks: [],
+    });
+
+    expect(() => negotiateRenderer({
+      format: "docx",
+      fontFamilies: ["Inter"],
+      features: [{ feature: "native-docx-structure" }],
+    }, {
+      ...docxRenderer,
+      id: "flattened-document-exporter",
+      features: ["raster-charts"],
+    })).toThrow("Feature native-docx-structure is unavailable and has no supported fallback.");
   });
 });

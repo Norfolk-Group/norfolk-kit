@@ -5,7 +5,7 @@
 Investor reports and exported reports are products in their own right. They are
 not alternate screenshots of an application screen. This contract governs every
 distributable report surface produced by a Norfolk Kit project: published HTML,
-PDF, XLSX, CSV, PNG, and PPTX, as well as the relationship each has to its
+PDF, DOCX, XLSX, CSV, PNG, and PPTX, as well as the relationship each has to its
 interactive on-screen counterpart.
 
 This is a Kit implementation contract. The private Norfolk AI Product OS owns
@@ -40,6 +40,7 @@ each layer.
 | **Interactive report** | exploration, filters, drill-down, responsive use | semantic model, terminology, data formatting | document geometry, controls, hover-only meaning, viewport layout |
 | **Published HTML** | browser reading, stable sharing, print preview | document model and CSS with PDF when declared canonical | live controls, session-only data, external dependencies that make a saved artifact change |
 | **Investor PDF** | circulation, printing, archive-quality reading | canonical document HTML when PDF is a deterministic render of it | responsive breakpoints, collapsed detail, browser chrome, screen-only colors or tooltips |
+| **Editable document (DOCX)** | review, redlining, controlled narrative editing | report semantics, hierarchy, disclosures, and document typography | flattened PDF pages, images of tables, spreadsheet density, layout that depends on one desktop installation |
 | **Workbook (XLSX)** | audit, sorting, recomputation, analysis | labels, values, units, hierarchy, disclosures | PDF pagination, decorative cover treatments, values converted to display strings |
 | **CSV** | machine exchange and simple analysis | row semantics, stable IDs, raw values, units through schema/headers | visual layout, merged cells, hidden calculations, locale-dependent ambiguity |
 | **Image (PNG)** | one bounded visual fact for sharing or embedding | approved chart/table styling and source metadata | whole-report reading, tiny type, clipped legends, undocumented cropping |
@@ -50,8 +51,9 @@ two profiles are equivalent without defining and testing the equivalence.
 
 ## 3. Investor-document rules
 
-These apply to published HTML and investor PDFs. A product may make them more
-strict, never less.
+These apply to published HTML and investor PDFs. An investor-facing DOCX inherits
+them unless its format-specific rule below is stricter. A product may make them
+more strict, never less.
 
 1. **One canonical render path.** If HTML and PDF are both distributed, the
    preferred path is one print-ready document HTML rendered to PDF with its
@@ -83,7 +85,7 @@ strict, never less.
 ### Default theme: Norfolk Financial Monochrome
 
 Kit ships one conservative baseline for financial statements and investor
-documents: `norfolk-financial-monochrome` v1. Products may add an approved
+documents: `norfolk-financial-monochrome` v2. Products may add an approved
 branded report theme, but a branded theme inherits these legibility and spacing
 floors. It cannot simply reuse the selected application-screen theme.
 
@@ -184,7 +186,25 @@ Every material chart or image has a caption or text alternative in the delivery
 surface. A cover may be expressive; statement pages remain quiet enough that
 the numbers are unmistakably primary.
 
-## 4. Data formats are not visual exports
+## 4. Each additional format keeps its native job
+
+### DOCX
+
+- DOCX is an editable document, not a PDF envelope. Headings use named styles;
+  paragraphs remain text; tables remain native tables; headers, footers, page
+  sections, links, captions, and accessibility metadata use the document model.
+- Use explicit sections for page geometry and controlled breaks. Repeat table
+  headers where the SDK supports them, keep semantic table groups together, and
+  declare any renderer limitation that prevents deterministic pagination.
+- Embed or package approved fonts when the renderer supports it. When it does
+  not, use only a declared metric-compatible fallback and record the substitution
+  in the artifact manifest; a viewer-dependent silent font swap is not compliant.
+- A DOCX may be intentionally editable or intentionally protected, but the
+  declaration must say which. Redlining or edits never mutate the canonical
+  report data, calculation provenance, or stored approved artifact.
+- Do not place screenshots of statements or flattened PDF pages inside DOCX to
+  imitate layout fidelity. If exact fixed layout is required, distribute PDF;
+  if editable structure is required, accept and test the DOCX renderer's reflow.
 
 ### XLSX
 
@@ -240,13 +260,13 @@ an investor report for a live request.
 An export is not ready because a file exists or a download returned `200`. The
 generator or release gate must record the following for each profile it ships:
 
-| Gate | All profiles | Document HTML / PDF | XLSX / CSV | PNG / PPTX |
-|---|---|---|---|---|
-| Semantic parity | expected sections, scope, years/entities, representative values, units, and rounding policy | same | same | same figures and labels |
-| Provenance | manifest, version, timestamp, classification, and source fingerprint | same | same | same |
-| Format integrity | successful parse/open by its native reader | valid HTML/PDF, no external runtime dependency | workbook/schema opens; formulas and numeric cells are valid | declared dimensions and native file structure |
-| Visual review | n/a where not meaningful | rendered-page check: overflow, clipping, contrast, orphaned headings, page breaks, footer/header collision, and density | legibility of headings and columns | legibility, crop, safe area, chart/table label visibility |
-| Regression | approved fixture or baseline when the design is stable | rendered visual baseline plus content/fingerprint check | schema/value fixture | rendered visual baseline plus content check |
+| Gate | All profiles | Document HTML / PDF | DOCX | XLSX / CSV | PNG / PPTX |
+|---|---|---|---|---|---|
+| Semantic parity | expected sections, scope, years/entities, representative values, units, and rounding policy | same | same, including editable text and native tables | same | same figures and labels |
+| Provenance | manifest, version, timestamp, classification, and source fingerprint | same | same | same | same |
+| Format integrity | successful parse/open by its native reader | valid HTML/PDF, no external runtime dependency | valid package, styles, sections, relationships, text, and native tables | workbook/schema opens; formulas and numeric cells are valid | declared dimensions and native file structure |
+| Visual review | n/a where not meaningful | rendered-page check: overflow, clipping, contrast, orphaned headings, page breaks, footer/header collision, and density | rendered review in the declared reference reader plus reflow check in one supported alternate reader | legibility of headings and columns | legibility, crop, safe area, chart/table label visibility |
+| Regression | approved fixture or baseline when the design is stable | rendered visual baseline plus content/fingerprint check | package-structure/content fixture plus rendered baseline | schema/value fixture | rendered visual baseline plus content check |
 
 The data-parity gate must test more than download success. At a minimum it
 checks expected sections, representative values within the report’s declared
@@ -283,8 +303,8 @@ The manifest names:
   format-specific capability overrides where an SDK's paths differ;
 - available embedded/local fonts;
 - page geometry, paged-media CSS, controlled break, and repeated-header support;
-- vector/raster chart, link, bookmark, tagged-PDF, PDF/A, transparency, and
-  native-spreadsheet-number support; and
+- vector/raster chart, link, bookmark, tagged-PDF, PDF/A, native DOCX
+  structure, transparency, and native-spreadsheet-number support; and
 - operational limits such as maximum input bytes and page count.
 
 Required capability missing → fail before rendering with a plain-language list
@@ -315,7 +335,8 @@ becomes the report model.
 - A PDF with live controls, hidden/collapsed material detail, clipped table
   values, unreadable axes, or a chart treated as decoration rather than data.
 - An XLSX/CSV that exports formatted display strings when real values are
-  required, or a PNG used as the sole record of a financial table.
+  required, a DOCX made from flattened page images, or a PNG used as the sole
+  record of a financial table.
 - Per-format calculation forks, untracked manual edits to generated artifacts,
   or a regeneration that changes a live multi-tenant server’s global state.
 - Publishing an artifact without a declared profile, manifest, semantic check,
