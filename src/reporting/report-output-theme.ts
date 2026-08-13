@@ -1,4 +1,4 @@
-export const REPORT_OUTPUT_FORMATS = ["html", "pdf", "xlsx", "csv", "png", "pptx"] as const;
+export const REPORT_OUTPUT_FORMATS = ["html", "pdf", "docx", "xlsx", "csv", "png", "pptx"] as const;
 
 export type ReportOutputFormat = (typeof REPORT_OUTPUT_FORMATS)[number];
 
@@ -102,7 +102,7 @@ const TABULAR_NUMERIC_FEATURES = ["tabular-nums", "lining-nums"] as const;
 
 export const norfolkFinancialMonochromeTheme = {
   id: "norfolk-financial-monochrome",
-  version: 1,
+  version: 2,
   name: "Norfolk Financial Monochrome",
   supportedFormats: REPORT_OUTPUT_FORMATS,
   fontAssets: [
@@ -202,7 +202,7 @@ export const norfolkFinancialMonochromeTheme = {
 } as const satisfies ReportOutputTheme;
 
 export const norfolkReportOutputThemeRegistry: ReportOutputThemeRegistry = {
-  version: 1,
+  version: 2,
   defaultThemeId: norfolkFinancialMonochromeTheme.id,
   themes: [norfolkFinancialMonochromeTheme],
   bindings: [],

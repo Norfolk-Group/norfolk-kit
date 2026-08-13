@@ -8,13 +8,13 @@ The U12 executable reference uses the small neutral foundation below. It proves 
 
 ## Output surfaces
 
-An investor PDF, published report HTML, workbook, CSV, image, or deck is not a
-responsive screen captured in another file format. These outputs have different
-reading distances, geometry, interaction models, durability, and verification
-needs. [`export-output-contract.md`](export-output-contract.md) is the binding
-format-specific contract: declare a report profile before building it, use
-document-only tokens and renderers where required, and verify data parity and
-visual integrity independently for every distributed format.
+An investor PDF, published report HTML, editable DOCX, workbook, CSV, image, or
+deck is not a responsive screen captured in another file format. These outputs
+have different reading distances, geometry, interaction models, durability, and
+verification needs. [`export-output-contract.md`](export-output-contract.md) is
+the binding format-specific contract: declare a report profile before building
+it, use document-only tokens and renderers where required, and verify data parity
+and visual integrity independently for every distributed format.
 
 The interactive design system governs exploration. The output contract governs
 circulation. Neither silently wins over the other.

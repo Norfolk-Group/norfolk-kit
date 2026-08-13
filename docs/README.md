@@ -14,7 +14,7 @@ This is a **router, not a summary** for the Kit implementation. Find the row mat
 | Auth, sessions, roles, permissions | `security.md` · `decisions/` (auth records) |
 | File upload/download, storage, video | `decisions/0002-presigned-direct-uploads.md` |
 | Money, fees, returns, investor-facing math | `business-logic.md` — **and full review panel** |
-| Investor reports, PDF/HTML/XLSX/CSV/PNG/PPTX exports | `export-output-contract.md` · `design-system.md` · `business-logic.md` |
+| Investor reports, PDF/HTML/DOCX/XLSX/CSV/PNG/PPTX exports | `export-output-contract.md` · `design-system.md` · `business-logic.md` |
 | Deployment, environments, secrets | `config-and-env-map.md` |
 | Anything, if it contradicts a documented decision | `decisions/` — surface the conflict, don't resolve it silently |
 
