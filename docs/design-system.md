@@ -1,10 +1,29 @@
 # Design System
 
-**Tier: CONTRACT** · Last verified: 2026-08-05
+**Tier: CONTRACT** · Last verified: 2026-08-13
 
 This file is the UI/UX source of truth for this project. It documents the visual foundations, component standards, layout rules, UX principles, accessibility requirements, interaction patterns, and forbidden UI patterns that all agents and developers must follow. Its purpose is to prevent design drift, preserve intentional design decisions, and keep every UI change consistent with the established product experience.
 
 The U12 executable reference uses the small neutral foundation below. It proves the component, Storybook, browser-review, and offline-artifact pipeline; it is not a client brand or the completed Product OS design canon. Products inherit approved Norfolk foundations and then declare their product, brand, theme, density, and output contracts before extending this reference.
+
+## Output surfaces
+
+An investor PDF, published report HTML, workbook, CSV, image, or deck is not a
+responsive screen captured in another file format. These outputs have different
+reading distances, geometry, interaction models, durability, and verification
+needs. [`export-output-contract.md`](export-output-contract.md) is the binding
+format-specific contract: declare a report profile before building it, use
+document-only tokens and renderers where required, and verify data parity and
+visual integrity independently for every distributed format.
+
+The interactive design system governs exploration. The output contract governs
+circulation. Neither silently wins over the other.
+
+The default financial-output theme is deliberately monochrome for statements,
+with restrained accent colors reserved for charts. It bundles Inter, IBM Plex
+Sans Condensed, and IBM Plex Mono; defines minimum readable point sizes; and
+requires generous chart padding. These report fonts and colors are a separate
+theme surface—not permission to change the application's selected theme.
 
 ---
 
