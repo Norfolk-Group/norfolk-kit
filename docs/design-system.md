@@ -31,6 +31,8 @@ theme surface—not permission to change the application's selected theme.
 
 Design tools produce exploration and handoff artifacts. They do not define the UI source of truth. That belongs to this file, shadcn blocks (0017), and the export contract (0018/0019).
 
+> **Pending acceptance:** The tooling rules in this section cite decisions 0020/0021, which remain Status: Proposed until Ricardo accepts. The substance (Inter, no second system, kit tokens win) applies; the ADR citations become binding on acceptance.
+
 ### Figma
 
 **Remote MCP only:** `https://mcp.figma.com/mcp`. No local `127.0.0.1:3845` (Grok Bots).
@@ -238,7 +240,7 @@ The reference is a focus surface capped at `48rem` with a reading measure below 
 - Do not treat preserved legacy animation sources as canonical until the Figma/Replit/H-Analytics/Kit lineage unit records the decision.
 - No second design system from any tool — Figma, Claude Design, Replit, or otherwise.
 - No `frontend-design` skill overrides that conflict with this file's documented Inter/Lucide/spacing rules.
-- No `127.0.0.1:3845` for Figma MCP — remote only.
+- No `127.0.0.1:3845` for Figma MCP from Grok Bots or remote-only agents — remote MCP only for those environments.
 - No invented motion or Design MCP assumptions — verify before use.
 - No Lovable or Replit as Norfolk runtime — design canvas only.
 - No screenshot reports — reports are documents per `export-output-contract.md`.

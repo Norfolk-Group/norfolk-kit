@@ -353,4 +353,4 @@ profile, token set, density, freshness, required sections, and canonical format.
 
 | Family | Tier | Description |
 |---|---|---|
-| [`agent-ops-daily-digest`](outputs/agent-ops-daily-digest.md) | CONTRACT | Weekday agent status email to Ricardo. U12 tokens, scan density, no PDF sibling. |
+| [`agent-ops-daily-digest`](outputs/agent-ops-daily-digest.md) | CONTRACT | Weekday agent status email to Ricardo. U12 tokens, scan density, no PDF sibling. (Proposed until Ricardo accepts) |

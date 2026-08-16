@@ -1,6 +1,6 @@
 # Docs Index
 
-**Tier: CONTRACT** · Last verified: 2026-08-13
+**Tier: CONTRACT** · Last verified: 2026-08-16
 
 This is a **router, not a summary** for the Kit implementation. Find the row matching the change you're about to make and read those files first. The private Norfolk AI Product OS candidate owns universal doctrine and wins cross-repository conflicts. Legacy universal policy in Kit is being replaced with concise implementation notes and must not be treated as a second editable canon.
 
@@ -31,8 +31,8 @@ This is a **router, not a summary** for the Kit implementation. Find the row mat
 | `security.md` | CONTRACT | Auth, sessions, permissions, data handling, threat notes |
 | `config-and-env-map.md` | REFERENCE | Doppler keys by name, environments, deploy wiring |
 | `decisions/` | CONTRACT | One record per decision — includes what each rules out |
-| `decisions/0020-*` | CONTRACT | Figma and Claude Design are tools, not a second system |
-| `decisions/0021-*` | CONTRACT | Bot UI handoff: kit contract in, ZIP/HTML/Figma-link out |
+| `decisions/0020-*` | CONTRACT | Figma and Claude Design are tools, not a second system (Proposed until Ricardo accepts) |
+| `decisions/0021-*` | CONTRACT | Bot UI handoff: kit contract in, ZIP/HTML/Figma-link out (Proposed until Ricardo accepts) |
 | `plans/` | REFERENCE | Active plans; `plans/archive/` for superseded ones. Also holds CE plans. |
 | `solutions/` | REFERENCE | CE-compound learnings. One file per learning, frontmatter, refreshed by `ce-compound-refresh`. |
 | `outputs/` | CONTRACT | Per-family output surface declarations. See `export-output-contract.md` for the governing rules. |
