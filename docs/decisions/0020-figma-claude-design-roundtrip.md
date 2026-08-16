@@ -39,7 +39,7 @@ Verified 2026-08-16: remote only `https://mcp.figma.com/mcp`. No `127.0.0.1:3845
 | Figma → code | `figma-implement-motion` + `get_motion_context`, bake per 0004 | Motion specs become build-time data |
 | In Figma | `figma-use-motion` with metronome flag, stop if unsupported | Do not force unsupported motion |
 
-**Code Connect:** Org/Enterprise only. Starter/View/Collab: ~6 MCP calls/month seat note.
+**Code Connect:** Org/Enterprise only. **View/Collab seats:** 20 calls/month on Starter; 6 calls/month on Professional/Organization/Enterprise (per [Figma rate-limit docs](https://developers.figma.com/docs/figma-mcp-server/rate-limits-access/)).
 
 ---
 

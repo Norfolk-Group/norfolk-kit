@@ -51,6 +51,8 @@ If, after all five steps, it still reads as vector rather than pigment: the miss
 
 ## Connectors already available, gating on authorization
 
+> **Superseded by 0020** (narrowly): The Figma MCP guidance below is replaced by the tooling rules in [0020](0020-figma-claude-design-roundtrip.md), which adds remote-only, `Failed to load` handling, rate limits, and Claude Design. The motion-baking architecture in this ADR is unchanged.
+
 - **Figma MCP server** + the `figma-implement-motion` / `figma-use-motion` Claude Code skills — the actual round-trip for pulling motion specs out of Figma faithfully (keyframes, easing, duration as data) instead of eyeballing a recording. Requires a one-time `/mcp` authorization in an interactive session; not available in this non-interactive one.
 - **shadcn registry format** — the natural distribution unit once the library is built: `npx shadcn add <url>` copies source, so nothing enters either product's bundle that wasn't explicitly reviewed.
 - **context7** — pull current docs before writing any Storybook 10 or Vite single-file config; the research surfaced live examples of blog posts already wrong about both.

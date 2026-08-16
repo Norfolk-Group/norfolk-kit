@@ -8,7 +8,7 @@ This file is the agent contract for every equipped Norfolk/KIT repo. Equip insta
 
 Superpowers and Compound Engineering are pinned and inherited by reference. Do not vendor skill trees. Do not double-loop brainstorm/plan.
 
-UI work inherits `docs/design-system.md`. Figma/Claude Design/Replit/Paper/Magic Patterns are tools not a second system (0020/0021). Reports are documents. Inter is the house face. Figma MCP remote only; `Failed to load` is not `needsAuth`; no `127.0.0.1:3845`. Claude Design MCP broken as of 2026-08; handoff ZIP/HTML. Rules live here not CLAUDE.md (0009).
+UI work inherits `docs/design-system.md`. Figma/Claude Design/Replit/Paper/Magic Patterns are tools not a second system (0020/0021 — Proposed until Ricardo accepts). Reports are documents. Inter is the house face. Figma MCP remote only; `Failed to load` is not `needsAuth`; no `127.0.0.1:3845` from Grok Bots / remote agents. Claude Design MCP broken as of 2026-08; handoff ZIP/HTML. Rules live here not CLAUDE.md (0009).
 
 ## Required agent plugins: Superpowers + Compound Engineering
 
