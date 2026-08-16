@@ -31,7 +31,11 @@ This is a **router, not a summary** for the Kit implementation. Find the row mat
 | `security.md` | CONTRACT | Auth, sessions, permissions, data handling, threat notes |
 | `config-and-env-map.md` | REFERENCE | Doppler keys by name, environments, deploy wiring |
 | `decisions/` | CONTRACT | One record per decision — includes what each rules out |
-| `plans/` | REFERENCE | Active plans; `plans/archive/` for superseded ones |
+| `decisions/0020-*` | CONTRACT | Figma and Claude Design are tools, not a second system |
+| `decisions/0021-*` | CONTRACT | Bot UI handoff: kit contract in, ZIP/HTML/Figma-link out |
+| `plans/` | REFERENCE | Active plans; `plans/archive/` for superseded ones. Also holds CE plans. |
+| `solutions/` | REFERENCE | CE-compound learnings. One file per learning, frontmatter, refreshed by `ce-compound-refresh`. |
+| `outputs/` | CONTRACT | Per-family output surface declarations. See `export-output-contract.md` for the governing rules. |
 | `artifacts/` | REFERENCE | Generated HTML: components, motion, icons, architecture, navigation |
 
 ## Tiers
@@ -47,4 +51,5 @@ Only CONTRACT files gate a change.
 - A CONTRACT file unverified for 90+ days is flagged for review, not auto-trusted.
 - Decisions are append-only: never edit an accepted record to reflect a new choice — write a new one and mark the old `Superseded by`.
 - Plans are named `YYYY-MM-DD-<name>.md`, updated as work progresses, moved to `plans/archive/` when done.
+- `docs/plans/` holds kit plans and CE plans. A CE plan does not outrank an ADR.
 - Never put a credential in any file here. Reference the Doppler key *name*.

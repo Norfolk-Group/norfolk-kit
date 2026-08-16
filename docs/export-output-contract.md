@@ -343,3 +343,14 @@ becomes the report model.
   and the profile’s visual/structural gate.
 - Asking an SDK, server, or plugin for an unsupported feature, accepting its
   silent degradation, or claiming conformance from download success alone.
+
+---
+
+## Declared output surfaces
+
+Per-family declarations live in `outputs/`. Each declares its reader, channel,
+profile, token set, density, freshness, required sections, and canonical format.
+
+| Family | Tier | Description |
+|---|---|---|
+| [`agent-ops-daily-digest`](outputs/agent-ops-daily-digest.md) | CONTRACT | Weekday agent status email to Ricardo. U12 tokens, scan density, no PDF sibling. |
