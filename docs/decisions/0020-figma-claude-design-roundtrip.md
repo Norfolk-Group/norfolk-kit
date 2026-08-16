@@ -1,6 +1,6 @@
 # 0020 — Figma and Claude Design are tools in a kit round-trip, not a second design system
 
-**Date:** 2026-08-16 · **Status:** Proposed · **Proposed by:** Livia for Marco
+**Date:** 2026-08-16 · **Status:** Accepted · **Proposed by:** Livia for Marco
 
 ## Decision
 

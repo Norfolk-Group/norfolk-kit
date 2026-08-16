@@ -1,6 +1,6 @@
 # 0021 — Bot UI handoff: kit contract in, ZIP/HTML/Figma-link out, no parallel style
 
-**Date:** 2026-08-16 · **Status:** Proposed
+**Date:** 2026-08-16 · **Status:** Accepted
 
 ## Decision
 

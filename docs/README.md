@@ -31,8 +31,8 @@ This is a **router, not a summary** for the Kit implementation. Find the row mat
 | `security.md` | CONTRACT | Auth, sessions, permissions, data handling, threat notes |
 | `config-and-env-map.md` | REFERENCE | Doppler keys by name, environments, deploy wiring |
 | `decisions/` | CONTRACT | One record per decision — includes what each rules out |
-| `decisions/0020-*` | CONTRACT | Figma and Claude Design are tools, not a second system (Proposed until Ricardo accepts) |
-| `decisions/0021-*` | CONTRACT | Bot UI handoff: kit contract in, ZIP/HTML/Figma-link out (Proposed until Ricardo accepts) |
+| `decisions/0020-*` | CONTRACT | Figma and Claude Design are tools, not a second system (Accepted) |
+| `decisions/0021-*` | CONTRACT | Bot UI handoff: kit contract in, ZIP/HTML/Figma-link out (Accepted) |
 | `plans/` | REFERENCE | Active plans; `plans/archive/` for superseded ones. Also holds CE plans. |
 | `solutions/` | REFERENCE | CE-compound learnings. One file per learning, frontmatter, refreshed by `ce-compound-refresh`. |
 | `outputs/` | CONTRACT | Per-family output surface declarations. See `export-output-contract.md` for the governing rules. |
