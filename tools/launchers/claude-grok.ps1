@@ -6,7 +6,7 @@
 #   TAKE  — clear stale provider routing; AUTH_TOKEN-only key; SMALL_FAST_MODEL;
 #           CLAUDE_CODE_EFFORT_LEVEL=high; Tool Search off; long timeouts;
 #           plan mode; effort high (not max).
-#   LEAVE — pin everything to grok-4.3 (outdated; flagship is 4.5).
+#   LEAVE — pin everything to grok-4.3 (outdated; flagship is 4.6).
 #   LEAVE — raw --model x-ai/grok-* (CC 2.1.x rejects unknown slugs; use
 #           --model opus + ANTHROPIC_DEFAULT_*_MODEL maps instead).
 #   LEAVE — doppler run wrapper (claude-launcher-lib already resolves Doppler
@@ -15,18 +15,18 @@
 # Opinionated Grok defaults:
 #   • Flagship on every slot — no silent Haiku downgrade to 4.3
 #   • OpenRouter transport (xAI Anthropic-compat still partial for real CC traffic)
-#   • Compact window matches Grok 4.5's 500K context
+#   • Compact window matches Grok 4.6's 500K context
 #   • Subagents stay on the primary
 #
-# Model registry verified against OpenRouter 2026-07-24: x-ai/grok-4.5 (500K ctx),
+# Model registry verified against OpenRouter 2026-07-24: x-ai/grok-4.6 (500K ctx),
 # x-ai/grok-4.3 (1M ctx), ~x-ai/grok-latest (routing alias → newest Grok, 500K).
 # grok-4.20 does NOT exist (hallucinated in an earlier draft — removed).
 #
 # Usage (first arg may be a model shortcut; everything else forwards to claude):
-#   .\claude-grok.ps1                           # x-ai/grok-4.5 (flagship)
+#   .\claude-grok.ps1                           # x-ai/grok-4.6 (flagship)
 #   .\claude-grok.ps1 4.3                       # x-ai/grok-4.3 (1M context)
 #   .\claude-grok.ps1 latest                    # ~x-ai/grok-latest (routing alias)
-#   .\claude-grok.ps1 x-ai/grok-4.5             # any full slug works too
+#   .\claude-grok.ps1 x-ai/grok-4.6             # any full slug works too
 #   $env:GROK_BUDGET='1'; .\claude-grok.ps1     # Haiku slot → grok-4.3
 #   $env:GROK_BASE_URL='https://api.x.ai'; $env:GROK_KEY_VAR='XAI_API_KEY'; $env:GROK_MODEL='grok-4.5'; .\claude-grok.ps1
 #
@@ -41,18 +41,18 @@ $LauncherKeyVar  = if ($env:GROK_KEY_VAR) { $env:GROK_KEY_VAR } else { 'OPENROUT
 $LauncherBaseUrl = if ($env:GROK_BASE_URL) { $env:GROK_BASE_URL } else { 'https://openrouter.ai/api' }
 
 # ── Model map ──────────────────────────────────────────────────────────────
-$GrokFlagship   = 'x-ai/grok-4.5'
+$GrokFlagship   = 'x-ai/grok-4.6'
 $GrokBudgetFast = 'x-ai/grok-4.3'
 $GrokLatest     = '~x-ai/grok-latest'
 
-# Positional model shortcut: first arg picks the primary (4.5 | 4.3 | latest |
+# Positional model shortcut: first arg picks the primary (4.6 | 4.3 | latest |
 # any x-ai/* or ~x-ai/* slug), then drops out of the args forwarded to claude.
 $GrokModel = $env:GROK_MODEL
 $GrokArgs  = @($args)
 if ($GrokArgs.Count -ge 1) {
   $GrokFirstArg = [string]$GrokArgs[0]
   $GrokShortcut = $null
-  if ($GrokFirstArg -eq '4.5') { $GrokShortcut = $GrokFlagship }
+  if ($GrokFirstArg -eq '4.6') { $GrokShortcut = $GrokFlagship }
   elseif ($GrokFirstArg -eq '4.3') { $GrokShortcut = $GrokBudgetFast }
   elseif ($GrokFirstArg -eq 'latest') { $GrokShortcut = $GrokLatest }
   elseif ($GrokFirstArg -like 'x-ai/*' -or $GrokFirstArg -like '~x-ai/*') { $GrokShortcut = $GrokFirstArg }
@@ -117,7 +117,7 @@ $env:CLAUDE_CODE_ALWAYS_ENABLE_EFFORT = if ($env:GROK_ALWAYS_ENABLE_EFFORT) { $e
 $env:CLAUDE_CODE_EFFORT_LEVEL = if ($env:GROK_EFFORT_LEVEL) { $env:GROK_EFFORT_LEVEL } else { 'high' }
 
 # Context window auto-matches the chosen primary (registry-verified 2026-07-24:
-# grok-4.5 and ~grok-latest = 500K, grok-4.3 = 1M). GROK_AUTO_COMPACT_WINDOW wins.
+# grok-4.6 and ~grok-latest = 500K, grok-4.3 = 1M). GROK_AUTO_COMPACT_WINDOW wins.
 $GrokCtxDefault = if ($GrokPrimary -like '*grok-4.3*') { '1000000' } else { '500000' }
 $env:CLAUDE_CODE_AUTO_COMPACT_WINDOW = if ($env:GROK_AUTO_COMPACT_WINDOW) { $env:GROK_AUTO_COMPACT_WINDOW } else { $GrokCtxDefault }
 $env:CLAUDE_AUTOCOMPACT_PCT_OVERRIDE = if ($env:GROK_AUTOCOMPACT_PCT_OVERRIDE) { $env:GROK_AUTOCOMPACT_PCT_OVERRIDE } else { '75' }
