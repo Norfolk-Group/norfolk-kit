@@ -48,6 +48,8 @@
     "docs/design/**": "client-safe",
     "docs/design-system.md": "client-safe",
     "docs/export-output-contract.md": "client-safe",
+    "docs/decisions/0020-figma-claude-design-roundtrip.md": "client-safe",
+    "docs/decisions/0021-bot-ui-handoff.md": "client-safe",
     "docs/architecture.md": "client-safe",
     "docs/api.md": "client-safe",
     "docs/business-logic.md": "client-safe",

@@ -1,6 +1,6 @@
 # Design System
 
-**Tier: CONTRACT** · Last verified: 2026-08-13
+**Tier: CONTRACT** · Last verified: 2026-08-16
 
 This file is the UI/UX source of truth for this project. It documents the visual foundations, component standards, layout rules, UX principles, accessibility requirements, interaction patterns, and forbidden UI patterns that all agents and developers must follow. Its purpose is to prevent design drift, preserve intentional design decisions, and keep every UI change consistent with the established product experience.
 
@@ -24,6 +24,44 @@ with restrained accent colors reserved for charts. It bundles Inter, IBM Plex
 Sans Condensed, and IBM Plex Mono; defines minimum readable point sizes; and
 requires generous chart padding. These report fonts and colors are a separate
 theme surface—not permission to change the application's selected theme.
+
+---
+
+## Design tooling — tools, not a second system
+
+Design tools produce exploration and handoff artifacts. They do not define the UI source of truth. That belongs to this file, shadcn blocks (0017), and the export contract (0018/0019).
+
+### Figma
+
+**Remote MCP only:** `https://mcp.figma.com/mcp`. No local `127.0.0.1:3845` (Grok Bots).
+
+**Motion:** Use `figma-implement-motion` / `figma-use-motion` skills when authorized. Motion specs follow 0004's bake-time architecture.
+
+**Handoff:** Copy link to selection with `node-id` required. Plain file URL is insufficient.
+
+**Adapt onto kit tokens:** Figma-generated Tailwind is not a second system. Rebuild onto kit tokens.
+
+### Claude Design
+
+Anthropic Labs 2026-04-17. Chat + canvas for prototypes, decks, one-pagers.
+
+**Not:** Figma, artifacts, or dashboard SoT.
+
+**Output:** ZIP, PDF, PPTX, HTML, share link. Agent handoff via ZIP/HTML; rebuild onto kit tokens.
+
+**MCP:** `https://api.anthropic.com/v1/design/mcp` documented and broken as of 2026-08. Plan for ZIP/HTML handoff.
+
+### Optional exploration tools
+
+**Magic Patterns, Paper:** optional for design exploration.
+
+**Skip for dashboards:** Lovable, Relume, Framer — these produce styled output that conflicts with kit tokens.
+
+**Replit:** design canvas only. Not a Norfolk runtime environment.
+
+### Inter is the house face
+
+The `frontend-design` skill bans Inter because many tools default to it poorly. Norfolk adopted Inter deliberately with explicit weight/feature rules. The skill ban does not apply to this kit.
 
 ---
 
@@ -198,6 +236,12 @@ The reference is a focus surface capped at `48rem` with a reading measure below 
 - No inline style as a local escape from tokens.
 - No hidden visual-baseline replacement: changes require a visible approve, reject, or defer outcome.
 - Do not treat preserved legacy animation sources as canonical until the Figma/Replit/H-Analytics/Kit lineage unit records the decision.
+- No second design system from any tool — Figma, Claude Design, Replit, or otherwise.
+- No `frontend-design` skill overrides that conflict with this file's documented Inter/Lucide/spacing rules.
+- No `127.0.0.1:3845` for Figma MCP — remote only.
+- No invented motion or Design MCP assumptions — verify before use.
+- No Lovable or Replit as Norfolk runtime — design canvas only.
+- No screenshot reports — reports are documents per `export-output-contract.md`.
 
 ---
 
@@ -295,12 +339,22 @@ A screenshot converts taste into a decision in about a minute. The Manus entry b
 | **ElevenLabs** — website | 2026-07-31 | ❌ browser hung on load | Public, checkable, retry. |
 | **Qurrent AI** — website *and content* | 2026-07-31 | ❌ not examined | Public. Note Ricardo named the **content**, not only the design — so this belongs partly under *Voice* above. |
 | **Richard Thaler / David Brooks** — prose | 2026-07-31 | ✅ known bodies of work | The voice section above. The most actionable reference of the day, because it governs every string rather than one surface. |
+| **Figma MCP** | 2026-08-16 | ⚠️ verified remote | `https://mcp.figma.com/mcp` only. `Failed to load` ≠ `needsAuth`. Motion via skills when authorized. |
+| **Claude Design** | 2026-08-16 | ⚠️ MCP broken | Chat+canvas for prototypes. MCP documented but broken as of 2026-08. Handoff via ZIP/HTML. |
+| **Magic Patterns** | 2026-08-16 | ❌ optional | Design exploration only. Not SoT. |
+| **Paper** | 2026-08-16 | ❌ optional | Design exploration only. Not SoT. |
+| **Lovable** | 2026-08-16 | ❌ skip for dashboards | Produces styled output that conflicts with kit tokens. |
+| **Relume** | 2026-08-16 | ❌ skip for dashboards | Produces styled output that conflicts with kit tokens. |
+| **Framer** | 2026-08-16 | ❌ skip for dashboards | Produces styled output that conflicts with kit tokens. |
+| **Replit** | 2026-08-16 | ⚠️ design canvas only | Not a Norfolk runtime environment. Prototypes inform design; they are not deployable. |
 
 **Eight references named on 31 July; two extracted.** That ratio is the point of this table. Visual taste arrives faster than it can be examined, and the gap between the two is where invented rules come from.
 
 **Fastest way to close a row:** a screenshot. The Manus row went from named to a durable rule in about a minute because Ricardo sent one image. Description alone produced only the Perplexity row, which is still marked unverified.
 
 **Rule: do not write design rules from an unexamined reference.** Leave the row blank. A blank row is honest and cheap; an invented rule is expensive and looks identical to a real one until someone builds on it.
+
+**A tool can be examined and still not be allowed to set tokens.** Claude Design and Figma are in that bucket — they are verified as functional (or broken), documented as workflow tools, but their output does not become the design system. They produce handoff artifacts that get rebuilt onto kit tokens.
 
 ---
 
@@ -309,3 +363,13 @@ A screenshot converts taste into a decision in about a minute. The Manus entry b
 Do not locally "improve" colours, typography, spacing, components, layouts, animations, or interaction behaviour unless explicitly requested or clearly consistent with this file. Introduce a new reusable pattern → add it here in the same PR. A change that conflicts with this file is a **design-system change requiring explicit approval**, not an implementation detail.
 
 The generated artifacts in [`artifacts/`](artifacts/) are the visual companion to this file — every primitive in all its states, the motion catalog, and the icon set, rendered and openable in a browser. Review changes there, not only in code.
+
+**Kit tokens win.** Output from Figma, Claude Design, or any other tool must be rebuilt onto kit tokens. The tool's default styling is not a second system.
+
+**Tooling changes live here and in ADRs, not CLAUDE.md.** Design tooling rules are documented in the *Design tooling* section above and in decisions 0020/0021. CLAUDE.md imports AGENTS.md per 0009; it does not carry design rules.
+
+**Docs consulted (0021).** Every UI PR must list the docs it consulted. The minimum set for UI work: `design-system.md`, `0020`, `0021`.
+
+**Unexamined stays blank.** Do not fill design-reference rows with assumptions. Cloudflare copilot and Codex IDE remain blank until examined.
+
+**Figma motion skills when authorized (0020).** Use `figma-implement-motion` / `figma-use-motion` after MCP authorization. Motion follows 0004's bake-time architecture.
