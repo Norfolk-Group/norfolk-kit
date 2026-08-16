@@ -18,7 +18,7 @@ Both required. Pinned in `.claude/settings.json`. Cursor operators still need `/
 
 **Superpowers owns:** TDD, verification-before-completion, systematic-debug, in-unit HOW.
 
-Factory-floor and mechanical work goes through tools/launchers (Qwen, Grok, Kimi, GLM) via Doppler; plan and complex-fix stays Claude Opus/Fable; Valerio owns which launcher slug.
+Factory-floor and mechanical work goes through tools/launchers (Qwen, Kimi, GLM, DeepSeek) via Doppler; plan and complex-fix stays Claude Opus/Fable; Valerio owns which launcher slug.
 
 **Workflow rules:**
 - One definition pass, one plan file (`docs/plans/`), one outer loop, one worktree.
