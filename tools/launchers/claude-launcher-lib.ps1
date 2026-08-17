@@ -20,9 +20,44 @@
 # DEV TOOLING ONLY (CLAUDE.md §1).
 
 $ErrorActionPreference = 'Stop'
-$script:LibRepoRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
+$script:LibLauncherDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
+
+# The repo this launcher is being run for — NOT the launcher's own folder.
+try {
+  $script:LibRepoRoot = (git -C $PWD rev-parse --show-toplevel 2>$null)
+  if (-not $script:LibRepoRoot) { $script:LibRepoRoot = $PWD.Path }
+} catch {
+  $script:LibRepoRoot = $PWD.Path
+}
+
 $script:DopplerBatch = $null
 $script:DopplerState = 'unfetched'   # unfetched | ok | failed
+
+# Doppler project/config come from THIS repo's doppler.yaml.
+#
+# They used to be hardcoded to h-analytics/dev — a workaround for `doppler setup`
+# no-opping in some containers, correct for the repo it was written in and wrong
+# for every other one. Because this library is shared by every equipped repo, that
+# default meant running a launcher inside Obra Pía silently fetched H-Analytics'
+# secrets, DATABASE_URL included. That is the same cross-project confusion that
+# decision 0015 exists to prevent, sitting inside the tooling meant to prevent it.
+#
+# So: read the project from the repo, and if there is no doppler.yaml, resolve
+# NOTHING rather than guessing. A missing key is a loud, correct failure; the
+# wrong project's key is a silent, wrong success.
+function Read-DopplerYaml {
+  param([Parameter(Mandatory = $true)][string]$Key)
+  $file = Join-Path $script:LibRepoRoot 'doppler.yaml'
+  if (-not (Test-Path $file)) { return $null }
+  $content = Get-Content $file -Raw
+  if ($content -match "(?m)^\s*${Key}:\s*['\`"]?([^'\`"\s]+)['\`"]?\s*$") {
+    return $Matches[1]
+  }
+  return $null
+}
+
+$script:LibDopplerProject = if ($env:DOPPLER_PROJECT) { $env:DOPPLER_PROJECT } else { Read-DopplerYaml -Key 'project' }
+$script:LibDopplerConfig  = if ($env:DOPPLER_CONFIG)  { $env:DOPPLER_CONFIG }  else { Read-DopplerYaml -Key 'config' }
 
 function Get-LauncherDopplerBatch {
   if ($script:DopplerState -ne 'unfetched') { return }
@@ -31,10 +66,15 @@ function Get-LauncherDopplerBatch {
     Write-Host "$($LauncherName): doppler CLI not installed - resolving secrets from env/.env only." -ForegroundColor Yellow
     return
   }
+  if (-not $script:LibDopplerProject) {
+    $script:DopplerState = 'failed'
+    Write-Host "$($LauncherName): no Doppler project for this repo - expected a 'project:' in $($script:LibRepoRoot)/doppler.yaml, or DOPPLER_PROJECT set. Resolving from env/.env only." -ForegroundColor Yellow
+    return
+  }
   # Project/config passed as FLAGS so nothing leaks into the child claude process env
   # (an inherited DOPPLER_* pair could silently redirect other doppler-using tooling).
-  $dopplerProject = if ($env:DOPPLER_PROJECT) { $env:DOPPLER_PROJECT } else { 'h-analytics' }
-  $dopplerConfig  = if ($env:DOPPLER_CONFIG)  { $env:DOPPLER_CONFIG }  else { 'dev' }
+  $dopplerProject = $script:LibDopplerProject
+  $dopplerConfig  = if ($script:LibDopplerConfig) { $script:LibDopplerConfig } else { 'dev' }
   try {
     $json = doppler secrets download --project $dopplerProject --config $dopplerConfig --no-file --format json 2>$null
     if ($LASTEXITCODE -eq 0 -and $json) {
@@ -87,7 +127,8 @@ function Invoke-ClaudeLauncher {
 
   $key = Resolve-LauncherSecret -Name $LauncherKeyVar
   if (-not $key) {
-    Write-Error "$($LauncherName): $LauncherKeyVar not found in env, Doppler (h-analytics/dev), or .env. Add it in the Doppler dashboard, or set it in this shell."
+    $dopplerRef = if ($script:LibDopplerProject) { "$($script:LibDopplerProject)/$(if ($script:LibDopplerConfig) { $script:LibDopplerConfig } else { 'dev' })" } else { '(no project)' }
+    Write-Error "$($LauncherName): $LauncherKeyVar not found in env, Doppler ($dopplerRef), or .env. Add it in the Doppler dashboard, or set it in this shell."
     exit 1
   }
 
