@@ -1,6 +1,6 @@
 # Letting a Codespace read the kit
 
-**Tier: SETUP** · Verified against docs.github.com on 2026-07-31
+**Tier: REFERENCE** · Last verified: 2026-07-31
 
 ## The problem this solves
 

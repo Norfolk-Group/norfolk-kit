@@ -17,6 +17,8 @@ This is a **router, not a summary** for the Kit implementation. Find the row mat
 | Investor reports, PDF/HTML/DOCX/XLSX/CSV/PNG/PPTX exports | `export-output-contract.md` · `design-system.md` · `business-logic.md` |
 | Deployment, environments, secrets | `config-and-env-map.md` |
 | Anything, if it contradicts a documented decision | `decisions/` — surface the conflict, don't resolve it silently |
+| Adopting or pinning a Product OS version | `product-os-adoption.md` |
+| Brand marks, logos | `../brand/README.md` |
 
 ## Files
 
@@ -36,6 +38,10 @@ This is a **router, not a summary** for the Kit implementation. Find the row mat
 | `plans/` | REFERENCE | Active plans; `plans/archive/` for superseded ones. Also holds CE plans. |
 | `solutions/` | REFERENCE | CE-compound learnings. One file per learning, frontmatter, refreshed by `ce-compound-refresh`. |
 | `outputs/` | CONTRACT | Per-family output surface declarations. See `export-output-contract.md` for the governing rules. |
+| `product-os-adoption.md` | CONTRACT | How kit adopts a pinned Product OS release. Kit cannot amend doctrine. |
+| `../brand/README.md` | CONTRACT | Canonical marks. Equip + kit-guard enforce the Norfolk vs client boundary. |
+| `OWNERS-GUIDE.md` | REFERENCE | Human-facing owner guide. Not an agent contract. |
+| `setup/` | REFERENCE | Codespace and Claude Code operator setup. |
 | `artifacts/` | REFERENCE | Generated HTML: components, motion, icons, architecture, navigation |
 
 ## Tiers

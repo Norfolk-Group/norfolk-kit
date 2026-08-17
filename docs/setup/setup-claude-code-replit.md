@@ -1,5 +1,7 @@
 # Claude Code setup on Replit
 
+**Tier: REFERENCE** · Last verified: 2026-07-31
+
 Replit can reset or lose local Claude files, so keep setup lightweight and easy to restore.
 
 ## 1. Make sure Claude Code works
