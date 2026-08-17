@@ -1,5 +1,7 @@
 # Claude Code setup on Mac
 
+**Tier: REFERENCE** · Last verified: 2026-07-31
+
 This is the simple Mac path.
 
 ## 1. Make sure Claude Code works

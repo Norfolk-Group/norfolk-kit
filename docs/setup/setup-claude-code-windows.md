@@ -1,5 +1,7 @@
 # Claude Code setup on Windows
 
+**Tier: REFERENCE** · Last verified: 2026-07-31
+
 This is the simple Windows path.
 
 ## 1. Make sure Claude Code works
