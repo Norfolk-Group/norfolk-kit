@@ -31,8 +31,6 @@ theme surface—not permission to change the application's selected theme.
 
 Design tools produce exploration and handoff artifacts. They do not define the UI source of truth. That belongs to this file, shadcn blocks (0017), and the export contract (0018/0019).
 
-> **Pending acceptance:** The tooling rules in this section cite decisions 0020/0021, which remain Status: Proposed until Ricardo accepts. The substance (Inter, no second system, kit tokens win) applies; the ADR citations become binding on acceptance.
-
 ### Figma
 
 **Remote MCP only:** `https://mcp.figma.com/mcp`. No local `127.0.0.1:3845` (Grok Bots).
