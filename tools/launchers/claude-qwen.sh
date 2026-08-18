@@ -4,7 +4,7 @@
 # per-workspace (region + WorkspaceId) — resolved from Doppler DASHSCOPE_BASE_URL.
 #
 # GLM-parity upgrade (2026-07-24, from Ricardo's reviewed suggestion): maps
-# qwen3.7-max-us into the Opus/Sonnet/Fable slots and qwen3.7-plus into Haiku,
+# qwen3.8-max into the Opus/Sonnet/Fable slots and qwen3.7-plus into Haiku,
 # each with the name/description/capability metadata Claude Code's model UI reads;
 # subagents route to qwen3.7-plus (cheaper tier) via LAUNCHER_SUBAGENT_MODEL; plus
 # the context/auto-compact/timeout/MCP/bash tuning profile mirrored from the
@@ -12,7 +12,7 @@
 # effort-param support is unverified; CLAUDE_CODE_ALWAYS_ENABLE_EFFORT keeps the
 # effort UI active, and a live run is the test of whether --effort sticks.
 #
-# Usage:  ./claude-qwen.sh                                  # qwen3.7-max-us
+# Usage:  ./claude-qwen.sh                                  # qwen3.8-max
 #         ./claude-qwen.sh --model opus --effort max --permission-mode plan
 #         QWEN_MODEL=qwen3-coder-plus ./claude-qwen.sh
 # DEV TOOLING ONLY (CLAUDE.md §1) — see claude-launcher-lib.sh.
@@ -24,11 +24,11 @@ LAUNCHER_NAME="claude-qwen.sh"
 LAUNCHER_KEY_VAR="DASHSCOPE_API_KEY"
 # US-region Anthropic endpoint — the account's key region (Alibaba: "the API key
 # must match the selected region"; probed 2026-07-24: US answers 200 for
-# qwen3.7-max-us / qwen3.7-plus / qwen3-coder-plus, intl 403s the newer models).
+# qwen3.8-max / qwen3.7-plus / qwen3-coder-plus, intl 403s the newer models).
 # NOTE: the Doppler DASHSCOPE_BASE_URL is the OpenAI-style /compatible-mode path —
 # wrong protocol for Claude Code — so it is deliberately NOT used.
 LAUNCHER_BASE_URL="${QWEN_BASE_URL:-https://dashscope-us.aliyuncs.com/apps/anthropic}"
-LAUNCHER_PRIMARY="${QWEN_MODEL:-qwen3.7-max-us}"
+LAUNCHER_PRIMARY="${QWEN_MODEL:-qwen3.8-max}"
 LAUNCHER_FAST="${QWEN_FAST_MODEL:-qwen3.7-plus}"
 # Unset ANTHROPIC_MODEL entirely (GLM's validated escape hatch) — rely on
 # --model <tier> + the DEFAULT_*_MODEL slot maps.
@@ -38,16 +38,16 @@ LAUNCHER_SUBAGENT_MODEL="${QWEN_SUBAGENT_MODEL:-qwen3.7-plus}"
 
 # Fable slot (Claude Code 2.1.x's 4th model tier) + per-slot metadata — the shared
 # lib only sets the bare Opus/Sonnet/Haiku model IDs, so Qwen adds the rest.
-export ANTHROPIC_DEFAULT_FABLE_MODEL="${QWEN_FABLE_MODEL:-qwen3.7-max-us}"
-export ANTHROPIC_DEFAULT_FABLE_MODEL_NAME="Qwen 3.7 Max (Fable slot)"
+export ANTHROPIC_DEFAULT_FABLE_MODEL="${QWEN_FABLE_MODEL:-qwen3.8-max}"
+export ANTHROPIC_DEFAULT_FABLE_MODEL_NAME="Qwen 3.8 Max (Fable slot)"
 export ANTHROPIC_DEFAULT_FABLE_MODEL_DESCRIPTION="ModelStudio Qwen compatibility mapping; this is not Anthropic Fable"
 export ANTHROPIC_DEFAULT_FABLE_MODEL_SUPPORTED_CAPABILITIES="thinking"
 
-export ANTHROPIC_DEFAULT_OPUS_MODEL_NAME="Qwen 3.7 Max (US)"
+export ANTHROPIC_DEFAULT_OPUS_MODEL_NAME="Qwen 3.8 Max (US)"
 export ANTHROPIC_DEFAULT_OPUS_MODEL_DESCRIPTION="Primary Qwen model for complex coding, architecture, and long-running tasks"
 export ANTHROPIC_DEFAULT_OPUS_MODEL_SUPPORTED_CAPABILITIES="thinking"
 
-export ANTHROPIC_DEFAULT_SONNET_MODEL_NAME="Qwen 3.7 Max (US, Sonnet slot)"
+export ANTHROPIC_DEFAULT_SONNET_MODEL_NAME="Qwen 3.8 Max (US, Sonnet slot)"
 export ANTHROPIC_DEFAULT_SONNET_MODEL_DESCRIPTION="Same Qwen primary through the Sonnet compatibility slot"
 export ANTHROPIC_DEFAULT_SONNET_MODEL_SUPPORTED_CAPABILITIES="thinking"
 
