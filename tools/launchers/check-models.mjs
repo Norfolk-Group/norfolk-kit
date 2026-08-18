@@ -38,8 +38,8 @@
 const CONFIGURED = {
   kimi: { file: "claude-kimi.sh", primary: "kimi-k3", fast: "kimi-k2.7-code" },
   glm: { file: "claude-glm.sh", primary: "glm-5.2[1m]", fast: "glm-4.5-air" },
-  qwen: { file: "claude-qwen.sh", primary: "qwen3.7-max-us", fast: "qwen3.7-plus" },
-  deepseek: { file: "claude-deepseek.sh", primary: null, fast: null }, // fill in when read
+  qwen: { file: "claude-qwen.sh", primary: "qwen3.8-max", fast: "qwen3.7-plus" },
+  deepseek: { file: "claude-deepseek.sh", primary: "deepseek-v4-pro", fast: "deepseek-v4-flash" },
   grok: { file: "claude-grok.sh", primary: "x-ai/grok-4.6", fast: "x-ai/grok-4.3" },
   openai: { file: "claude-openai.sh", primary: null, fast: null },
   gemini: { file: "claude-gemini.sh", primary: "google/gemini-3.6-flash", fast: "google/gemini-3.5-flash-lite" },

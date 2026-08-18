@@ -1,7 +1,7 @@
 # claude-qwen.ps1 — Claude Code on Qwen via DashScope's US-region Anthropic endpoint
 # (DIRECT: newest Qwen models day-0; the account key is US-region).
 #
-# GLM-parity upgrade (2026-07-24, mirroring claude-qwen.sh): maps qwen3.7-max-us into
+# GLM-parity upgrade (2026-07-24, mirroring claude-qwen.sh): maps qwen3.8-max into
 # the Opus/Sonnet/Fable slots and qwen3.7-plus into Haiku, each with the
 # name/description/capability metadata Claude Code's model UI reads; subagents route to
 # qwen3.7-plus (cheaper tier) via $LauncherSubagentModel; plus the
@@ -19,12 +19,12 @@ $LauncherName = 'claude-qwen.ps1'
 
 $LauncherKeyVar  = 'DASHSCOPE_API_KEY'
 # US-region Anthropic endpoint — the account's key region (Alibaba: "the API key must
-# match the selected region"; probed 2026-07-24: US answers 200 for qwen3.7-max-us /
+# match the selected region"; probed 2026-07-24: US answers 200 for qwen3.8-max /
 # qwen3.7-plus / qwen3-coder-plus, intl 403s the newer models). NOTE: the Doppler
 # DASHSCOPE_BASE_URL is the OpenAI-style /compatible-mode path — wrong protocol for
 # Claude Code — so it is deliberately NOT used.
 $LauncherBaseUrl = if ($env:QWEN_BASE_URL) { $env:QWEN_BASE_URL } else { 'https://dashscope-us.aliyuncs.com/apps/anthropic' }
-$LauncherPrimary = if ($env:QWEN_MODEL) { $env:QWEN_MODEL } else { 'qwen3.7-max-us' }
+$LauncherPrimary = if ($env:QWEN_MODEL) { $env:QWEN_MODEL } else { 'qwen3.8-max' }
 $LauncherFast    = if ($env:QWEN_FAST_MODEL) { $env:QWEN_FAST_MODEL } else { 'qwen3.7-plus' }
 # Unset ANTHROPIC_MODEL entirely (GLM's validated escape hatch) — rely on
 # --model <tier> + the DEFAULT_*_MODEL slot maps.
@@ -34,16 +34,16 @@ $LauncherSubagentModel = if ($env:QWEN_SUBAGENT_MODEL) { $env:QWEN_SUBAGENT_MODE
 
 # Fable slot (Claude Code 2.1.x's 4th model tier) + per-slot name/description/capability
 # metadata — the shared lib only sets the bare Opus/Sonnet/Haiku model IDs, so Qwen adds the rest.
-$env:ANTHROPIC_DEFAULT_FABLE_MODEL = if ($env:QWEN_FABLE_MODEL) { $env:QWEN_FABLE_MODEL } else { 'qwen3.7-max-us' }
-$env:ANTHROPIC_DEFAULT_FABLE_MODEL_NAME = 'Qwen 3.7 Max (Fable slot)'
+$env:ANTHROPIC_DEFAULT_FABLE_MODEL = if ($env:QWEN_FABLE_MODEL) { $env:QWEN_FABLE_MODEL } else { 'qwen3.8-max' }
+$env:ANTHROPIC_DEFAULT_FABLE_MODEL_NAME = 'Qwen 3.8 Max (Fable slot)'
 $env:ANTHROPIC_DEFAULT_FABLE_MODEL_DESCRIPTION = 'ModelStudio Qwen compatibility mapping; this is not Anthropic Fable'
 $env:ANTHROPIC_DEFAULT_FABLE_MODEL_SUPPORTED_CAPABILITIES = 'thinking'
 
-$env:ANTHROPIC_DEFAULT_OPUS_MODEL_NAME = 'Qwen 3.7 Max (US)'
+$env:ANTHROPIC_DEFAULT_OPUS_MODEL_NAME = 'Qwen 3.8 Max (US)'
 $env:ANTHROPIC_DEFAULT_OPUS_MODEL_DESCRIPTION = 'Primary Qwen model for complex coding, architecture, and long-running tasks'
 $env:ANTHROPIC_DEFAULT_OPUS_MODEL_SUPPORTED_CAPABILITIES = 'thinking'
 
-$env:ANTHROPIC_DEFAULT_SONNET_MODEL_NAME = 'Qwen 3.7 Max (US, Sonnet slot)'
+$env:ANTHROPIC_DEFAULT_SONNET_MODEL_NAME = 'Qwen 3.8 Max (US, Sonnet slot)'
 $env:ANTHROPIC_DEFAULT_SONNET_MODEL_DESCRIPTION = 'Same Qwen primary through the Sonnet compatibility slot'
 $env:ANTHROPIC_DEFAULT_SONNET_MODEL_SUPPORTED_CAPABILITIES = 'thinking'
 
