@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
 # claude-glm.sh — Claude Code on Zhipu GLM via Z.AI's Anthropic endpoint (DIRECT).
 #
-# Mirrors Ricardo's validated-working ad-hoc invocation (2026-07-24): maps GLM-5.2[1m]
-# into the Opus/Sonnet compatibility slots (1M context) and GLM-5.2 into Claude Code
-# 2.1.x's newer Fable slot, GLM-4.5-Air into Haiku — each with the name/description/
-# capability metadata Claude Code's model UI reads — plus the auto-compact/timeout/MCP/
-# bash tuning the 1M-context primary and long agentic runs need. Z.AI's Doppler secret
-# is available under both ZAI_API_KEY (current) and ZHIPU_API_KEY (legacy) — this
-# defaults to the former.
+# Maps GLM-5.3 into the Opus/Sonnet compatibility slots and the Fable slot,
+# GLM-4.5-Air into Haiku — each with the name/description/capability metadata
+# Claude Code's model UI reads — plus the auto-compact/timeout/MCP/bash tuning
+# the primary and long agentic runs need. Z.AI's Doppler secret is available
+# under both ZAI_API_KEY (current) and ZHIPU_API_KEY (legacy) — this defaults
+# to the former.
 #
-# Usage:  ./claude-glm.sh             # glm-5.2[1m], opus tier, max effort, plan mode
+# Usage:  ./claude-glm.sh             # glm-5.3, opus tier, max effort, plan mode
 #         GLM_MODEL=glm-4.7 ./claude-glm.sh
 #         GLM_KEY_VAR=ZHIPU_API_KEY ./claude-glm.sh   # use the legacy secret name
 # DEV TOOLING ONLY (CLAUDE.md §1) — see claude-launcher-lib.sh.
@@ -20,24 +19,24 @@ source "$LAUNCHER_DIR/claude-launcher-lib.sh"
 LAUNCHER_NAME="claude-glm.sh"
 LAUNCHER_KEY_VAR="${GLM_KEY_VAR:-ZAI_API_KEY}"
 LAUNCHER_BASE_URL="https://api.z.ai/api/anthropic"
-LAUNCHER_PRIMARY="${GLM_MODEL:-glm-5.2[1m]}"
+LAUNCHER_PRIMARY="${GLM_MODEL:-glm-5.3}"
 LAUNCHER_FAST="${GLM_FAST_MODEL:-glm-4.5-air}"
 LAUNCHER_SKIP_MODEL_ALIAS=1
 
 # Fable slot (Claude Code 2.1.x's 4th model tier) + per-slot name/description/capability
 # metadata — the shared lib only sets the bare Opus/Sonnet/Haiku model IDs, so GLM adds
 # the rest directly.
-export ANTHROPIC_DEFAULT_FABLE_MODEL="${GLM_FABLE_MODEL:-glm-5.2}"
-export ANTHROPIC_DEFAULT_FABLE_MODEL_NAME="GLM-5.2 Max (Fable slot)"
-export ANTHROPIC_DEFAULT_FABLE_MODEL_DESCRIPTION="Z.AI GLM-5.2 compatibility mapping; this is not Anthropic Fable"
+export ANTHROPIC_DEFAULT_FABLE_MODEL="${GLM_FABLE_MODEL:-glm-5.3}"
+export ANTHROPIC_DEFAULT_FABLE_MODEL_NAME="GLM-5.3 Max (Fable slot)"
+export ANTHROPIC_DEFAULT_FABLE_MODEL_DESCRIPTION="Z.AI GLM-5.3 compatibility mapping; this is not Anthropic Fable"
 export ANTHROPIC_DEFAULT_FABLE_MODEL_SUPPORTED_CAPABILITIES="effort,xhigh_effort,max_effort,thinking,adaptive_thinking"
 
-export ANTHROPIC_DEFAULT_OPUS_MODEL_NAME="GLM-5.2 Max (1M)"
+export ANTHROPIC_DEFAULT_OPUS_MODEL_NAME="GLM-5.3 Max"
 export ANTHROPIC_DEFAULT_OPUS_MODEL_DESCRIPTION="Primary GLM route for complex coding, architecture, and long-running tasks"
 export ANTHROPIC_DEFAULT_OPUS_MODEL_SUPPORTED_CAPABILITIES="effort,xhigh_effort,max_effort,thinking,adaptive_thinking"
 
-export ANTHROPIC_DEFAULT_SONNET_MODEL_NAME="GLM-5.2 Standard (1M)"
-export ANTHROPIC_DEFAULT_SONNET_MODEL_DESCRIPTION="Same Z.AI GLM-5.2 model through the Sonnet compatibility slot"
+export ANTHROPIC_DEFAULT_SONNET_MODEL_NAME="GLM-5.3 Standard"
+export ANTHROPIC_DEFAULT_SONNET_MODEL_DESCRIPTION="Same Z.AI GLM-5.3 model through the Sonnet compatibility slot"
 export ANTHROPIC_DEFAULT_SONNET_MODEL_SUPPORTED_CAPABILITIES="effort,xhigh_effort,max_effort,thinking,adaptive_thinking"
 
 export ANTHROPIC_DEFAULT_HAIKU_MODEL_NAME="GLM-4.5-Air Fast"

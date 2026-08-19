@@ -1,10 +1,9 @@
 # claude-glm.ps1 — Claude Code on Zhipu GLM via Z.AI's Anthropic endpoint (DIRECT).
-# Mirrors Ricardo's validated-working ad-hoc invocation (2026-07-24): maps GLM-5.2[1m] into
-# the Opus/Sonnet slots (1M context) and GLM-5.2 into Claude Code 2.1.x's newer Fable slot,
-# GLM-4.5-Air into Haiku — each with the name/description/capability metadata Claude Code's
-# model UI reads — plus the auto-compact/timeout/MCP/bash tuning the 1M-context primary
-# needs. Z.AI's Doppler secret is available under both ZAI_API_KEY (current) and
-# ZHIPU_API_KEY (legacy) — this defaults to the former.
+# Maps GLM-5.3 into the Opus/Sonnet slots and the Fable slot, GLM-4.5-Air into Haiku —
+# each with the name/description/capability metadata Claude Code's model UI reads — plus
+# the auto-compact/timeout/MCP/bash tuning the primary needs. Z.AI's Doppler secret is
+# available under both ZAI_API_KEY (current) and ZHIPU_API_KEY (legacy) — this defaults
+# to the former.
 # Usage:  .\claude-glm.ps1         |  $env:GLM_MODEL='glm-4.7'; .\claude-glm.ps1
 # Windows twin of the .sh wrapper — DEV TOOLING ONLY (CLAUDE.md par.1); see claude-launcher-lib.ps1.
 
@@ -14,23 +13,23 @@ $LauncherName = 'claude-glm.ps1'
 
 $LauncherKeyVar  = if ($env:GLM_KEY_VAR) { $env:GLM_KEY_VAR } else { 'ZAI_API_KEY' }
 $LauncherBaseUrl = 'https://api.z.ai/api/anthropic'
-$LauncherPrimary = if ($env:GLM_MODEL) { $env:GLM_MODEL } else { 'glm-5.2[1m]' }
+$LauncherPrimary = if ($env:GLM_MODEL) { $env:GLM_MODEL } else { 'glm-5.3' }
 $LauncherFast    = if ($env:GLM_FAST_MODEL) { $env:GLM_FAST_MODEL } else { 'glm-4.5-air' }
 $LauncherSkipModelAlias = $true
 
 # Fable slot (Claude Code 2.1.x's 4th model tier) + per-slot name/description/capability
 # metadata — the shared lib only sets the bare Opus/Sonnet/Haiku model IDs.
-$env:ANTHROPIC_DEFAULT_FABLE_MODEL = if ($env:GLM_FABLE_MODEL) { $env:GLM_FABLE_MODEL } else { 'glm-5.2' }
-$env:ANTHROPIC_DEFAULT_FABLE_MODEL_NAME = 'GLM-5.2 Max (Fable slot)'
-$env:ANTHROPIC_DEFAULT_FABLE_MODEL_DESCRIPTION = 'Z.AI GLM-5.2 compatibility mapping; this is not Anthropic Fable'
+$env:ANTHROPIC_DEFAULT_FABLE_MODEL = if ($env:GLM_FABLE_MODEL) { $env:GLM_FABLE_MODEL } else { 'glm-5.3' }
+$env:ANTHROPIC_DEFAULT_FABLE_MODEL_NAME = 'GLM-5.3 Max (Fable slot)'
+$env:ANTHROPIC_DEFAULT_FABLE_MODEL_DESCRIPTION = 'Z.AI GLM-5.3 compatibility mapping; this is not Anthropic Fable'
 $env:ANTHROPIC_DEFAULT_FABLE_MODEL_SUPPORTED_CAPABILITIES = 'effort,xhigh_effort,max_effort,thinking,adaptive_thinking'
 
-$env:ANTHROPIC_DEFAULT_OPUS_MODEL_NAME = 'GLM-5.2 Max (1M)'
+$env:ANTHROPIC_DEFAULT_OPUS_MODEL_NAME = 'GLM-5.3 Max'
 $env:ANTHROPIC_DEFAULT_OPUS_MODEL_DESCRIPTION = 'Primary GLM route for complex coding, architecture, and long-running tasks'
 $env:ANTHROPIC_DEFAULT_OPUS_MODEL_SUPPORTED_CAPABILITIES = 'effort,xhigh_effort,max_effort,thinking,adaptive_thinking'
 
-$env:ANTHROPIC_DEFAULT_SONNET_MODEL_NAME = 'GLM-5.2 Standard (1M)'
-$env:ANTHROPIC_DEFAULT_SONNET_MODEL_DESCRIPTION = 'Same Z.AI GLM-5.2 model through the Sonnet compatibility slot'
+$env:ANTHROPIC_DEFAULT_SONNET_MODEL_NAME = 'GLM-5.3 Standard'
+$env:ANTHROPIC_DEFAULT_SONNET_MODEL_DESCRIPTION = 'Same Z.AI GLM-5.3 model through the Sonnet compatibility slot'
 $env:ANTHROPIC_DEFAULT_SONNET_MODEL_SUPPORTED_CAPABILITIES = 'effort,xhigh_effort,max_effort,thinking,adaptive_thinking'
 
 $env:ANTHROPIC_DEFAULT_HAIKU_MODEL_NAME = 'GLM-4.5-Air Fast'
