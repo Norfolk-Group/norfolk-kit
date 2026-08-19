@@ -4,7 +4,7 @@
  * provider's current flagship, instead of trusting a hardcoded slug forever.
  *
  * WHY THIS EXISTS: every claude-*.sh launcher hardcodes a model slug
- * (e.g. LAUNCHER_PRIMARY="glm-5.2[1m]") because Claude Code needs a fixed
+ * (e.g. LAUNCHER_PRIMARY="glm-5.3") because Claude Code needs a fixed
  * ID at startup — it can't ask "give me your best model" itself. But
  * providers ship new flagships every few months, and a stale slug either
  * silently keeps using a superseded model or starts 404ing. This script is
@@ -37,7 +37,7 @@
 // exists specifically to make forgetting that visible in CI.
 const CONFIGURED = {
   kimi: { file: "claude-kimi.sh", primary: "kimi-k3", fast: "kimi-k2.7-code" },
-  glm: { file: "claude-glm.sh", primary: "glm-5.2[1m]", fast: "glm-4.5-air" },
+  glm: { file: "claude-glm.sh", primary: "glm-5.3", fast: "glm-4.5-air" },
   qwen: { file: "claude-qwen.sh", primary: "qwen3.8-max", fast: "qwen3.7-plus" },
   deepseek: { file: "claude-deepseek.sh", primary: "deepseek-v4-pro", fast: "deepseek-v4-flash" },
   grok: { file: "claude-grok.sh", primary: "x-ai/grok-4.6", fast: "x-ai/grok-4.3" },
