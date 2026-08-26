@@ -37,7 +37,7 @@ This is a **router, not a summary** for the Kit implementation. Find the row mat
 | `decisions/` | CONTRACT | One record per decision — includes what each rules out |
 | `decisions/0020-*` | CONTRACT | Figma and Claude Design are tools, not a second system (Accepted) |
 | `decisions/0021-*` | CONTRACT | Bot UI handoff: kit contract in, ZIP/HTML/Figma-link out (Accepted) |
-| `decisions/0022-*` | CONTRACT | Admin-gated catalogs sit behind the Admin wall (Proposed; shipped in Tamarindo) |
+| `decisions/0022-*` | CONTRACT | Admin-gated catalogs sit behind the Admin wall (Accepted; first shipped in Tamarindo) |
 | `plans/` | REFERENCE | Active plans; `plans/archive/` for superseded ones. Also holds CE plans. |
 | `solutions/` | REFERENCE | CE-compound learnings. One file per learning, frontmatter, refreshed by `ce-compound-refresh`. |
 | `outputs/` | CONTRACT | Per-family output surface declarations. See `export-output-contract.md` for the governing rules. |

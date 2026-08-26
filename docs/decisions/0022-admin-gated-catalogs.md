@@ -1,6 +1,6 @@
 # 0022 — Admin-gated catalogs sit behind the Admin wall, not on blue Assumptions
 
-**Date:** 2026-08-26 · **Status:** Proposed  
+**Date:** 2026-08-26 · **Status:** Accepted · **Decided by:** Ricardo
 **First shipped in:** Tamarindo / Nico (`Admin → ICPs`)  
 **Companion:** [`admin-catalog-contract.md`](../admin-catalog-contract.md)
 
