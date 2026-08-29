@@ -25,7 +25,7 @@ This is a **router, not a summary** for the Kit implementation. Find the row mat
 
 | File | Tier | Covers |
 |---|---|---|
-| `SYSTEM-GOVERNANCE-RULE.md` | CONTRACT | How docs govern changes; precedence; tiers; enforcement |
+| `SYSTEM-GOVERNANCE-RULE.md` | CONTRACT | kit HOW notes; Product OS links for precedence and tiers |
 | `architecture.md` | CONTRACT | System structure, data flow, infrastructure, constraints |
 | `business-logic.md` | CONTRACT | Domain rules, workflows, roles, edge cases |
 | `api.md` | CONTRACT | Procedures, inputs/outputs, authz, error handling |
