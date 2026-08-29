@@ -1,6 +1,6 @@
 # Export Output Contract
 
-**Tier: CONTRACT** · Last verified: 2026-08-13
+**Tier: CONTRACT** · Last verified: 2026-08-29
 
 Investor reports and exported reports are products in their own right. They are
 not alternate screenshots of an application screen. This contract governs every
@@ -8,7 +8,7 @@ distributable report surface produced by a Norfolk Kit project: published HTML,
 PDF, DOCX, XLSX, CSV, PNG, and PPTX, as well as the relationship each has to its
 interactive on-screen counterpart.
 
-This is a Kit implementation contract. The private Norfolk AI Product OS owns
+This is a Kit implementation contract. The Norfolk AI Product OS owns
 universal doctrine; a product adds its approved brand, audience, disclosure,
 and data-specific rules without weakening this baseline.
 

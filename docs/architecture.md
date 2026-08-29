@@ -1,8 +1,10 @@
 # Architecture
 
-**Tier: CONTRACT** · Last verified: 2026-08-05
+**Tier: CONTRACT** · Last verified: 2026-08-29
 
 Norfolk Kit is the executable reference implementation of the Norfolk AI Product OS. Product OS owns doctrine and rationale; Kit demonstrates the compatible implementation pattern. A product may replace adapters and modules, but it may not bypass the capability, authorization, or audit boundaries described here.
+
+This architecture belongs to the sole application template. Adjacent Norfolk repositories have distinct non-template responsibilities recorded in [`repository-roles.md`](repository-roles.md); their local instructions do not override this implementation or Product OS doctrine.
 
 ## System shape
 

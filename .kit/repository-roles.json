@@ -1,0 +1,161 @@
+{
+  "$comment": "Operational inventory of Norfolk shared and foundation repositories that could be mistaken for project starters. Product repositories are intentionally outside this scope. Product OS owns doctrine; this file governs Kit adoption and GitHub labeling only.",
+  "version": 1,
+  "organization": "Norfolk-Group",
+  "scope": "starter-confusion-risk-repositories",
+  "canonicalProjectStarter": "Norfolk-Group/norfolk-kit",
+  "roleTopics": {
+    "project-starter": "repo-role-template",
+    "governance-source": "repo-role-governance",
+    "handbook-renderer": "repo-role-handbook",
+    "brand-source": "repo-role-brand-source",
+    "design-source": "repo-role-design-source",
+    "integration-source": "repo-role-integration-source",
+    "application": "repo-role-application",
+    "agent-config": "repo-role-agent-config",
+    "plugin-catalog": "repo-role-plugin-catalog",
+    "skill-catalog": "repo-role-skill-catalog",
+    "sandbox": "repo-role-sandbox"
+  },
+  "repositories": [
+    {
+      "repository": "Norfolk-Group/norfolk-kit",
+      "role": "project-starter",
+      "projectBootstrap": "canonical-template",
+      "lifecycle": "active",
+      "purpose": "Executable reference implementation and adoption source for Norfolk applications.",
+      "githubDescription": "The only Norfolk application template — executable implementation of Norfolk AI Product OS standards."
+    },
+    {
+      "repository": "Norfolk-Group/norfolk-ai-product-os",
+      "role": "governance-source",
+      "projectBootstrap": "never",
+      "lifecycle": "active",
+      "purpose": "Canonical Norfolk-wide product doctrine, governance, rationale, and adoption contracts.",
+      "githubDescription": "Canonical Norfolk-wide product doctrine, governance, and adoption contracts — not an application template."
+    },
+    {
+      "repository": "Norfolk-Group/norfolk-manual",
+      "role": "handbook-renderer",
+      "projectBootstrap": "never",
+      "lifecycle": "active",
+      "purpose": "Readable generated view of Norfolk Kit material.",
+      "githubDescription": "Generated Norfolk Kit handbook — not editable policy; not an application template."
+    },
+    {
+      "repository": "Norfolk-Group/norfolk-ai-brand",
+      "role": "brand-source",
+      "projectBootstrap": "never",
+      "lifecycle": "active",
+      "purpose": "Brand exploration, source assets, and upstream identity material.",
+      "githubDescription": "Norfolk AI brand research and source assets — not an application template."
+    },
+    {
+      "repository": "Norfolk-Group/hbg-design-system",
+      "role": "design-source",
+      "projectBootstrap": "never",
+      "lifecycle": "archived",
+      "purpose": "Historical HBG component, theme, icon, and chart reference.",
+      "githubDescription": "ARCHIVED legacy HBG design reference — not an application template; use Norfolk Kit for active work.",
+      "githubMetadataWrite": "blocked-by-archive",
+      "projectStarterReplacement": "Norfolk-Group/norfolk-kit"
+    },
+    {
+      "repository": "Norfolk-Group/hbg-screens",
+      "role": "design-source",
+      "projectBootstrap": "never",
+      "lifecycle": "archived",
+      "purpose": "Historical HBG page-level screen implementation reference.",
+      "githubDescription": "ARCHIVED legacy HBG screen reference — not an application template; use Norfolk Kit for active work.",
+      "githubMetadataWrite": "blocked-by-archive",
+      "projectStarterReplacement": "Norfolk-Group/norfolk-kit"
+    },
+    {
+      "repository": "Norfolk-Group/hbg-twilio-telephony",
+      "role": "integration-source",
+      "projectBootstrap": "never",
+      "lifecycle": "archived",
+      "purpose": "Historical HBG Twilio voice, SMS, and webhook integration reference.",
+      "githubDescription": "ARCHIVED legacy HBG Twilio integration reference — not an application template; use Norfolk Kit for active work.",
+      "githubMetadataWrite": "blocked-by-archive",
+      "projectStarterReplacement": "Norfolk-Group/norfolk-kit"
+    },
+    {
+      "repository": "Norfolk-Group/hbg-elevenlabs",
+      "role": "integration-source",
+      "projectBootstrap": "never",
+      "lifecycle": "archived",
+      "purpose": "Historical HBG ElevenLabs voice-agent integration reference.",
+      "githubDescription": "ARCHIVED legacy HBG ElevenLabs integration reference — not an application template; use Norfolk Kit for active work.",
+      "githubMetadataWrite": "blocked-by-archive",
+      "projectStarterReplacement": "Norfolk-Group/norfolk-kit"
+    },
+    {
+      "repository": "Norfolk-Group/Norfolk-AI-Agent-Factory",
+      "role": "application",
+      "projectBootstrap": "never",
+      "lifecycle": "active",
+      "purpose": "Application for creating and revising ElevenLabs voice agents.",
+      "githubDescription": "ElevenLabs voice-agent management application — not an application template."
+    },
+    {
+      "repository": "Norfolk-Group/norfolk-ai-agents",
+      "role": "agent-config",
+      "projectBootstrap": "never",
+      "lifecycle": "active",
+      "purpose": "Voice-agent configurations and knowledge bases.",
+      "githubDescription": "Voice-agent configurations and knowledge bases — not canonical policy; not an application template."
+    },
+    {
+      "repository": "Norfolk-Group/NAI-claude-plugins",
+      "role": "plugin-catalog",
+      "projectBootstrap": "never",
+      "lifecycle": "active",
+      "purpose": "Private Norfolk organization marketplace for approved Claude plugins and pinned upstream sources.",
+      "githubDescription": "Private Claude plugin marketplace for Norfolk tooling — not canonical policy; not an application template."
+    },
+    {
+      "repository": "Norfolk-Group/manus-skills",
+      "role": "skill-catalog",
+      "projectBootstrap": "never",
+      "lifecycle": "active",
+      "purpose": "Manus-specific operational skill catalog.",
+      "githubDescription": "Manus-specific skill catalog — not canonical policy; not an application template."
+    },
+    {
+      "repository": "Norfolk-Group/cowork-skills",
+      "role": "skill-catalog",
+      "projectBootstrap": "never",
+      "lifecycle": "active",
+      "purpose": "Claude Cowork-specific operational skill catalog.",
+      "githubDescription": "Claude Cowork skill catalog — not canonical policy; not an application template."
+    },
+    {
+      "repository": "Norfolk-Group/general",
+      "role": "sandbox",
+      "projectBootstrap": "never",
+      "lifecycle": "legacy",
+      "purpose": "Empty historical sandbox with no governing or bootstrap authority.",
+      "githubDescription": "Empty legacy sandbox — do not use as a project starter.",
+      "projectStarterReplacement": "Norfolk-Group/norfolk-kit"
+    },
+    {
+      "repository": "Norfolk-Group/demo-repository",
+      "role": "sandbox",
+      "projectBootstrap": "never",
+      "lifecycle": "active",
+      "purpose": "Minimal GitHub feature-demonstration sandbox with no governing or bootstrap authority.",
+      "githubDescription": "GitHub feature demonstration sandbox — not canonical policy; not an application template."
+    }
+  ],
+  "deletedRepositories": [
+    {
+      "repository": "Norfolk-Group/norfolk-starter",
+      "role": "legacy-starter",
+      "projectBootstrap": "never",
+      "lifecycle": "deleted",
+      "purpose": "Deleted predecessor harvested into Norfolk Kit; formal retirement evidence remains incomplete.",
+      "projectStarterReplacement": "Norfolk-Group/norfolk-kit"
+    }
+  ]
+}

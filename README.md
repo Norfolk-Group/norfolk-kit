@@ -1,10 +1,21 @@
 # Norfolk Kit
 
-The executable starter and reference implementation for Norfolk AI products and client engagements. One runnable stack and one capability architecture let each product begin from a tested baseline instead of re-litigating infrastructure.
+**The only Norfolk application template.** One runnable stack and one capability architecture let products and client engagements begin from a tested baseline instead of re-litigating infrastructure.
 
-The private **Norfolk AI Product OS** owns canonical doctrine, standards, and rationale. Kit implements a compatible “how”: application scaffolding, adapters, components, modules, checks, and adoption tooling. Client accounts—including KIT Capital—consume this system but do not define Norfolk AI identity or own its reusable IP.
+The **Norfolk AI Product OS** owns canonical doctrine, standards, and rationale. Kit implements the compatible “how”: application scaffolding, adapters, components, modules, checks, and adoption tooling. Client accounts—including KIT Capital—consume this system but do not define Norfolk AI identity or own its reusable IP.
 
-**Status:** the U12 reference foundation is runnable locally on `feat/product-os-reference-foundation`; it has not been published or adopted. `Norfolk-Group/norfolk-starter` is **not retired**. Its unique content must be preserved and parity-checked before a separate archive or deletion approval. Tracked in [`docs/plans/`](docs/plans/).
+`Norfolk-Group/norfolk-starter` was deleted after its retained material was harvested; formal retirement evidence remains incomplete. Do not use similarly named brand, design, manual, agent, skill, or sandbox repositories to start an application. See the checked [repository-role map](docs/repository-roles.md).
+
+## One starting point, distinct supporting roles
+
+| Need | Use | Rule |
+|---|---|---|
+| Start or equip an application | `Norfolk-Group/norfolk-kit` | **Only project template** |
+| Read universal doctrine and rationale | `Norfolk-Group/norfolk-ai-product-os` | Governs; never fork as an app |
+| Read the generated handbook | `Norfolk-Group/norfolk-manual` | Renders; does not govern or bootstrap |
+| Work on upstream brand sources | `Norfolk-Group/norfolk-ai-brand` | Source material; approved distribution snapshots enter Kit |
+| Work on voice agents, plugins, or platform-specific skills | Agent/config/plugin/skill repositories | Narrow applications or tooling; not policy or templates |
+| Consult old HBG components, screens, or integrations | Archived HBG repositories | Historical evidence only; promote approved patterns into Kit |
 
 ## The stack
 
@@ -94,7 +105,7 @@ tools/launchers/   run Claude Code against Kimi / GLM / Qwen / Grok / DeepSeek /
 
 ## Governance
 
-`docs/` governs this Kit implementation only. Universal Norfolk doctrine and rationale are being migrated to the private `Norfolk-Group/norfolk-ai-product-os` candidate, which wins if these legacy policy passages conflict. Before any Kit code or UI change, read the relevant local implementation notes and update them in the same PR. [`docs/SYSTEM-GOVERNANCE-RULE.md`](docs/SYSTEM-GOVERNANCE-RULE.md) is preserved as a superseded legacy source pending duplicate-content cleanup; it is not a second canonical Product OS.
+`docs/` governs this Kit implementation only. Universal Norfolk doctrine and rationale live in the canonical `Norfolk-Group/norfolk-ai-product-os`, which wins if legacy Kit policy conflicts. Before any Kit code or UI change, read the relevant local implementation notes and update them in the same PR. [`docs/SYSTEM-GOVERNANCE-RULE.md`](docs/SYSTEM-GOVERNANCE-RULE.md) is preserved as a superseded legacy source pending duplicate-content cleanup; it is not a second canonical Product OS.
 
 Two rules worth stating on the front page because they are the most commonly violated:
 

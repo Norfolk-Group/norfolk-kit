@@ -1,15 +1,15 @@
-# Brand — the canonical marks
+# Brand — governed distribution snapshot
 
-**Tier: CONTRACT** · Last verified: 2026-07-31
+**Tier: CONTRACT** · Last verified: 2026-08-29
 
-One folder per brand, organized by **ownership**, imported as a curation from Ricardo's Dropbox sources (2026-07-31). These are the only logo files any project should use — if a mark isn't here, it isn't canonical yet.
+`Norfolk-Group/norfolk-ai-brand` holds upstream brand research and source material. This Kit directory is the approved, payload-governed distribution snapshot, organized by **ownership** and curated from Ricardo's source files. A product may use only marks promoted into this snapshot; an upstream asset is not distributable merely because it exists in the brand-source repository.
 
 ## Ownership and the boundary rule
 
 - `norfolk/` — Ricardo's own companies: **Norfolk AI** (tech), **Norfolk Consulting Group** (business arm), **Cidale** (personal marks).
 - `clients/kit-capital/` — **KIT Capital is a client**; its properties (Obra Pía, El Claustro, La Plage, Rituel du Sol) and engagement partner marks (Colliers) live under it.
 
-**The boundary is law (decision recorded in the 2026-07-31 brainstorm):** the equip verb delivers Norfolk marks only to Norfolk-org repos, and a client's marks only to that client's repos — enforced by `markers.json` + the kit-guard CI check, not by folder position alone. Norfolk assets never enter client repos; no client ever sees another client's marks.
+**Approved distribution boundary:** Product OS owns the cross-repository doctrine; this Kit implements it through `.kit/payloads.json`, `.kit/markers.json`, and the `kit-guard` check. Equip delivers Norfolk marks only to Norfolk-org repositories and a client's marks only to that client's repositories. Folder position alone never grants distribution rights.
 
 ## markers.json
 
@@ -37,7 +37,7 @@ Vector-derived exports render at **maximum practical resolution** (≥4096px req
 
 ## Additional source for Phase 5 (design standards)
 
-**[norfolk.ai](https://www.norfolk.ai)** carries the brand's *voice and character* layer not present in these files: the agent mascots (Marcela, Diego, Chip the voice agent), taglines ("Always on AI Agent", "Conversations that actually convert"), and the site's design language. Pull from it when populating `docs/design-system.md`.
+**[norfolk.ai](https://www.norfolk.ai)** is research evidence for brand voice, character, mascots, taglines, and visual language. Do not copy it directly into the design contract. Propose any reusable pattern through the Product OS approval path and a reviewed Kit change before promoting it into `docs/design-system.md` or this distribution snapshot.
 
 ## Gap log (all dispositioned 2026-07-31)
 

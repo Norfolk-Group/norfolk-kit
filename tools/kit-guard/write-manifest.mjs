@@ -19,6 +19,13 @@
 import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
+import {
+  hasSafeUnmatchedDefault,
+  isKitManagedPath,
+  matchesMarkerPattern,
+  REQUIRED_UNMATCHED_DEFAULT,
+  sensitivityOf,
+} from "./markers.mjs";
 
 const args = process.argv.slice(2);
 const argOf = (n, d = null) => {
@@ -43,21 +50,12 @@ for (const f of [".kit/markers.json", ".kit/payloads.json"]) {
 
 const markers = JSON.parse(readFileSync(".kit/markers.json", "utf8"));
 const payloads = JSON.parse(readFileSync(".kit/payloads.json", "utf8"));
+if (!hasSafeUnmatchedDefault(markers)) {
+  console.error(`error: .kit/markers.json must set unmatchedDefault to "${REQUIRED_UNMATCHED_DEFAULT}"; less restrictive defaults are refused.`);
+  process.exit(2);
+}
 const orgRule = payloads.payloads[org] || payloads.default;
 const allowed = new Set(orgRule.allowedSensitivities || []);
-
-const matches = (pattern, path) =>
-  pattern.endsWith("/**") ? path.startsWith(pattern.slice(0, -2)) : pattern === path;
-
-function sensitivityOf(path) {
-  let best = null;
-  for (const [pattern, sens] of Object.entries(markers.markers)) {
-    if (matches(pattern, path) && (!best || pattern.length > best.pattern.length)) {
-      best = { pattern, sens };
-    }
-  }
-  return best ? best.sens : markers.unmatchedDefault || "norfolk-only";
-}
 
 // Collect candidate paths
 let paths;
@@ -80,8 +78,8 @@ if (discover) {
       // this file is written, and a hash that never verifies teaches people
       // to ignore hash mismatches
       p !== ".kit/manifest.json" &&
-      !excluded.some((pat) => matches(pat, p)) &&
-      Object.keys(markers.markers).some((pat) => matches(pat, p)),
+      !excluded.some((pattern) => matchesMarkerPattern(pattern, p)) &&
+      isKitManagedPath(markers, p),
   );
 } else {
   const raw = argOf("--files", "");
@@ -103,7 +101,7 @@ for (const p of paths.sort()) {
     console.error(`error: ${p} does not exist on disk — refusing to claim a file that isn't there.`);
     process.exit(2);
   }
-  const sens = sensitivityOf(p);
+  const sens = sensitivityOf(markers, p);
   if (!allowed.has(sens)) {
     // Do not record it — and say so. A manifest that quietly omits a
     // boundary-crossing file would let kit-guard's scope rule catch it as an

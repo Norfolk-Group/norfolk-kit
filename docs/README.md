@@ -1,8 +1,8 @@
 # Docs Index
 
-**Tier: CONTRACT** · Last verified: 2026-08-26
+**Tier: CONTRACT** · Last verified: 2026-08-29
 
-This is a **router, not a summary** for the Kit implementation. Find the row matching the change you're about to make and read those files first. The private Norfolk AI Product OS candidate owns universal doctrine and wins cross-repository conflicts. Legacy universal policy in Kit is being replaced with concise implementation notes and must not be treated as a second editable canon.
+This is a **router, not a summary** for the Kit implementation. Find the row matching the change you're about to make and read those files first. The Norfolk AI Product OS owns universal doctrine and wins cross-repository conflicts. Legacy universal policy in Kit is being replaced with concise implementation notes and must not be treated as a second editable canon.
 
 ## Route by change type
 
@@ -20,6 +20,7 @@ This is a **router, not a summary** for the Kit implementation. Find the row mat
 | Anything, if it contradicts a documented decision | `decisions/` — surface the conflict, don't resolve it silently |
 | Adopting or pinning a Product OS version | `product-os-adoption.md` |
 | Brand marks, logos | `../brand/README.md` |
+| Repository purpose, GitHub labels, project-template status | `repository-roles.md` |
 
 ## Files
 
@@ -42,7 +43,8 @@ This is a **router, not a summary** for the Kit implementation. Find the row mat
 | `solutions/` | REFERENCE | CE-compound learnings. One file per learning, frontmatter, refreshed by `ce-compound-refresh`. |
 | `outputs/` | CONTRACT | Per-family output surface declarations. See `export-output-contract.md` for the governing rules. |
 | `product-os-adoption.md` | CONTRACT | How kit adopts a pinned Product OS release. Kit cannot amend doctrine. |
-| `../brand/README.md` | CONTRACT | Canonical marks. Equip + kit-guard enforce the Norfolk vs client boundary. |
+| `repository-roles.md` | REFERENCE | Operational map for shared/foundation repositories and the sole project template. |
+| `../brand/README.md` | CONTRACT | Governed brand distribution snapshot. Equip + kit-guard enforce the Norfolk vs client boundary. |
 | `OWNERS-GUIDE.md` | REFERENCE | Human-facing owner guide. Not an agent contract. |
 | `setup/` | REFERENCE | Codespace and Claude Code operator setup. |
 | `artifacts/` | REFERENCE | Generated HTML: components, motion, icons, architecture, navigation |

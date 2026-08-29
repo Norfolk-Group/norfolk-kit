@@ -4,7 +4,7 @@ This project is built on the Norfolk Kit. These rules bind every agent and devel
 
 ## Kit-bare inheritance
 
-This file is the agent contract for every equipped Norfolk/KIT repo. Equip installs it; a project may add rules below and may not silently drop one. `kit-guard` enforces the payload marker. Unmarked kit files are norfolk-only.
+This file is the agent contract for every equipped Norfolk/KIT repo. Equip installs it; a project may add rules below and may not silently drop one. `kit-guard` enforces the payload marker. Unmarked Kit files are `kit-only` and ship nowhere.
 
 Superpowers and Compound Engineering are pinned and inherited by reference. Do not vendor skill trees. Do not double-loop brainstorm/plan.
 
@@ -27,11 +27,11 @@ Factory-floor and mechanical work goes through tools/launchers (Qwen, Kimi, GLM,
 - Kit rule 10 overrides `/lfg` auto-ship.
 - Do not let `/ce-strategy` mint a second STRATEGY.md.
 
-Read [`docs/SYSTEM-GOVERNANCE-RULE.md`](../docs/SYSTEM-GOVERNANCE-RULE.md) first — it defines how `/docs` governs changes, what wins when sources disagree, and which gates enforce it.
+Read [`docs/SYSTEM-GOVERNANCE-RULE.md`](docs/SYSTEM-GOVERNANCE-RULE.md) first — it defines how `/docs` governs changes, what wins when sources disagree, and which gates enforce it.
 
 ## 1. Documentation governs
 
-`/docs` is the source of truth for architecture, business logic, API surface, and design system. Before any code or UI change: read the relevant docs (start at [`docs/README.md`](../docs/README.md), which routes change-type → files), follow them, and update them in the same PR when behaviour or UI changes.
+`/docs` is the source of truth for architecture, business logic, API surface, and design system. Before any code or UI change: read the relevant docs (start at [`docs/README.md`](docs/README.md), which routes change-type → files), follow them, and update them in the same PR when behaviour or UI changes.
 
 `/docs` **outranks the code**. A doc–code conflict is a finding to surface, not a decision to make quietly.
 

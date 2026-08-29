@@ -1,6 +1,6 @@
 # SYSTEM GOVERNANCE RULE (v2)
 
-> **Superseded legacy source during Product OS migration.** This body is preserved for provenance. The private `Norfolk-Group/norfolk-ai-product-os` candidate owns universal doctrine; this file governs only Kit implementation details that do not conflict with it. After cutover, duplicate policy will be replaced by concise implementation notes and links.
+> **Superseded legacy source during Product OS migration.** Legacy universal policy is retained here for provenance only. The canonical `Norfolk-Group/norfolk-ai-product-os` owns universal doctrine; current precedence and Kit-specific implementation notes below apply only where they do not conflict with it. After cutover, duplicate policy will be replaced by concise implementation notes and links.
 
 `/docs` is this Kit implementation's local source for architecture, business logic, API structure, and executable design notes. Before any Kit code or UI change, the agent MUST consult it, follow it when compatible with Product OS, and update it in the same PR when behavior or UI changes. A change made without consulting the relevant Product OS and Kit sources is invalid.
 
@@ -12,10 +12,11 @@ That much is v1. Everything below exists because v1 was unenforceable, unbounded
 
 Ranked. Higher wins:
 
-1. **The user's explicit instruction, in this session.**
-2. **`CLAUDE.md`** — the agent contract (how to work).
-3. **`/docs`** — the project contract (what to build).
-4. **The code.**
+1. **The user's explicit instruction and approval, within system safety and authorization boundaries.**
+2. **Norfolk AI Product OS** — universal cross-repository doctrine and rationale.
+3. **`AGENTS.md`** — the vendor-neutral agent contract (how to work); `CLAUDE.md` imports it.
+4. **Current, non-superseded `/docs` contracts** — what this Kit implementation builds.
+5. **The code.**
 
 Two consequences that matter:
 

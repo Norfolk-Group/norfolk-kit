@@ -32,7 +32,7 @@ Read `.kit/payloads.json` from the kit. Look up the org from §1.
 - Found → use its `class` and `allowedSensitivities`.
 - **Not found** (fork, no remote, multiple remotes, new org) → use `default`: **tooling only, zero brand**, and say plainly in the PR body which org was detected and why the payload was restricted. *(C1/C2.)*
 
-Read `.kit/markers.json`. Every kit file has a sensitivity; **unmatched paths count as `norfolk-only`** (fail closed). Build the payload as: every kit file whose sensitivity ∈ `allowedSensitivities`, **minus** anything matching `$excludeFromPayload`.
+Read `.kit/markers.json`. Every governed Kit file has a sensitivity; **unmatched paths count as `kit-only`** and ship nowhere (fail closed). Build the payload as: every Kit file whose sensitivity ∈ `allowedSensitivities`, **minus** anything matching `$excludeFromPayload`.
 
 Two markers need care:
 
