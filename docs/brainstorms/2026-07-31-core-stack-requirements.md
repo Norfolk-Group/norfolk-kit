@@ -5,6 +5,8 @@ topic: core-stack-equip-and-tidy
 
 # Core-Stack: Equip & Tidy Any Repo Without Touching a Terminal
 
+> Historical requirements artifact. Repository-topology statements are superseded by [`../repository-roles.md`](../repository-roles.md). Preserve the rationale below, but do not treat it as authority to change H-Analytics, revive archived design repositories, or create another project template.
+
 ## Problem Frame
 
 Ricardo runs a growing portfolio of repos (H-Analytics, Obra Pía investor portal, FAA, muxy-case, more coming) as a non-programmer CTO working through Claude Code. Today every new project re-decides its stack, and every existing repo drifts into its own layout, accumulating stale files, scattered docs, and junk. Standardizing by hand requires GitHub/git fluency Ricardo doesn't have and shouldn't need — the July 30 session proved it: equipping one repo with launchers took an hour of chmod, auth, stash, and GPG failures, each needing hand-holding.

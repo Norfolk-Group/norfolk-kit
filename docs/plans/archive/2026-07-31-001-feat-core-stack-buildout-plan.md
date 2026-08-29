@@ -1,12 +1,14 @@
 ---
 title: "feat: Core-Stack Buildout — brand, verbs, manual, consolidation"
 type: feat
-status: active
+status: superseded
 date: 2026-07-31
 origin: docs/brainstorms/2026-07-31-core-stack-requirements.md
 ---
 
 # ✨ Core-Stack Buildout — brand, verbs, manual, consolidation
+
+> Superseded as an execution plan on 2026-08-29. Preserve it as implementation history. Start new scoped work from the current docs and [`../../repository-roles.md`](../../repository-roles.md); do not initiate H-Analytics or repository-lifecycle changes from this file.
 
 ## Overview
 
@@ -176,12 +178,12 @@ WorkOS auth swap on `feat/workos-auth` (Codespace, prompt ready) → full auth r
 ## Sources & References
 
 ### Origin
-- **Origin document:** [docs/brainstorms/2026-07-31-core-stack-requirements.md](../brainstorms/2026-07-31-core-stack-requirements.md) — all R1–R20 mapped into phases above. Key decisions carried forward: Claude Code as courier + PR-only writes (R2/R7); org-aware payloads with Norfolk/client boundary (Key Decisions); two-verbs-separate (R4); Manual-renders-kit-never-forks (R18); server-side finance (R19).
+- **Origin document:** [docs/brainstorms/2026-07-31-core-stack-requirements.md](../../brainstorms/2026-07-31-core-stack-requirements.md) — all R1–R20 mapped into phases above. Key decisions carried forward: Claude Code as courier + PR-only writes (R2/R7); org-aware payloads with Norfolk/client boundary (Key Decisions); two-verbs-separate (R4); Manual-renders-kit-never-forks (R18); server-side finance (R19).
 - Requirements marked already-done in origin and *not* re-planned: R9, R14 (applied 2026-07-31), R15 launchers, R1/R13 as standing policy.
 
 ### Internal
 - SpecFlow analysis (this plan's session, 2026-07-31): findings C1–C7, I1–I10, M1–M5 — all incorporated above.
-- Kit decision records: `docs/decisions/0001–0004`; consolidation plan `docs/plans/2026-07-29-kit-consolidation.md` (harvest/archive: done).
+- Kit decision records: `docs/decisions/0001–0004`; consolidation plan `docs/plans/archive/2026-07-29-kit-consolidation.md` (harvest/archive: done).
 - Owner's Guide: `docs/OWNERS-GUIDE.md` · Visual overview: `docs/artifacts/core-stack.html`.
 
 ### External (verified during brainstorm, cited in origin/research outputs)

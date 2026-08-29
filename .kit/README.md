@@ -1,6 +1,6 @@
 # `.kit/` — the rules that decide what a repo may receive
 
-Three small files. Together they answer one question: **when the kit is copied into a repo, which parts of it are that repo allowed to hold?**
+Four small files. Three answer one question—**when the Kit is copied into a repo, which parts may that repo hold?**—and one prevents shared Norfolk repositories from being mistaken for project starters.
 
 Product OS adoption also uses these boundaries. The signed release manifest supplies incoming hashes and sensitivity; `tools/product-os-adopt/plan.mjs` verifies and plans, while `kit-guard` independently enforces the resulting pull request. Adoption never writes the default branch or executes a deletion.
 
@@ -9,8 +9,9 @@ You do not need to edit these by hand. Ask for the change in plain English and i
 | File | What it decides |
 |---|---|
 | `payloads.json` | **Which org gets what.** Each GitHub org maps to a class (norfolk / client / personal), and each class lists the sensitivities it may hold. An org that isn't listed gets tooling only, no brand. |
-| `markers.json` | **How sensitive each file is.** Every path in the kit carries a marker: `client-safe`, `norfolk-only`, or `client:<name>`. A path nobody marked counts as `norfolk-only`. |
+| `markers.json` | **How sensitive each file is.** Every governed path carries a marker: `client-safe`, `norfolk-only`, `client:<name>`, or `kit-only`. A path nobody marked counts as `kit-only` and ships nowhere. |
 | `manifest.json` | **What was actually installed** — written into the *target* repo, not here. Lists every file equip put there, with its hash and marker. |
+| `repository-roles.json` | **Which shared repo does what.** Declares the only project template and classifies adjacent governance, handbook, brand, design, integration, agent, skill, sandbox, and deleted predecessors. It is Kit-local and never enters a product payload. |
 
 ## Why it works this way
 
@@ -18,7 +19,7 @@ The obvious design would be to put Norfolk material in a Norfolk folder, client 
 
 So folder position is never the boundary. `markers.json` is. A file's location can change freely; its marker travels with its path, and `kit-guard` checks the marker, not the folder.
 
-**Unmarked means norfolk-only.** Add a file and forget to mark it, and it simply won't go into a client repo. The failure mode is a missing file, which someone notices — not a leaked one, which nobody does.
+**Unmarked means kit-only.** Add a file and forget to mark it, and it ships nowhere. The failure mode is a missing file, which someone notices—not an internal file silently distributed to every Norfolk repository.
 
 ## Why the boundary lives here and not in GitHub permissions
 
@@ -30,7 +31,7 @@ That is also why `kit-guard` runs in every equipped repo rather than only here. 
 
 - **New org** → add it to `payloads.json`. Until you do, it gets tooling only and the PR says so. That default is deliberate: granting brand should be a decision someone made, not something that happened.
 - **New client** → add a `client:<name>` sensitivity, mark their brand paths, and map their org.
-- **New kit file** → mark it in `markers.json` in the same commit. Unmarked files are invisible to client repos.
+- **New kit file** → mark it in `markers.json` in the same commit. Unmarked files ship nowhere.
 
 ## Checking a repo yourself
 
