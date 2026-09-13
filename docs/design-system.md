@@ -207,6 +207,24 @@ The reflex — human and agent alike — is to stretch content to the available 
 
 ## Component standards
 
+### Offline owner guide
+
+`docs/artifacts/owner-guide.html` is a reading document generated only from
+`docs/OWNERS-GUIDE.md`, not a new application shell. It uses the neutral tokens
+above, bundled Inter 400/600, semantic headings/tables, visible focus and 44px
+copy controls. A bounded reading column sits beside section navigation on wide
+screens; navigation moves above content on narrow screens and tables scroll
+inside their own regions. Copy reports success or selects the exact prompt with
+keyboard-copy instructions when clipboard access is unavailable.
+
+Its reading-copy print profile is A4 portrait with 18mm margins, white paper,
+near-black ink, 10pt body and 9pt tables/prompts. Navigation/copy controls do not
+print; table headers repeat and rows avoid splitting. This owner manual is not
+an investor statement and does not change financial-output typography floors.
+Source digest and renderer version identify the generated copy. Verification
+covers offline loading, heading targets, exact prompt copying/fallback, narrow
+viewport containment and visual inspection of a rendered PDF before delivery.
+
 The first executable specimen is `StatusCard` at `src/client/components/StatusCard.tsx`. It defines loading, ready, and error states with an `aria-live` region; Storybook renders all three. Loading uses a dashed geometric mark, not a fabricated percentage, and respects reduced motion. Error copy names the next action.
 
 Reference review buttons define default, hover, keyboard-focus, and 44px target behavior and offer explicit approve, reject, and defer outcomes. A product must add disabled, loading, and error behavior before using a button for asynchronous work.

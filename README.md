@@ -1,10 +1,17 @@
-# Norfolk Kit
+# Norfolk AI Product OS & Starter Kit
 
-The executable starter and reference implementation for Norfolk AI products and client engagements. One runnable stack and one capability architecture let each product begin from a tested baseline instead of re-litigating infrastructure.
+**One go-to repository: `Norfolk-Group/norfolk-kit`.** Start here to build a new application, assess an existing project, or update Norfolk standards. The Product OS defines how Norfolk builds and operates products; the Starter Kit supplies the executable baseline; the owner guide explains how to use them.
 
-The private **Norfolk AI Product OS** owns canonical doctrine, standards, and rationale. Kit implements a compatible “how”: application scaffolding, adapters, components, modules, checks, and adoption tooling. Client accounts—including KIT Capital—consume this system but do not define Norfolk AI identity or own its reusable IP.
+| I want to… | Start here |
+|---|---|
+| Start a project | [New-project guide and prompt](docs/OWNERS-GUIDE.md#start-new-projects-safely) |
+| Upgrade an existing project | [Read-only assessment and safe adoption](docs/OWNERS-GUIDE.md#adopt-into-existing-projects-without-breakage) |
+| Update Norfolk standards | [Standards-change workflow](docs/OWNERS-GUIDE.md#update-norfolk-standards) |
+| Understand the stack, rules and tools | [Owner's Guide](docs/OWNERS-GUIDE.md) · [Offline HTML](docs/artifacts/owner-guide.html) |
 
-**Status:** the U12 reference foundation is runnable locally on `feat/product-os-reference-foundation`; it has not been published or adopted. `Norfolk-Group/norfolk-starter` is **not retired**. Its unique content must be preserved and parity-checked before a separate archive or deletion approval. Tracked in [`docs/plans/`](docs/plans/).
+**Status:** the owner approved consolidation into this repository on 2026-09-13. The reference implementation is on `main`; source/release cutover from the former Product OS is **not complete**. The existing Product OS lock remains `proposed`, not adopted. Read the [consolidation inventory and blockers](docs/consolidation.md) before renaming, archiving or importing another repository. Historical starter/retirement claims are not evidence that preservation or adoption passed.
+
+Client projects consume approved reusable modules; they do not define Norfolk identity or own its reusable IP. GitHub template copying does not apply Kit's sensitivity filter: inspect the selected payload and destination organization before creating a customer repository.
 
 ## The stack
 
@@ -30,7 +37,7 @@ Rationale for each choice — and what each one **rules out** — is in [`docs/d
 ## Start a new project
 
 ```bash
-# 1. Create the repo from this template (GitHub UI: "Use this template", or:)
+# Only after approving the source revision, visibility and payload contents:
 gh repo create Norfolk-Group/my-app --template Norfolk-Group/norfolk-kit --private
 
 # 2. Open it in a Codespace. The devcontainer installs Doppler, Claude Code,
@@ -94,9 +101,9 @@ tools/launchers/   run Claude Code against Kimi / GLM / Qwen / Grok / DeepSeek /
 
 ## Governance
 
-`docs/` governs this Kit implementation only. Universal Norfolk doctrine and rationale are being migrated to the private `Norfolk-Group/norfolk-ai-product-os` candidate, which wins if these legacy policy passages conflict. Before any Kit code or UI change, read the relevant local implementation notes and update them in the same PR. [`docs/SYSTEM-GOVERNANCE-RULE.md`](docs/SYSTEM-GOVERNANCE-RULE.md) is preserved as a superseded legacy source pending duplicate-content cleanup; it is not a second canonical Product OS.
+Use this repository as the single owner entry point. [Decision 0023](docs/decisions/0023-one-product-os-entry-point.md) records the approved consolidation and its staged safety boundary. Until source/release migration is verified, existing adopted contracts and signed artifacts retain their meaning; do not silently reinterpret them or create a second editable copy. The [docs index](docs/README.md) routes implementation work, and [the owner guide](docs/OWNERS-GUIDE.md) routes human decisions.
 
 Two rules worth stating on the front page because they are the most commonly violated:
 
 1. **No secrets in code, ever.** Doppler is the only home for credentials.
-2. **Product OS outranks Kit; Kit implementation notes outrank conflicting Kit code.** Surface either conflict rather than silently rewriting the losing source.
+2. **Read contracts before code and surface conflicts.** The owner guide is an explanation, not an override of adopted project policy. `AGENTS.md` is the shared agent-rule source for Cursor, Claude Code and Codex.

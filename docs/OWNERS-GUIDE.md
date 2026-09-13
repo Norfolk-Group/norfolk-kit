@@ -1,66 +1,306 @@
-# Owner's Guide — for Ricardo
+# Norfolk AI Product OS & Starter Kit
 
-**Tier: REFERENCE** · Last verified: 2026-07-31
+**Owner's Guide · REFERENCE · Source reviewed: 2026-09-13**
 
-This is the one document written for you, not for agents. It answers: what is all this, how do I use it, why is it the way it is, and what happens next. When you're lost, start here.
+## Start here
 
----
+Your one starting point is [Norfolk Kit](https://github.com/Norfolk-Group/norfolk-kit).
+Bookmark it for new applications, existing-project assessments and standards changes.
 
-## What is this repo?
+The Product OS is the agreed way Norfolk builds and operates products. The
+Starter Kit is its reusable implementation. This guide explains how you use both.
+These are three roles of one intended system, not three competing products.
 
-**`norfolk-kit` — you call it the core-stack — is Norfolk AI's toolbox.** Everything a project should start with or conform to lives here: the rules, the tools, the brand files, the tech-stack decisions, and (soon) the two skills that carry all of it into any repo. It is Norfolk IP; it gets *applied to* client work (KIT Capital's repos), but it lives in your house.
+**Consolidation is in progress.** Kit contains a runnable reference app, rules,
+report utilities and setup tools. Separate Product OS source and release tooling
+have not yet migrated. The proposed lock is not an adopted release. Old repositories
+remain available until preservation, privacy and dependency checks pass. See the
+[consolidation record](https://github.com/Norfolk-Group/norfolk-kit/blob/main/docs/consolidation.md).
 
-You have three GitHubs, one identity: **Norfolk-Group** (your companies — this repo lives here), **KIT-Capital** (client org you administer), **ricardo-cidale-personal** (the login your Codespaces use).
+This guide explains the contracts; it does not replace them. Approved project
+exceptions remain valid until deliberately changed. Never apply adoption work to
+an application the owner has excluded.
 
-## How do I use it? — phrases that work
+## Choose your job
 
-You never need a terminal. Say these to Claude Code, in any repo:
+| Your goal | Prompt below | What you should receive |
+|---|---|---|
+| Start an application | Start a new project | Brief, selected modules, provision checklist and first tested feature |
+| Bring an app into line | Assess an existing project | Read-only gaps, preserved customizations and phased proposal |
+| Implement an approved upgrade | Adopt safely | Reviewable changes, tests and rollback instructions |
+| Change a Norfolk standard | Update a standard | One Kit decision and proposal, then deliberate per-project adoption |
+| Check readiness | Verify release readiness | Actual checks, service evidence, unresolved risks and go/no-go |
 
-| Say | What happens |
+## The stack in plain English
+
+This table combines approved technology choices with implemented components;
+it is not proof every service is connected in every application. Provision optional services only when needed. Exact versions live
+in package manifests and lockfiles, not this table.
+
+| Part | Baseline | Use and verification |
+|---|---|---|
+| Source/work area | GitHub; Codespaces/devcontainer available | Every project needs a repo; local editor workspaces are also usable |
+| App foundation | TypeScript, React/Vite, Express | Present in the reference; preserve an existing framework until migration is approved |
+| Capabilities | tRPC and MCP over the same authorized core | Human and agent requests enforce the same permissions and business rules |
+| Interface | shadcn/ui, Tailwind, CSS-variable themes | Follow the design contract, not a second design system |
+| Secrets | Doppler | Required for credentials; isolate development, staging and production |
+| Hosting | Railway | Verify the actual linked repository, environment and deployed revision |
+| Identity | WorkOS AuthKit | For authenticated apps; verify real login and permissions before exposure |
+| Data | Neon Postgres and Drizzle | When persistent data is needed; isolate environments and test recovery |
+| Documents/images | Cloudflare R2 | When storing files; transfer directly with short-lived presigned grants |
+| Video | Cloudflare Stream | Optional for video-heavy apps |
+| Email | Resend | When sending email; verify sender and test safely before real recipients |
+| Errors | Sentry | Verify SDK setup and a received safe test event, not just an account |
+| In-app AI | Vercel AI SDK selected policy | Not installed in the current reference; implement and test only when needed |
+| Knowledge/retrieval | Approved embeddings/search; pgvector when needed | Optional; define source ownership, permissions, freshness and evaluations |
+| Voice/agent jobs | Supported provider/runtime per use case | Optional; define consent, tools, budget, human handoff and evaluations |
+
+Read the [architecture](https://github.com/Norfolk-Group/norfolk-kit/blob/main/docs/architecture.md),
+[decisions](https://github.com/Norfolk-Group/norfolk-kit/tree/main/docs/decisions)
+and [configuration map](https://github.com/Norfolk-Group/norfolk-kit/blob/main/docs/config-and-env-map.md)
+for implementation details and reasons.
+
+## What each project must carry
+
+- Owner, purpose, audience, data classification and explicit scope.
+- A pinned baseline, or an honest record that adoption is still proposed.
+- The shared agent contract, docs index and relevant architecture, API,
+  security, business and design contracts.
+- Project decisions and approved exceptions, with reasons and review conditions.
+- Configuration key names only, service owners and environment mapping.
+- Meaningful tests, blocking quality checks and a release/rollback path.
+- A record of required, optional, configured and actually verified modules.
+
+**Required is not installed; installed is not working.** Ask the agent to report
+these states separately. Credentials belong in Doppler, not prompts, screenshots,
+checked-in files or copied browser sessions.
+
+## Cursor, Claude Code and Codex
+
+All three should follow the same [AGENTS.md](https://github.com/Norfolk-Group/norfolk-kit/blob/main/AGENTS.md).
+Do not maintain three versions of Norfolk policy.
+
+| Editor | Rule entry point | What to verify |
+|---|---|---|
+| Cursor | Root AGENTS.md | Kit has Cursor MCP config; verify server access and loaded skills in Cursor |
+| Claude Code | CLAUDE.md imports AGENTS.md | Verify declared plugins, marketplace trust, installation and loading |
+| Codex | Root AGENTS.md | Verify Codex skills/plugins and MCP connections; Claude settings do not prove Codex setup |
+
+Current plugin settings identify enabled plugins and a marketplace but contain
+no immutable version pins. The contract's intended pinning is a setup gap, not
+something already enforced. Do not invent a version field or vendor skill trees.
+
+Compound Engineering owns definition, planning, implementation orchestration and
+captured learnings. Superpowers supplies test-first work, debugging and verification.
+Install supported upstream distributions by reference. Record source, resolved
+version, license, permissions and editor-specific proof. If a required capability
+is unavailable, report it and request an approved fallback; don't pretend another
+editor's configuration installed it. Vendor skills are optional and task-specific.
+
+Use the setup prompt below to ask what actually loaded. Official references:
+[Codex instructions](https://learn.chatgpt.com/docs/agent-configuration/agents-md),
+[Codex skills](https://learn.chatgpt.com/docs/build-skills),
+[Claude imports](https://code.claude.com/docs/en/memory),
+[Cursor rules](https://cursor.com/docs/rules). These links do not certify a local installation.
+
+## The harness: from idea to improvement
+
+A starter gives you initial files. The harness guides the whole job and requires
+evidence before moving forward. It is not an autonomous production-release engine.
+
+| Step | Ask for this result |
 |---|---|
-| **"equip this repo"** *(once built)* | Kit tools/rules/brand added to the repo as a pull request you approve |
-| **"tidy this repo"** *(once built)* | Repo audited against the standard layout; cleanup proposed as a PR; nothing silently deleted |
-| **"plan it"** | Turns a finished brainstorm into a sequenced build plan |
-| **"research X deeply"** | Parallel research agents against official sources, verdicts with citations |
-| `claude-glm.sh` *(in a Codespace terminal, via* `doppler run --` *)* | Claude Code runs on GLM — the closest third-party model to Opus, for cheap bulk work |
-| **"check model calibration"** | One command verifies every launcher still points at each provider's best model |
+| Ideation | Clear user problem, useful outcome and what is out of scope |
+| Context | Existing decisions, source evidence, data boundaries and constraints |
+| Plan | One plan with acceptance examples, risks, dependencies and rollback |
+| Implement | Small test-first changes using the approved tools and rules |
+| Evaluate and test | Real test results plus representative AI, voice, knowledge or report evaluations |
+| Review | Final diff review and a disposition for every relevant bot finding |
+| Refactor and learn | Behavior-preserving improvements, regression tests and reusable lessons |
+| Release or adopt | Approved revision, verified environment, rollback and explicit authority |
 
-The full launcher list (8 models: Kimi, GLM, Qwen, Grok, DeepSeek, GPT, Gemini, Llama) is in `tools/launchers/README.md`.
+Failures return to diagnosis and implementation, then repeat evaluation and review.
+Changed requirements return to context and planning. Scale the paperwork to the
+risk; do not run two competing planning workflows.
 
-## Where is everything?
+The [harness guide](https://github.com/Norfolk-Group/norfolk-kit/blob/main/docs/harness.md)
+defines each handoff. The local command `pnpm harness:check --root [project-path]`
+checks basic structure without modifying the project or running its scripts.
+Its result is an assessment starting point, never proof of readiness or adoption.
 
-| Looking for… | Go to |
-|---|---|
-| The rules that govern all work | `AGENTS.md` (one file, read by Claude Code *and* Cursor) |
-| Why a decision was made | `docs/decisions/` — each record says what it **rules out**, so it can't be quietly undone |
-| The settled tech stack + reasons + risks | `docs/brainstorms/2026-07-31-core-stack-requirements.md` (R10) and the visual: `docs/artifacts/core-stack.html` |
-| The animations | `src/components/animations/` + the live catalog `docs/artifacts/motion.html` |
-| The model launchers | `tools/launchers/` |
-| Setup guides (Windows / Mac / Replit) | `docs/setup/` |
-| This week's full requirements (R1–R17) | `docs/brainstorms/2026-07-31-core-stack-requirements.md` |
+## Agent names and roles
 
-## Why is it this way? — the decisions in one breath each
+Use recognizable human names, with the role secondary: Gustavo · Analyst,
+Rebecca · AI Co-Pilot. Keep names in one registry, preserve stable technical IDs,
+and reuse the same labels in the interface and exports. Authorized display-name
+changes must not alter permissions or routing. Existing approved names stay intact;
+new shared names follow the Kit convention. Not every app needs a fleet of agents.
 
-- **Railway hosts everything** — the only platform that runs your actual apps without rewriting them; data lives elsewhere so a Railway outage can't destroy anything.
-- **Neon + WorkOS + R2, not Supabase** — Supabase would downgrade two pillars to gain one dashboard, and its security model fights your architecture.
-- **Voyage for AI search** — cheapest top-tier option, Anthropic's own pick, ~$3 to ever undo.
-- **Docker stays invisible** — Codespaces and Railway already containerize everything; you never touch it.
-- **`AGENTS.md` is the one rules file** — the vendor-neutral standard Cursor reads natively; Claude Code reads it through a one-line bridge. Cursor is welcome as a friend any time.
-- **Plugins are pinned in the repo** — superpowers + compound-engineering + greptile load automatically in every clone; nobody edits settings by hand again.
-- **Claude is the baseline; the fleet is a resource** — 8 third-party models as drivers or APIs, each verified against the provider's live catalog before being trusted.
-- **Everything verified against official docs, never assumed** — the standing policy (R13), bought with two real mistakes this week (a fabricated package name; a double-encoding that corrupted three files).
+The [naming contract](https://github.com/Norfolk-Group/norfolk-kit/blob/main/docs/agent-naming.md)
+captures the H-Analytics persona-first pattern without changing that application.
 
-## What's NOT done yet — the build list, in order
+## Start new projects safely
 
-1. **Brand import** — curate 9 logo sets + avatars into `brand/` (sources mapped on your PC; 3 gaps flagged: KIT Partners needs a PNG export, Rituel needs a dark variant, Colliers is low-res)
-2. **Decision records 0005+** — write this week's research verdicts into permanent records
-3. **The equip skill** — then its first live run: equipping Obra Pía properly
-4. **The tidy skill** + the canonical repo layout it audits against (drafted *with you* before it ever runs)
-5. **Reviews with you** — governance rules read-through; design-system populated with real standards; avatar/logo picks blessed
-6. **The consolidation** — retire Manus and Perplexity subscriptions as Claude Code absorbs their jobs; record the savings
+1. Describe the customer, users, sensitive data and first useful outcome.
+2. Confirm destination organization and repository visibility.
+3. Select minimum Kit modules and record the approved source revision.
+4. Inspect payload sensitivity before copying. GitHub's template-copy operation
+   does not enforce Kit filtering; don't indiscriminately copy company/client assets.
+5. Provision needed services and isolated development credentials in Doppler.
+6. Build one end-to-end feature, with equivalent human and agent permissions.
+7. Verify gates and development behavior before requesting release approval.
 
-Say **"plan it"** to have this sequenced formally, or pick any single line and say "do #1."
+The reference app's development test identity is not production authentication.
+Verify WorkOS in the target environment before exposure. A repository, homepage
+or passing build does not mean the product is secure and ready for customers.
 
-## Meanwhile, the other big thread
+## Adopt into existing projects without breakage
 
-The **Obra Pía WorkOS auth swap** is queued in the Codespace (branch `feat/workos-auth`, prompt ready). Database and file storage already migrated and verified in production. After auth: deploy to Railway → test → point `investor.obrapia.co` at it → cancel Manus.
+Begin read-only. Inventory architecture, data, authentication, exports, deployment,
+integrations, custom rules and known defects. Preserve behavior and approved artifacts.
+
+Classify each requirement as compliant, missing, conflicting, not applicable or
+approved exception. Do not overwrite custom code because Kit has the same filename.
+
+Adopt in small changes: documentation and configuration visibility, compatible
+tools/checks, then approved runtime/design changes. Each needs tests, a rollback
+target and acceptance criteria. Production actions and data migrations need their
+own authorization.
+
+For reports, generate the new profile beside the approved version. Compare numbers
+and appearance. Preserve URLs, storage keys and prior renderers until approved
+cutover. Follow the [adoption contract](https://github.com/Norfolk-Group/norfolk-kit/blob/main/docs/product-os-adoption.md).
+
+## Design and financial reports
+
+Screens and documents have different jobs. A dashboard theme must not silently
+become the PDF, workbook or investor-report theme.
+
+- Inter is the house face. Kit includes IBM Plex Sans Condensed and IBM Plex Mono
+  for declared report roles; use the approved profile rather than arbitrary fonts.
+- Statements default to monochrome, aligned numbers and readable type. Preserve
+  signs, currency, units, decimals, periods and footnotes.
+- Use restrained chart accents, generous padding and deliberate chart size. Keep
+  legends readable; don't shrink statements until they merely fit.
+- Map screen/report themes through versioned IDs, not guesses from color names.
+- Declare PDF, HTML, XLSX, CSV, PNG, DOCX and PPTX separately when supported.
+  Preserve numeric spreadsheet cells and document semantics.
+- Check renderer/SDK/plugin support for fonts, embedding, pagination, tables,
+  charts and accessibility. Fail clearly or record an approved fallback.
+- Verify numbers, layout, clipping, fonts and provenance before accepting an export.
+  A successful download is not a quality check.
+
+Binding details: [export contract](https://github.com/Norfolk-Group/norfolk-kit/blob/main/docs/export-output-contract.md)
+and [design system](https://github.com/Norfolk-Group/norfolk-kit/blob/main/docs/design-system.md).
+Product logos do not authorize recoloring financial tables.
+
+## Quality, security and release
+
+Require actual lint, typecheck, test and build results. Applicable CodeQL findings
+must be clear of high/critical issues. Every installed review-bot comment needs
+an explicit disposition. Bugbot and Greptile do not replace tests or certify
+production security. Green means only the checks actually configured and run.
+
+Confirm environment, commit and integration. Sentry must receive a safe test
+event; Doppler access must be scoped; Railway must deploy the approved source.
+Record backup/recovery evidence, cost ownership and incident contacts without
+putting credentials in documentation.
+
+Merge approval is not automatic permission for a production migration, DNS
+change or customer email. Keep outward actions within the owner's scope.
+
+## Update Norfolk standards
+
+Start at Kit, not historical skills/manual repos. Read existing decisions, state
+the problem and impact, then implement an approved, tested, reviewed change.
+
+During consolidation, source still in the former Product OS needs an explicit
+migration or linked reviewed change. Don't create a conflicting second policy
+copy, rewrite signed artifacts or mark the proposed lock adopted without evidence.
+
+After release, offer each app a versioned upgrade proposal. Never silently push
+new standards into all projects. Preserve compatible exceptions and record actual adoption.
+
+## Copy-paste prompts
+
+Replace bracketed descriptions. These prompts do not grant unlimited access or
+override the active project's rules.
+
+### Check my editor setup
+
+```text
+Check this project's Norfolk setup without changing files or external systems.
+Read AGENTS.md and the docs index. Tell me which rules, skills, plugins and MCP
+connections this editor actually loaded, with sources and resolved versions.
+Compare with Norfolk-Group/norfolk-kit. Distinguish required, declared, installed
+and verified. Report missing capabilities and conflicting local instructions.
+Never print secret values or extract browser tokens.
+```
+
+### Start a new project
+
+```text
+Use Norfolk-Group/norfolk-kit as my Product OS and Starter Kit entry point.
+My project is [purpose], for [users], owned by [organization], with [data types].
+The first useful outcome is [outcome]. Read the owner guide and current contracts.
+Use the harness: ideation, context, one plan, implementation, evaluation/testing,
+review, refactoring and release readiness. Show evidence and blockers at each gate.
+Propose minimum modules, source version, visibility, service setup and tests.
+Check payload sensitivity before copying source or brand assets. Flag unreleased
+or proposed baselines honestly. Ask about material missing decisions. Do not
+create external resources, publish, deploy or incur charges until approved.
+```
+
+### Assess an existing project
+
+```text
+Assess [repository] against Norfolk-Group/norfolk-kit. This is read-only.
+Inventory architecture, rules, skills, services, security, CI, design and every
+report/export path. Preserve application behavior and customer identity.
+Give me a gap table: compliant, missing, conflicting, not applicable or approved
+exception, with evidence. Propose small adoption steps with tests and rollback.
+Do not edit, deploy, rename repositories or migrate data.
+```
+
+### Adopt safely
+
+```text
+Implement only [approved steps] in [repository], against [approved Kit version].
+Use an isolated branch. Preserve customizations and report conflicts before
+overwriting. Keep report URLs and renderers until side-by-side outputs are
+approved. Run actual tests and provide rollback instructions. Separate completed,
+blocked and unverified items. Do not expand into a framework rewrite, production
+migration or changes to other repositories.
+```
+
+### Update a standard
+
+```text
+In Norfolk-Group/norfolk-kit, propose [standard change and reason]. Read current
+contracts and decisions, including consolidation status. Identify affected tools,
+editors, exports and consumers. Preserve historical decisions; document the new
+decision and compatibility strategy. Implement after approval, verify and prepare
+a release/adoption proposal. Do not auto-update apps or fabricate a signed release.
+```
+
+### Verify release readiness
+
+```text
+Check release readiness for [repository and revision] in [environment]. Verify
+required CI, CodeQL policy, review findings and actual behavior. Distinguish a
+passing build from verified authentication, permissions, monitoring and reports.
+List blockers, exceptions and rollback evidence. Do not merge, deploy, migrate
+data or contact customers unless those exact actions are already authorized.
+```
+
+## Keep a local copy
+
+This Markdown file is the editable source. The generated HTML owner guide has
+navigation, copyable prompts and print layout. Generate with `pnpm docs:owner`;
+check freshness with `pnpm docs:owner:check`.
+
+Keep a dated HTML/PDF snapshot in the existing Norfolk AI business folder's
+Product/Kit area. Don't create another repository or edit snapshots as a second
+source of truth. Regenerate after approved changes and retain the source digest.
+A PDF also needs a recorded renderer/version and visual check; this guide does
+not certify arbitrary browser print settings.
