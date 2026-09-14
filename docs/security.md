@@ -1,6 +1,6 @@
 # Security
 
-**Tier: CONTRACT** · Last verified: 2026-08-05
+**Tier: CONTRACT** · Last verified: 2026-09-14
 
 ## Authentication
 
@@ -24,6 +24,29 @@ Server-side capability authorization is authoritative. UI checks only improve pr
 - Audit records contain actor, capability/action, outcome, correlation ID, and time. They do not contain secrets, raw WorkOS sessions, or unnecessary client content.
 
 ## Threat notes
+
+### Login-start abuse protection
+
+`GET /auth/login` allows 10 requests per client per 15-minute window, including
+successful redirects and failed login starts. `express-rate-limit` runs before
+the auth service or transaction creation. Excess requests return HTTP 429,
+`Retry-After`, standard rate-limit headers, and a `rate-limited` recovery response.
+The login quota does not block callbacks for transactions already issued.
+
+The reference host keeps Express `trust proxy` disabled. Client identity uses
+the library's default IP key (including IPv6 /56 grouping), not arbitrary
+`X-Forwarded-For` or `Forwarded` values. A production proxy deployment must verify
+its proxy addresses and header sanitization before configuring explicit trust;
+never enable blanket `trust proxy: true`. Without this configuration, clients
+behind a proxy share its IP quota.
+
+The default counter store is per process and resets on restart. Multi-replica
+products must supply shared counters or an equivalent verified edge limit before
+deployment. This login-start guard is not protection for all auth or API routes,
+nor a complete distributed denial-of-service defense. Keep the library's
+fail-closed store-error behavior; do not skip successful requests.
+
+### Remaining product hardening
 
 This foundation defends against authorization drift between tRPC and MCP, agent bypass of human-only actions, accidental production trust in synthetic headers, optional-module residue, and external network dependencies in review artifacts.
 

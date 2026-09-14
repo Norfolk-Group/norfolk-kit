@@ -1,5 +1,6 @@
 import { randomBytes } from "node:crypto";
 import type { Request, Response, Router } from "express";
+import { rateLimit } from "express-rate-limit";
 import { AuthService, InMemoryAuthTransactionStore, isSafeReturnIntent, sessionCookieOptions, type EntryMode } from "./index.js";
 import { WorkOSAuthProvider } from "./workos-provider.js";
 
@@ -32,7 +33,16 @@ export function createAuthServiceFromEnvironment() {
 }
 
 export function installAuthRoutes(router: Router, service: AuthService) {
-  router.get("/login", async (request: Request, response: Response) => {
+  // Count successful redirects too: each login start creates an auth transaction.
+  // Keep this off /callback so an already-started login can still complete.
+  const loginLimiter = rateLimit({
+    windowMs: 15 * 60_000,
+    limit: 10,
+    standardHeaders: "draft-8",
+    legacyHeaders: false,
+    message: { state: "rate-limited", recovery: "retry after the Retry-After interval" },
+  });
+  router.get("/login", loginLimiter, async (request: Request, response: Response) => {
     const returnTo = typeof request.query.returnTo === "string" ? request.query.returnTo : "/";
     const login = await service.beginLogin({ returnTo, nonce: randomBytes(24).toString("base64url") });
     response.redirect(303, login.url);
