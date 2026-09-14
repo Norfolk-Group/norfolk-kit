@@ -82,6 +82,26 @@ describe("read-only Norfolk project harness", () => {
     expect(checked.stdout).not.toContain("SETUP_ONLY_SENTINEL");
   });
 
+  it.each([
+    "@AG<!-- comment -->ENTS.md\n",
+    "<!-- unclosed\n@AGENTS.md\n",
+    "<!-- outer <!-- inner -->\n@AGENTS.md\n-->\n",
+    "```text <!-- example -->\n@AGENTS.md\n```\n",
+    "```text\n```not-a-close\n@AGENTS.md\n```\n",
+  ])("does not manufacture or expose a Claude import by removing comments: %s", async (content) => {
+    const root = await makeFixture();
+    await writeFile(path.join(root, "CLAUDE.md"), content);
+    const checked = run(root);
+    expect(checked.status).toBe(1);
+    expect(checked.report.findings).toContainEqual(expect.objectContaining({ id: "claude-bridge", status: "blocked" }));
+  });
+
+  it("recognizes a standalone import after comments and fenced comment examples", async () => {
+    const root = await makeFixture();
+    await writeFile(path.join(root, "CLAUDE.md"), "<!-- explanation -->\n```html\n<!-- example\n```\n@./AGENTS.md\n");
+    expect(run(root).status).toBe(0);
+  });
+
   it("redacts malformed JSON parser details and all configuration values", async () => {
     const root = await makeFixture();
     const secretSentinel = "DO_NOT_PRINT_CONFIGURATION_SENTINEL";

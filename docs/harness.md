@@ -94,6 +94,12 @@ over 1 MiB are refused. File contents, command strings, lock values and raw pars
 errors are never included in output. Keep all credentials in Doppler regardless:
 an allowlisted configuration file is not a safe place to store them.
 
+The Claude bridge check requires a standalone `@AGENTS.md` or `@./AGENTS.md`
+line outside fenced examples and HTML comments. It skips comment-bearing lines
+without joining fragments; nested or unterminated comments are conservatively
+treated as hidden content. This is an import-presence heuristic, not an HTML
+sanitizer or a complete Markdown parser.
+
 ### What the result means
 
 | Result | Meaning | What to do |

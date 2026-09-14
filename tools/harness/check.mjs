@@ -12,14 +12,26 @@ const limit = 1024 * 1024;
 
 function hasClaudeImport(content) {
   let fence = null;
-  for (const line of content.replace(/<!--[\s\S]*?-->/g, "").split(/\r?\n/)) {
-    const marker = line.match(/^\s*(`{3,}|~{3,})/);
-    if (marker) {
-      if (!fence) fence = marker[1];
-      else if (marker[1][0] === fence[0] && marker[1].length >= fence.length) fence = null;
+  let commentDepth = 0;
+  for (const line of content.split(/\r?\n/)) {
+    if (commentDepth === 0) {
+      const marker = line.match(/^\s*(`{3,}|~{3,})/);
+      if (marker) {
+        if (!fence) fence = marker[1];
+        else if (marker[1][0] === fence[0] && marker[1].length >= fence.length && !line.slice(marker[0].length).trim()) fence = null;
+        continue;
+      }
+      if (fence) continue;
+    }
+    // Inspect original lines, never join fragments across removed comments.
+    // Nested/malformed comments are conservatively hidden until fully closed.
+    if (commentDepth > 0 || line.includes("<!--")) {
+      for (const marker of line.matchAll(/<!--|-->/g)) {
+        commentDepth = marker[0] === "<!--" ? commentDepth + 1 : Math.max(0, commentDepth - 1);
+      }
       continue;
     }
-    if (!fence && /^\s*@(?:\.\/)?AGENTS\.md\s*$/.test(line)) return true;
+    if (/^\s*@(?:\.\/)?AGENTS\.md\s*$/.test(line)) return true;
   }
   return false;
 }
