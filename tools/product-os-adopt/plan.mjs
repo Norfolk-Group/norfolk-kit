@@ -18,6 +18,7 @@ export function resolvePayloadPolicy(payloads, organization) { return payloads.p
 export function planFile({ path, sensitivity, installedHash, currentHash, incomingHash, allowedSensitivities, action = "update" }) {
   if (!allowedSensitivities.includes(sensitivity)) return { path, action: "blocked", reason: `sensitivity ${sensitivity} is not allowed` };
   if (action === "delete") return { path, action: "destructive-proposal", executed: false, reason: "exact separate approval required" };
+  if (!installedHash && currentHash) return { path, action: "foreign", reason: "existing file is not Kit-managed; preserve ownership even when bytes match" };
   if (installedHash && currentHash !== installedHash) return { path, action: "conflict", reason: "locally edited managed file" };
   if (currentHash === incomingHash) return { path, action: "unchanged" };
   return { path, action: installedHash ? "update" : "add" };

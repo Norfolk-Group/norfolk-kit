@@ -8,6 +8,24 @@ The adopter fetches a pinned private release, verifies trusted signature and eve
 
 Normal rollback covers code/configuration only in the declared expand-and-contract window. Irreversible data work needs a separate approved recovery plan. Current Kit candidate exceptions: none.
 
+## File ownership before any adoption write
+
+Inventory the target before changing files. A file absent from the installed
+manifest is FOREIGN whenever it already exists, including when its bytes equal
+the incoming file. `planFile()` returns `foreign`, never `add` or `unchanged`,
+for that case. Only absent files may be added; unchanged managed files may be
+updated; edited or missing managed files remain conflicts.
+
+Manifest generation requires a reviewed explicit `--files` list. The former
+`--discover` option fails before reading or writing target files because matching
+a sensitivity marker is not proof of Kit ownership. Stop on unresolved managed
+edits rather than rehashing them into a new baseline. Hashing is byte evidence,
+not trusted release verification or permission to overwrite a local file.
+
+The fixture tests exercise the actual planner, read-only assessment command and
+Git restoration of synthetic changes. They do not certify a production adopter,
+signed release, service provisioning or editor/plugin activation.
+
 ## Existing report-output adoption
 
 Financial reports and exports are adopted as an expand-and-contract migration,

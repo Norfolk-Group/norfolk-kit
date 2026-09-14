@@ -6,13 +6,13 @@ This project is built on the Norfolk Kit. These rules bind every agent and devel
 
 This file is the agent contract for every equipped Norfolk/KIT repo. Equip installs it; a project may add rules below and may not silently drop one. `kit-guard` enforces the payload marker. Unmarked kit files are norfolk-only.
 
-Superpowers and Compound Engineering are pinned and inherited by reference. Do not vendor skill trees. Do not double-loop brainstorm/plan.
+Superpowers and Compound Engineering must be pinned and inherited by reference. The current settings declare plugins but do not enforce immutable pins; verify resolved versions and actual loading per editor before claiming setup complete. Do not vendor skill trees. Do not double-loop brainstorm/plan.
 
 UI work inherits `docs/design-system.md`. Figma/Claude Design/Replit/Paper/Magic Patterns are tools not a second system (0020/0021 — Accepted). Reports are documents. Inter is the house face. Figma MCP remote only; `Failed to load` is not `needsAuth`; no `127.0.0.1:3845` from Grok Bots / remote agents. Claude Design MCP broken as of 2026-08; handoff ZIP/HTML. Rules live here not CLAUDE.md (0009).
 
 ## Required agent plugins: Superpowers + Compound Engineering
 
-Both required. Pinned in `.claude/settings.json`. Cursor operators still need `/add-plugin superpowers` and `/add-plugin compound-engineering`.
+Both required. Declared in `.claude/settings.json`; declaration is not installation, pinning or verified loading. Cursor operators still need `/add-plugin superpowers` and `/add-plugin compound-engineering`.
 
 **Compound Engineering owns:** `/ce-brainstorm`, `/ce-plan`, `/ce-work` or `/lfg`, `/ce-compound` into `docs/solutions/` (REFERENCE).
 

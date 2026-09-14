@@ -36,7 +36,7 @@ Read `.kit/markers.json`. Every kit file has a sensitivity; **unmatched paths co
 
 Two markers need care:
 
-- **`kit-only`** — never ships anywhere, no exceptions. The kit's own plans, decision records, and Owner's Guide. No org allows it, so the filter already handles it; the point is that copying them would fork the kit, which is the failure the Manual app exists to prevent. The Manual *reads* them from the kit at render time.
+- **`kit-only`** — never ships anywhere, no exceptions. The kit's own plans, decision records, and Owner's Guide. No org allows it, so the filter already handles it. The portable owner guide is generated within Kit; it is not a separate Manual application or a second policy source.
 - **`$excludeFromPayload`** — files with a valid sensitivity that are still not worth shipping (today: the 180MB brand tree, pending curated web sets). Not a security control — the guard still enforces the marker — just a payload decision. Say in the PR body when something was withheld for this reason.
 
 > Ricardo's rule, and the reason this exists: Norfolk-internal material never enters a client repo, and no client ever sees another client's brand. He controls all three orgs, so nothing but this mapping prevents it.
@@ -61,15 +61,30 @@ This is what makes re-equipping meaningful: after a kit update, run equip again 
 
 ## 4. Write the manifest — with the script, never by hand
 
-Copy `.kit/payloads.json`, `.kit/markers.json`, `tools/kit-guard/` and `.github/workflows/kit-guard.yml` into the repo first (all `client-safe`), then run:
+Apply the same ADD/UPDATE/CONFLICT/FOREIGN classification to `.kit/payloads.json`,
+`.kit/markers.json`, `tools/kit-guard/` and `.github/workflows/kit-guard.yml`.
+Never overwrite a foreign control file to get past preflight. Stop for reconciliation
+if an existing control file prevents safe setup. After approved ADD/UPDATE writes,
+run the writer with the explicit, reviewed list of installed Kit-managed paths:
 
 ```bash
-node tools/kit-guard/write-manifest.mjs --kit-sha <pinned SHA> --org <detected org> --discover
+node tools/kit-guard/write-manifest.mjs --kit-sha <pinned SHA> --org <detected org> --files <comma-separated-installed-paths>
 ```
 
-**Do not hand-write `.kit/manifest.json`.** It is the claim `kit-guard` checks the diff against — if you author both the claim and the change, the guard is comparing your word to your word and checks nothing. The script hashes the real bytes on disk, so a file you wrote but did not intend to claim still surfaces as an unclaimed write.
+Include previously managed paths that remain installed, retaining their recorded
+hash for any unresolved local edit; do not recertify edited bytes as an accepted
+baseline. Stop before manifest generation if any such conflict is unresolved.
+Never claim FOREIGN paths, even if they happen to match incoming Kit bytes.
+`--discover` is rejected: a sensitivity marker does not establish ownership.
 
-The script exits non-zero and names the files if anything on disk violates the org's boundary. If that happens: **remove those files and re-run.** Never work around it — it is telling you the payload filter in §2 was applied wrongly.
+**Do not hand-write `.kit/manifest.json`.** The script hashes the selected real
+bytes, but those hashes do not independently prove source provenance or ownership.
+Review the selection against the pre-change inventory and pinned source, then
+check the real diff with `kit-guard`. The writer is not a complete installer.
+
+The script exits non-zero if a selected file violates the org's boundary.
+Stop and report it. Do not delete a pre-existing file to make the check pass;
+any removal needs the separately approved recovery or deletion procedure.
 
 ## 5. Deliver as a pull request
 
