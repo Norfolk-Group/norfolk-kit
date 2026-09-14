@@ -11,8 +11,9 @@ to AGENTS.md so every editor sees them. Claude-only notes below.
 
 ## Claude Code specifics
 
-- Plugins (superpowers, compound-engineering, greptile) are pinned in
-  `.claude/settings.json` — they load automatically in every clone.
+- Plugins (superpowers, compound-engineering, greptile) are declared in
+  `.claude/settings.json`. Verify installation, resolved versions and loading
+  in this project; the file does not provide immutable pins or prove activation.
 - Skills live in `.claude/skills/` — the open Agent Skills format, which
   Cursor also reads directly. Write once, both editors use them.
 - MCP servers: `.mcp.json` (Claude Code) and `.cursor/mcp.json` (Cursor)

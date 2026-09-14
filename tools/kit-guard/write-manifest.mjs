@@ -12,13 +12,12 @@
  *   node tools/kit-guard/write-manifest.mjs \
  *     --kit-sha <sha> --org <org> --files <newline-or-comma-separated paths>
  *
- * Or let it discover: any path matching a marker pattern that exists on disk.
- *   node tools/kit-guard/write-manifest.mjs --kit-sha <sha> --org <org> --discover
+ * Supply only the reviewed installed-file list. Marker matches describe
+ * sensitivity, not ownership; discovery cannot distinguish FOREIGN files.
  */
 
-import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
-import { join } from "node:path";
 
 const args = process.argv.slice(2);
 const argOf = (n, d = null) => {
@@ -29,6 +28,11 @@ const argOf = (n, d = null) => {
 const kitSha = argOf("--kit-sha");
 const org = argOf("--org");
 const discover = args.includes("--discover");
+
+if (discover) {
+  console.error("error: --discover is unsafe for existing project ownership. Pass an explicit reviewed --files list of installed Kit-managed files; leave FOREIGN files unclaimed.");
+  process.exit(2);
+}
 
 if (!kitSha || !org) {
   console.error("error: --kit-sha and --org are both required.");
@@ -59,46 +63,23 @@ function sensitivityOf(path) {
   return best ? best.sens : markers.unmatchedDefault || "norfolk-only";
 }
 
-// Collect candidate paths
-let paths;
-if (discover) {
-  const walk = (dir) => {
-    if (!existsSync(dir)) return [];
-    return readdirSync(dir).flatMap((name) => {
-      if (name === ".git" || name === "node_modules") return [];
-      const full = join(dir, name);
-      const rel = full.split("\\").join("/").replace(/^\.\//, "");
-      return statSync(full).isDirectory() ? walk(full) : [rel];
-    });
-  };
-  const excluded = Object.keys(markers.$excludeFromPayload || {}).filter(
-    (k) => !k.startsWith("$"),
-  );
-  paths = walk(".").filter(
-    (p) =>
-      // never record the manifest's own hash — it would be stale the instant
-      // this file is written, and a hash that never verifies teaches people
-      // to ignore hash mismatches
-      p !== ".kit/manifest.json" &&
-      !excluded.some((pat) => matches(pat, p)) &&
-      Object.keys(markers.markers).some((pat) => matches(pat, p)),
-  );
-} else {
-  const raw = argOf("--files", "");
-  paths = raw
-    .split(/[\n,]/)
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
+// Selection is reviewed separately; hashing bytes does not prove ownership.
+const paths = [...new Set(argOf("--files", "").split(/[\n,]/).map((s) => s.trim()).filter(Boolean))];
 
 if (!paths.length) {
-  console.error("error: no files to record. Pass --files or --discover.");
+  console.error("error: no files to record. Pass an explicit reviewed --files list.");
   process.exit(2);
 }
 
 const files = {};
 const refused = [];
 for (const p of paths.sort()) {
+  if (p.toLowerCase() === ".kit/manifest.json" || /[\\:]/.test(p)
+    || [...p].some((character) => character.charCodeAt(0) < 32)
+    || p.split("/").some((part) => ["", ".", "..", ".git"].includes(part.toLowerCase()) || /[. ]$/.test(part))) {
+    console.error("error: selection must contain canonical repository-relative paths, excluding Git metadata and the manifest itself.");
+    process.exit(2);
+  }
   if (!existsSync(p)) {
     console.error(`error: ${p} does not exist on disk — refusing to claim a file that isn't there.`);
     process.exit(2);
@@ -122,7 +103,7 @@ if (refused.length) {
     `\nerror: ${refused.length} file(s) are on disk but a "${orgRule.class}" repo may not hold them:`,
   );
   refused.forEach((r) => console.error(`  ${r.path}  (${r.sens})`));
-  console.error("\nRemove them before writing the manifest. Equip should not have copied them.");
+  console.error("\nStop and report the rejected selection. Do not delete pre-existing files; removal requires separate approval.");
   process.exit(1);
 }
 

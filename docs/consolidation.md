@@ -93,3 +93,37 @@ Manual content. Its CLI and artifact remain Kit-local and do not ship in equip.
 No repository is deleted. No broad automatic adoption runs against existing apps.
 The remaining content-publication and trusted-release gates are real blockers, not reasons
 to represent this inventory as a completed source consolidation.
+
+## 2026-09-14 execution checkpoint
+
+PR #19 merged as `becf55398f3686d116a424073416e80c4bbd830b` with green
+quality, CodeQL and Bugbot checks. The owner authorized executing the remaining
+consolidation stages, including conditional predecessor renames and archives.
+No deletion or customer-application adoption is included.
+
+Local-only full-ref preservation now exists for both predecessors. Product OS
+preservation covers 12 named refs plus HEAD; Manual covers 10 plus HEAD, including
+its three branches and the open PR #2 head/merge state. Both complete-history
+bundles were restored independently and passed `git fsck --full --strict`; all
+exported ref SHAs matched. The Manual PR #2 patch was preserved and dry-run applied
+to its restored merge-base. Private backups and metadata are outside public Kit.
+This is source-recovery evidence, not a complete operational backup or retirement.
+
+Remaining gates:
+
+- Decide private versus sanitized public release distribution. Existing accepted
+  source still specifies private bundles. Do not infer disclosure approval from
+  the repository's public visibility or bulk-import validation/history material.
+- Migrate and test release repository identity, signing authorization and provider
+  trust; historical signed manifests and candidate tags remain unchanged.
+- Verify external consumers and hosting. Empty Pages/hooks/deploy-key results
+  do not prove the absence of integrations; GitHub App inventory was unavailable.
+- Preserve/disposition open work and install successor notices before conditional
+  rename/archive. Manual PR #2 is not merged or closed as a cleanup side effect.
+- Verify actual rule/skill loading in each editor and a complete new-project
+  setup. Local command/cache presence is not installation or session proof.
+
+The workflow audit also found unsafe FOREIGN-file classification and blind
+manifest discovery. Regression fixtures now require preserving unmanaged files,
+explicit manifest selection and real filesystem/Git recovery checks. These are
+prerequisites, not evidence that the source/release cutover has happened.

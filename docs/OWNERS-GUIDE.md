@@ -1,6 +1,6 @@
 # Norfolk AI Product OS & Starter Kit
 
-**Owner's Guide · REFERENCE · Source reviewed: 2026-09-13**
+**Owner's Guide · REFERENCE · Source reviewed: 2026-09-14**
 
 ## Start here
 
@@ -162,6 +162,12 @@ integrations, custom rules and known defects. Preserve behavior and approved art
 Classify each requirement as compliant, missing, conflicting, not applicable or
 approved exception. Do not overwrite custom code because Kit has the same filename.
 
+Existing files that Kit did not install remain project-owned, even when they
+match Kit exactly. The planner labels these `foreign`; do not adopt ownership
+silently. Manifest generation requires an explicit reviewed list of installed
+files. Blind `--discover` is rejected. Stop on unresolved edits before generating
+a replacement manifest, so local customizations do not become a false baseline.
+
 Adopt in small changes: documentation and configuration visibility, compatible
 tools/checks, then approved runtime/design changes. Each needs tests, a rollback
 target and acceptance criteria. Production actions and data migrations need their
@@ -304,3 +310,17 @@ Product/Kit area. Don't create another repository or edit snapshots as a second
 source of truth. Regenerate after approved changes and retain the source digest.
 A PDF also needs a recorded renderer/version and visual check; this guide does
 not certify arbitrary browser print settings.
+
+## What is still waiting for verification
+
+Source backups of the old Product OS and Manual passed local restoration checks.
+Hosting, external consumers and release identity still need verification before
+either repository can be retired.
+
+The old Product OS still specifies private signed releases. Public Kit publication
+requires approval of the reviewed Norfolk-owned payload and trusted-release setup.
+Private/client evidence stays excluded.
+
+Fixtures prove planning, read-only assessment and Git recovery, not complete
+installation or release. Cursor, Claude Code and Codex still need actual session
+evidence of required plugin loading; caches and enabled IDs are not proof.
