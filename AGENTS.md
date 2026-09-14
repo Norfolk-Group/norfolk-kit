@@ -27,6 +27,10 @@ Factory-floor and mechanical work goes through tools/launchers (Qwen, Kimi, GLM,
 - Kit rule 10 overrides `/lfg` auto-ship.
 - Do not let `/ce-strategy` mint a second STRATEGY.md.
 
+Use `docs/harness.md` for the complete work cycle and evidence gates. Named
+agents follow `docs/agent-naming.md`: human name first, role second, one identity
+registry, stable IDs and explicit visibility. Preserve approved existing personas.
+
 Read [`docs/SYSTEM-GOVERNANCE-RULE.md`](../docs/SYSTEM-GOVERNANCE-RULE.md) first — it defines how `/docs` governs changes, what wins when sources disagree, and which gates enforce it.
 
 ## 1. Documentation governs

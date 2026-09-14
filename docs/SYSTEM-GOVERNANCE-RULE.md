@@ -1,5 +1,13 @@
 # SYSTEM GOVERNANCE RULE (v2)
 
+> **2026-09-13 transition notice:** [Decision 0023](https://github.com/Norfolk-Group/norfolk-kit/blob/main/docs/decisions/0023-one-product-os-entry-point.md)
+> changes the destination to one Product OS and Starter Kit in `norfolk-kit`.
+> Source/release migration remains pending; preserve existing adopted contracts.
+> The legacy body below is provenance, not permission to start a second canon.
+> Its `CLAUDE.md` precedence is superseded by accepted decision 0009: `AGENTS.md`
+> is the canonical agent-rule source. Its historical "private" description is
+> not a current access-control assertion; consult the live consolidation inventory.
+
 > **Superseded legacy source during Product OS migration.** This body is preserved for provenance. The private `Norfolk-Group/norfolk-ai-product-os` candidate owns universal doctrine; this file governs only Kit implementation details that do not conflict with it. After cutover, duplicate policy will be replaced by concise implementation notes and links.
 
 `/docs` is this Kit implementation's local source for architecture, business logic, API structure, and executable design notes. Before any Kit code or UI change, the agent MUST consult it, follow it when compatible with Product OS, and update it in the same PR when behavior or UI changes. A change made without consulting the relevant Product OS and Kit sources is invalid.

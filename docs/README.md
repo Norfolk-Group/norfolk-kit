@@ -2,12 +2,20 @@
 
 **Tier: CONTRACT** · Last verified: 2026-08-26
 
-This is a **router, not a summary** for the Kit implementation. Find the row matching the change you're about to make and read those files first. The private Norfolk AI Product OS candidate owns universal doctrine and wins cross-repository conflicts. Legacy universal policy in Kit is being replaced with concise implementation notes and must not be treated as a second editable canon.
+This is a **router, not a summary**. Start owner workflows at `OWNERS-GUIDE.md`.
+Decision 0023 makes this repository the one Product OS and Starter Kit entry
+point. Source/release cutover is still pending: preserve existing adopted
+contracts and signed references, and surface conflicts rather than create a
+second editable canon. See `consolidation.md` for verified migration blockers.
 
 ## Route by change type
 
 | You are changing… | Read first |
 |---|---|
+| Starting, assessing or upgrading a project | `OWNERS-GUIDE.md` · `product-os-adoption.md` |
+| Lifecycle, evaluation, testing or refactoring | `harness.md` · `../AGENTS.md` |
+| Agent names, identities, roles or display overrides | `agent-naming.md` · `decisions/0012-*` |
+| Repository roles, owner handbook or source consolidation | `decisions/0023-one-product-os-entry-point.md` · `consolidation.md` |
 | UI, styling, components, layout, motion | `design-system.md` · `artifacts/` |
 | Database schema, migrations, data model | `architecture.md` · `decisions/0003-*` |
 | API surface, tRPC procedures, MCP tools | `api.md` · `architecture.md` |
@@ -44,8 +52,12 @@ This is a **router, not a summary** for the Kit implementation. Find the row mat
 | `product-os-adoption.md` | CONTRACT | How kit adopts a pinned Product OS release. Kit cannot amend doctrine. |
 | `../brand/README.md` | CONTRACT | Canonical marks. Equip + kit-guard enforce the Norfolk vs client boundary. |
 | `OWNERS-GUIDE.md` | REFERENCE | Human-facing owner guide. Not an agent contract. |
+| `harness.md` | REFERENCE | Full work cycle, evidence gates and read-only structural assessment |
+| `agent-naming.md` | CONTRACT | Persona-first names, stable identities, resolver and visibility rules |
+| `consolidation.md` | REFERENCE | Repository inventory, privacy/release blockers and retirement gates |
+| `decisions/0023-one-product-os-entry-point.md` | CONTRACT | One owner entry point; staged source/release consolidation |
 | `setup/` | REFERENCE | Codespace and Claude Code operator setup. |
-| `artifacts/` | REFERENCE | Generated HTML: components, motion, icons, architecture, navigation |
+| `artifacts/` | REFERENCE | Generated HTML: owner guide, components, motion, icons, architecture, navigation |
 
 ## Tiers
 
