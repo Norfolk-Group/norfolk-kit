@@ -102,6 +102,12 @@ describe("read-only Norfolk project harness", () => {
     expect(run(root).status).toBe(0);
   });
 
+  it("recognizes the alternate HTML comment terminator before an active import", async () => {
+    const root = await makeFixture();
+    await writeFile(path.join(root, "CLAUDE.md"), "<!-- explanation --!>\n@AGENTS.md\n");
+    expect(run(root).status).toBe(0);
+  });
+
   it("redacts malformed JSON parser details and all configuration values", async () => {
     const root = await makeFixture();
     const secretSentinel = "DO_NOT_PRINT_CONFIGURATION_SENTINEL";

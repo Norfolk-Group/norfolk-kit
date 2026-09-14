@@ -26,7 +26,7 @@ function hasClaudeImport(content) {
     // Inspect original lines, never join fragments across removed comments.
     // Nested/malformed comments are conservatively hidden until fully closed.
     if (commentDepth > 0 || line.includes("<!--")) {
-      for (const marker of line.matchAll(/<!--|-->/g)) {
+      for (const marker of line.matchAll(/<!--|--!?>/g)) {
         commentDepth = marker[0] === "<!--" ? commentDepth + 1 : Math.max(0, commentDepth - 1);
       }
       continue;
